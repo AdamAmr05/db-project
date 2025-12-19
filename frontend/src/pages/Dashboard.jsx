@@ -9,25 +9,50 @@ import CyberCard from '../components/CyberCard';
 import PerformanceCycleTracker from '../components/PerformanceCycleTracker';
 
 // Dark Cyber Palette (matches Power BI dashboard)
+// Hybrid Palette: Matches adjacent Donut/Bar charts (Cyan, Purple, Pink) + Deep Blues for "Dark Cyber" cohesion
 const TREEMAP_PALETTE = [
-    '#06b6d4', // cyan-500
-    '#3b82f6', // blue-500
-    '#8b5cf6', // violet-500
-    '#14b8a6', // teal-500
-    '#0891b2', // cyan-600
-    '#2563eb', // blue-600
-    '#7c3aed', // violet-600
-    '#0d9488', // teal-600
+    '#06b6d4', // Cyan 500 (Matches Donut "Active")
+    '#3b82f6', // Blue 500 (Matches Bar "Completed")
+    '#8b5cf6', // Violet 500 (Matches Donut "Probation")
+    '#ec4899', // Pink 500 (Matches Donut "Leave")
+    '#059669', // Emerald 600 (Accent)
+    '#2563eb', // Blue 600 (Primary core)
+    '#7c3aed', // Violet 600
+    '#0891b2', // Cyan 600
 ];
 
-const CustomTreemapContent = ({ x, y, width, height, index, name, value }) => {
-    if (width < 40 || height < 25) return null;
+const CustomTreemapContent = ({ x, y, width, height, index, name, value, allData }) => {
+    // Relaxed threshold: Show more items even if small, but hide absolute micros
+    if (width < 30 || height < 30) return null;
 
     const color = TREEMAP_PALETTE[index % TREEMAP_PALETTE.length];
-    const displayName = name?.length > 14 ? name.slice(0, 14) + '…' : name;
+
+    // Lookup real value if `allData` is provided (handling damped sizes)
+    const realValue = allData ? (allData.find(d => d.name === name)?.realValue || value) : value;
+
+    // Dynamic font size based on box dimensions
+    const isSmall = width < 80 || height < 60;
+    const isVerySmall = width < 50 || height < 50;
+
+    // Determine font sizes
+    const nameSize = isVerySmall ? 'text-[9px]' : (isSmall ? 'text-[10px]' : 'text-xs');
+    const valueSize = isVerySmall ? 'text-[8px]' : 'text-[10px]';
 
     return (
         <g>
+            <defs>
+                <filter id={`shadow-${index}`} x="-20%" y="-20%" width="140%" height="140%">
+                    <feGaussianBlur in="SourceAlpha" stdDeviation="2" />
+                    <feOffset dx="1" dy="1" result="offsetblur" />
+                    <feComponentTransfer>
+                        <feFuncA type="linear" slope="0.3" />
+                    </feComponentTransfer>
+                    <feMerge>
+                        <feMergeNode />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            </defs>
             <rect
                 x={x}
                 y={y}
@@ -35,34 +60,36 @@ const CustomTreemapContent = ({ x, y, width, height, index, name, value }) => {
                 height={height}
                 fill={color}
                 stroke="#000"
-                strokeWidth={1}
+                strokeWidth={2}
+                className="transition-all duration-300 hover:opacity-90"
             />
-            <text
-                x={x + width / 2}
-                y={y + height / 2 - 6}
-                textAnchor="middle"
-                fill="#fff"
-                fontSize={10}
-                fontFamily="monospace"
-                fontWeight="600"
-                stroke="none"
-                style={{ paintOrder: 'fill' }}
-            >
-                {displayName}
-            </text>
-            <text
-                x={x + width / 2}
-                y={y + height / 2 + 10}
-                textAnchor="middle"
-                fill="#000"
-                fontSize={14}
-                fontWeight="bold"
-                fontFamily="monospace"
-                stroke="none"
-                style={{ paintOrder: 'fill' }}
-            >
-                {value}
-            </text>
+            {/* 
+              Using foreignObject allows us to use HTML/CSS flexbox for text wrapping and alignment.
+            */}
+            <foreignObject x={x} y={y} width={width} height={height}>
+                <div
+                    className="w-full h-full p-1 flex flex-col justify-center items-center text-center overflow-hidden"
+                    style={{ color: '#fff' }}
+                >
+                    <span
+                        className={`font-mono font-bold leading-none mb-0.5 ${nameSize}`}
+                        style={{
+                            wordBreak: 'break-word', // Handles long words in narrow boxes (Pharmacy)
+                            overflowWrap: 'anywhere',
+                            display: '-webkit-box',
+                            WebkitLineClamp: isVerySmall ? 1 : 2, // Limit lines based on height
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden'
+                        }}
+                    >
+                        {name}
+                    </span>
+                    {/* Always show value unless box is tiny, removed absolute height check */}
+                    <span className={`${valueSize} opacity-90 font-mono`}>
+                        {realValue}
+                    </span>
+                </div>
+            </foreignObject>
         </g>
     );
 };
@@ -100,11 +127,33 @@ const Dashboard = () => {
     if (loading) return <div className="text-xs font-mono animate-pulse">INITIALIZING SYSTEM...</div>;
     if (!stats) return <div className="text-xs font-mono text-red-500">SYSTEM ERROR: DATA UNREACHABLE</div>;
 
-    // Treemap data
-    const treemapData = deptData.map(d => ({
-        name: d.Department_Name,
-        size: Number(d.EmployeeCount) || 0
-    }));
+    // Treemap data with visual balancing (Damping)
+    // We adjust 'size' for layout purposes but display the real count
+    const treemapData = deptData.map(d => {
+        const count = Number(d.EmployeeCount) || 0;
+        let size = count;
+
+        // Manual Visual Damping as requested
+        // Shrink dominant items slightly to give room
+        if (d.Department_Name === 'Computer Science') size = count * 0.85;
+        if (d.Department_Name === 'HR Department') size = count * 0.9;
+
+        // Inflate small items to prevent them from being crushed
+        if (d.Department_Name === 'Pharmacy' || d.Department_Name === 'Dentistry' || count < 2) {
+            size = Math.max(count * 2.0, 3); // Artificial inflation
+        }
+
+        return {
+            name: d.Department_Name,
+            size: size,
+            realValue: count // Store real value for display lookup
+        };
+    });
+
+    const getRealValue = (name) => {
+        const item = treemapData.find(d => d.name === name);
+        return item ? item.realValue : 0;
+    };
 
     // Donut data with colors (Power BI style)
     const donutColors = {
@@ -181,7 +230,7 @@ const Dashboard = () => {
                                 dataKey="size"
                                 aspectRatio={4 / 3}
                                 stroke="#000"
-                                content={<CustomTreemapContent />}
+                                content={<CustomTreemapContent allData={treemapData} />}
                             />
                         </ResponsiveContainer>
                     ) : (

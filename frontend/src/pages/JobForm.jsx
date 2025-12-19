@@ -17,7 +17,7 @@ const JobForm = () => {
         Job_Code: '',
         Job_Title: '',
         Job_Level: 'Entry',
-        Job_Category: 'Calculated',
+        Job_Category: '',
         Job_Grade: 'Grade C',
         Min_Salary: '',
         Max_Salary: '',
@@ -29,6 +29,8 @@ const JobForm = () => {
 
     const [departments, setDepartments] = useState([]);
     const [potentialManagers, setPotentialManagers] = useState([]); // Potential managers (other jobs)
+    const [existingCategories, setExistingCategories] = useState([]); // For auto-suggestions
+    const [showSuggestions, setShowSuggestions] = useState(false);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
@@ -106,6 +108,10 @@ const JobForm = () => {
             ]);
             setDepartments(deptRes.data.data);
             setPotentialManagers(jobRes.data.data);
+
+            // Extract unique categories for suggestions
+            const categories = [...new Set(jobRes.data.data.map(j => j.Job_Category).filter(Boolean))];
+            setExistingCategories(categories.sort());
         } catch (err) {
             console.error('Error loading options:', err);
         }
@@ -281,16 +287,37 @@ const JobForm = () => {
                         </div>
 
                         {/* Category */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">CATEGORY</label>
                             <input
                                 type="text"
                                 name="Job_Category"
                                 value={formData.Job_Category}
                                 onChange={handleChange}
+                                onFocus={() => setShowSuggestions(true)}
+                                onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                                 className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
                                 placeholder="e.g. IT, Finance"
+                                autoComplete="off"
                             />
+                            {showSuggestions && existingCategories.length > 0 && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {existingCategories
+                                        .filter(cat => cat.toLowerCase().includes(formData.Job_Category.toLowerCase()))
+                                        .map((cat, i) => (
+                                            <div
+                                                key={i}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, Job_Category: cat }));
+                                                    setShowSuggestions(false);
+                                                }}
+                                            >
+                                                {cat}
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Reports To */}
