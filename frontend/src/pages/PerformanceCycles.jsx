@@ -9,6 +9,7 @@ const PerformanceCycles = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [showForm, setShowForm] = useState(false);
     const [editingCycle, setEditingCycle] = useState(null);
+    const [showCycleType, setShowCycleType] = useState(false);
 
     // Form State
     const [formData, setFormData] = useState({
@@ -120,17 +121,31 @@ const PerformanceCycles = () => {
                                     className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
                                 />
                             </div>
-                            <div>
+                            <div className="relative">
                                 <label className="text-xs font-mono text-muted">TYPE</label>
-                                <select
-                                    value={formData.Cycle_Type}
-                                    onChange={e => setFormData({ ...formData, Cycle_Type: e.target.value })}
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
+                                <div
+                                    onClick={() => setShowCycleType(!showCycleType)}
+                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <option value="Annual">Annual</option>
-                                    <option value="Probation">Probation</option>
-                                    <option value="Quarterly">Quarterly</option>
-                                </select>
+                                    <span>{formData.Cycle_Type || 'SELECT_TYPE'}</span>
+                                    <span className="text-muted">▼</span>
+                                </div>
+                                {showCycleType && (
+                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                        {['Annual', 'Probation', 'Quarterly'].map((opt) => (
+                                            <div
+                                                key={opt}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData({ ...formData, Cycle_Type: opt });
+                                                    setShowCycleType(false);
+                                                }}
+                                            >
+                                                {opt}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <div className="grid grid-cols-2 gap-4">
                                 <div>

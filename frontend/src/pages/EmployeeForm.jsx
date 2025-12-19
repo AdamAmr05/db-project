@@ -14,6 +14,13 @@ const EmployeeForm = () => {
     const [departments, setDepartments] = useState([]);
     const [contracts, setContracts] = useState([]);
 
+    // Dropdown visibility states
+    const [showGender, setShowGender] = useState(false);
+    const [showStatus, setShowStatus] = useState(false);
+    const [showDept, setShowDept] = useState(false);
+    const [showJob, setShowJob] = useState(false);
+    const [showContract, setShowContract] = useState(false);
+
     const [formData, setFormData] = useState({
         First_Name: '',
         Middle_Name: '',
@@ -176,19 +183,33 @@ const EmployeeForm = () => {
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 relative">
                             <label className="text-xs font-mono text-muted uppercase">Gender</label>
-                            <select
-                                name="Gender"
-                                value={formData.Gender}
-                                onChange={handleChange}
-                                className="cyber-input"
-                                required
+                            <div
+                                onClick={() => setShowGender(!showGender)}
+                                className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <option value="">SELECT_GENDER</option>
-                                <option value="Male">Male</option>
-                                <option value="Female">Female</option>
-                            </select>
+                                <span className={formData.Gender ? 'text-white' : 'text-muted'}>
+                                    {formData.Gender || 'SELECT_GENDER'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showGender && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Male', 'Female'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Gender: opt }));
+                                                setShowGender(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-2">
@@ -241,19 +262,33 @@ const EmployeeForm = () => {
                             />
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 relative">
                             <label className="text-xs font-mono text-muted uppercase">Employment Status</label>
-                            <select
-                                name="Employment_Status"
-                                value={formData.Employment_Status}
-                                onChange={handleChange}
-                                className="cyber-input"
+                            <div
+                                onClick={() => setShowStatus(!showStatus)}
+                                className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <option value="Active">Active</option>
-                                <option value="Probation">Probation</option>
-                                <option value="Leave">Leave</option>
-                                <option value="Retired">Retired</option>
-                            </select>
+                                <span className={formData.Employment_Status ? 'text-white' : 'text-muted'}>
+                                    {formData.Employment_Status || 'SELECT_STATUS'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showStatus && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Active', 'Probation', 'Leave', 'Retired'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Employment_Status: opt }));
+                                                setShowStatus(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-2">
@@ -283,55 +318,91 @@ const EmployeeForm = () => {
 
                 <CyberCard title="Job Assignment" className="mb-6">
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
+                        <div className="space-y-2 relative">
                             <label className="text-xs font-mono text-muted uppercase">Department</label>
-                            <select
-                                name="Department_ID"
-                                value={formData.Department_ID}
-                                onChange={handleChange}
-                                className="cyber-input"
+                            <div
+                                onClick={() => setShowDept(!showDept)}
+                                className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <option value="">SELECT_DEPARTMENT</option>
-                                {departments.map(dept => (
-                                    <option key={dept.Department_ID} value={dept.Department_ID}>
-                                        {dept.Department_Name}
-                                    </option>
-                                ))}
-                            </select>
+                                <span className={formData.Department_ID ? 'text-white' : 'text-muted'}>
+                                    {departments.find(d => d.Department_ID === Number(formData.Department_ID))?.Department_Name || 'SELECT_DEPARTMENT'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showDept && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {departments.map(dept => (
+                                        <div
+                                            key={dept.Department_ID}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Department_ID: dept.Department_ID }));
+                                                setShowDept(false);
+                                            }}
+                                        >
+                                            {dept.Department_Name}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 relative">
                             <label className="text-xs font-mono text-muted uppercase">Job Role</label>
-                            <select
-                                name="Job_ID"
-                                value={formData.Job_ID}
-                                onChange={handleChange}
-                                className="cyber-input"
+                            <div
+                                onClick={() => setShowJob(!showJob)}
+                                className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <option value="">SELECT_JOB</option>
-                                {filteredJobs.map(job => (
-                                    <option key={job.Job_ID} value={job.Job_ID}>
-                                        {job.Job_Title}
-                                    </option>
-                                ))}
-                            </select>
+                                <span className={formData.Job_ID ? 'text-white' : 'text-muted'}>
+                                    {filteredJobs.find(j => j.Job_ID === Number(formData.Job_ID))?.Job_Title || 'SELECT_JOB'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showJob && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {filteredJobs.map(job => (
+                                        <div
+                                            key={job.Job_ID}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Job_ID: job.Job_ID }));
+                                                setShowJob(false);
+                                            }}
+                                        >
+                                            {job.Job_Title}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div className="space-y-2">
+                        <div className="space-y-2 relative">
                             <label className="text-xs font-mono text-muted uppercase">Contract Type</label>
-                            <select
-                                name="Contract_ID"
-                                value={formData.Contract_ID}
-                                onChange={handleChange}
-                                className="cyber-input"
+                            <div
+                                onClick={() => setShowContract(!showContract)}
+                                className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <option value="">SELECT_CONTRACT</option>
-                                {contracts.map(contract => (
-                                    <option key={contract.Contract_ID} value={contract.Contract_ID}>
-                                        {contract.Contract_Name}
-                                    </option>
-                                ))}
-                            </select>
+                                <span className={formData.Contract_ID ? 'text-white' : 'text-muted'}>
+                                    {contracts.find(c => c.Contract_ID === Number(formData.Contract_ID))?.Contract_Name || 'SELECT_CONTRACT'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showContract && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {contracts.map(contract => (
+                                        <div
+                                            key={contract.Contract_ID}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Contract_ID: contract.Contract_ID }));
+                                                setShowContract(false);
+                                            }}
+                                        >
+                                            {contract.Contract_Name}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="space-y-2">

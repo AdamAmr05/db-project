@@ -25,6 +25,11 @@ const DepartmentForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Dropdown visibility states
+    const [showType, setShowType] = useState(false);
+    const [showFaculty, setShowFaculty] = useState(false);
+    const [showUniversity, setShowUniversity] = useState(false);
+
     useEffect(() => {
         loadMetadata();
         if (isEdit) {
@@ -145,55 +150,91 @@ const DepartmentForm = () => {
                         </div>
 
                         {/* Type */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">DEPARTMENT TYPE</label>
-                            <select
-                                name="Department_Type"
-                                value={formData.Department_Type}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowType(!showType)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Academic">Academic</option>
-                                <option value="Administrative">Administrative</option>
-                            </select>
+                                <span>{formData.Department_Type || 'SELECT_TYPE'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showType && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Academic', 'Administrative'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Department_Type: opt }));
+                                                setShowType(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Conditional Dropdowns */}
                         {formData.Department_Type === 'Academic' ? (
-                            <div>
+                            <div className="relative">
                                 <label className="block text-xs font-mono text-muted mb-1">FACULTY</label>
-                                <select
-                                    name="Faculty_ID"
-                                    value={formData.Faculty_ID}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                <div
+                                    onClick={() => setShowFaculty(!showFaculty)}
+                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <option value="">SELECT FACULTY</option>
-                                    {faculties.map(f => (
-                                        <option key={f.Faculty_ID} value={f.Faculty_ID}>
-                                            {f.Faculty_Name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <span className={formData.Faculty_ID ? 'text-white' : 'text-muted'}>
+                                        {faculties.find(f => f.Faculty_ID === Number(formData.Faculty_ID))?.Faculty_Name || 'SELECT FACULTY'}
+                                    </span>
+                                    <span className="text-muted">▼</span>
+                                </div>
+                                {showFaculty && (
+                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                        {faculties.map(f => (
+                                            <div
+                                                key={f.Faculty_ID}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, Faculty_ID: f.Faculty_ID }));
+                                                    setShowFaculty(false);
+                                                }}
+                                            >
+                                                {f.Faculty_Name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         ) : (
-                            <div>
+                            <div className="relative">
                                 <label className="block text-xs font-mono text-muted mb-1">UNIVERSITY</label>
-                                <select
-                                    name="University_ID"
-                                    value={formData.University_ID}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                <div
+                                    onClick={() => setShowUniversity(!showUniversity)}
+                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <option value="">SELECT UNIVERSITY</option>
-                                    {universities.map(u => (
-                                        <option key={u.University_ID} value={u.University_ID}>
-                                            {u.University_Name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <span className={formData.University_ID ? 'text-white' : 'text-muted'}>
+                                        {universities.find(u => u.University_ID === Number(formData.University_ID))?.University_Name || 'SELECT UNIVERSITY'}
+                                    </span>
+                                    <span className="text-muted">▼</span>
+                                </div>
+                                {showUniversity && (
+                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                        {universities.map(u => (
+                                            <div
+                                                key={u.University_ID}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, University_ID: u.University_ID }));
+                                                    setShowUniversity(false);
+                                                }}
+                                            >
+                                                {u.University_Name}
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                         )}
 

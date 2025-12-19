@@ -285,8 +285,17 @@ const Dashboard = () => {
                                 <XAxis type="number" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} />
                                 <YAxis type="category" dataKey="name" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} width={100} />
                                 <Tooltip
-                                    contentStyle={{ backgroundColor: '#000', border: '1px solid #333' }}
+                                    contentStyle={{ backgroundColor: '#000', border: '1px solid #333', maxWidth: '300px' }}
                                     itemStyle={{ color: '#fff' }}
+                                    labelStyle={{ color: '#fff', fontWeight: 'bold', whiteSpace: 'normal' }}
+                                    formatter={(value, name, props) => [value, name]}
+                                    labelFormatter={(label, payload) => {
+                                        // Ensure we get the full name from the payload if available, else standard label
+                                        if (payload && payload.length > 0 && payload[0].payload && payload[0].payload.name) {
+                                            return payload[0].payload.name;
+                                        }
+                                        return label;
+                                    }}
                                 />
                                 <Bar dataKey="Assigned" fill="#06b6d4" barSize={12} />
                                 <Bar dataKey="Completed" fill="#3b82f6" barSize={12} />

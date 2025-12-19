@@ -26,8 +26,17 @@ const TrainingProgramForm = () => {
     const [allEmployees, setAllEmployees] = useState([]);
     const [selectedEmployee, setSelectedEmployee] = useState('');
 
+    // Subtype suggestions
+    const [existingSubtypes, setExistingSubtypes] = useState([]);
+    const [showSuggestions, setShowSuggestions] = useState(false);
+
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+
+    // Dropdown visibility states
+    const [showStatus, setShowStatus] = useState(false);
+    const [showType, setShowType] = useState(false);
+    const [showDelivery, setShowDelivery] = useState(false);
 
     // Certificate modal state
     const [showCertModal, setShowCertModal] = useState(false);
@@ -37,8 +46,8 @@ const TrainingProgramForm = () => {
     useEffect(() => {
         if (isEdit) {
             loadProgram();
-            loadEmployees();
         }
+        loadMetadata(); // Always load employees and subtypes
     }, [id]);
 
     const loadProgram = async () => {
@@ -67,12 +76,18 @@ const TrainingProgramForm = () => {
         }
     };
 
-    const loadEmployees = async () => {
+    const loadMetadata = async () => {
         try {
-            const res = await api.get('/employees');
-            setAllEmployees(res.data.data);
+            // Load employees
+            const empRes = await api.get('/employees');
+            setAllEmployees(empRes.data.data);
+
+            // Load existing programs to extract subtypes
+            const progRes = await trainingService.getAll();
+            const subtypes = [...new Set(progRes.data.data.map(p => p.Subtype).filter(Boolean))];
+            setExistingSubtypes(subtypes.sort());
         } catch (err) {
-            console.error('Error loading employees:', err);
+            console.error('Error loading metadata:', err);
         }
     };
 
@@ -215,59 +230,121 @@ const TrainingProgramForm = () => {
                             />
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">STATUS</label>
-                            <select
-                                name="Approval_Status"
-                                value={formData.Approval_Status}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowStatus(!showStatus)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Pending">Pending</option>
-                                <option value="Approved">Approved</option>
-                                <option value="Rejected">Rejected</option>
-                            </select>
+                                <span>{formData.Approval_Status || 'SELECT_STATUS'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showStatus && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Pending', 'Approved', 'Rejected'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Approval_Status: opt }));
+                                                setShowStatus(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">TYPE</label>
-                            <select
-                                name="Type"
-                                value={formData.Type}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowType(!showType)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Technical">Technical</option>
-                                <option value="Soft Skills">Soft Skills</option>
-                                <option value="Compliance">Compliance</option>
-                                <option value="Leadership">Leadership</option>
-                            </select>
+                                <span>{formData.Type || 'SELECT_TYPE'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showType && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Technical', 'Soft Skills', 'Compliance', 'Leadership'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Type: opt }));
+                                                setShowType(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">SUBTYPE</label>
-                            <input
-                                type="text"
-                                name="Subtype"
-                                value={formData.Subtype}
-                                onChange={handleChange}
-                                placeholder="e.g. Cloud, Security, Coaching"
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
-                            />
+                            <div className="relative flex items-center">
+                                <input
+                                    type="text"
+                                    name="Subtype"
+                                    value={formData.Subtype}
+                                    onChange={handleChange}
+                                    onFocus={() => setShowSuggestions(true)}
+                                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                                    placeholder="e.g. Cloud, Security, Coaching"
+                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 pr-8 text-white focus:outline-none focus:border-primary font-mono"
+                                    autoComplete="off"
+                                />
+                                <span className="absolute right-3 text-muted pointer-events-none">▼</span>
+                            </div>
+                            {showSuggestions && existingSubtypes.length > 0 && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {existingSubtypes
+                                        .filter(s => s.toLowerCase().includes(formData.Subtype.toLowerCase()))
+                                        .map((s, i) => (
+                                            <div
+                                                key={i}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, Subtype: s }));
+                                                    setShowSuggestions(false);
+                                                }}
+                                            >
+                                                {s}
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
                         </div>
 
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">DELIVERY METHOD</label>
-                            <select
-                                name="Delivery_Method"
-                                value={formData.Delivery_Method}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowDelivery(!showDelivery)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Online">Online</option>
-                                <option value="In-Person">In-Person</option>
-                                <option value="Hybrid">Hybrid</option>
-                            </select>
+                                <span>{formData.Delivery_Method || 'SELECT_METHOD'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showDelivery && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Online', 'In-Person', 'Hybrid'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Delivery_Method: opt }));
+                                                setShowDelivery(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         <div className="md:col-span-2">
@@ -290,170 +367,174 @@ const TrainingProgramForm = () => {
                         <Save className="w-5 h-5" />
                         {loading ? 'SAVING...' : (isEdit ? 'UPDATE PROGRAM' : 'CREATE PROGRAM')}
                     </button>
-                </CyberCard>
-            </form>
+                </CyberCard >
+            </form >
 
             {/* Enrollment Section (Only visible in Edit Mode) */}
-            {isEdit && (
-                <div className="space-y-4">
-                    <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
-                        <GraduationCap className="w-5 h-5 text-primary" />
-                        ENROLLMENT MANAGEMENT
-                    </h2>
+            {
+                isEdit && (
+                    <div className="space-y-4">
+                        <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                            <GraduationCap className="w-5 h-5 text-primary" />
+                            ENROLLMENT MANAGEMENT
+                        </h2>
 
-                    <CyberCard>
-                        {/* Enroll New Employee */}
-                        <div className="bg-white/5 p-4 rounded border border-white/10 mb-6">
-                            <label className="block text-xs font-mono text-muted mb-2">ENROLL EMPLOYEE</label>
-                            <div className="flex gap-2">
-                                <select
-                                    value={selectedEmployee}
-                                    onChange={(e) => setSelectedEmployee(e.target.value)}
-                                    className="flex-1 bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono appearance-none"
-                                >
-                                    <option value="">SELECT EMPLOYEE TO ENROLL</option>
-                                    {allEmployees
-                                        .filter(emp => !enrollments.some(enr => enr.Employee_ID === emp.Employee_ID))
-                                        .map(emp => (
-                                            <option key={emp.Employee_ID} value={emp.Employee_ID}>
-                                                {emp.First_Name} {emp.Last_Name} ({emp.Job_Title || 'No Job'})
-                                            </option>
-                                        ))}
-                                </select>
-                                <button
-                                    onClick={handleEnroll}
-                                    disabled={!selectedEmployee}
-                                    className="bg-primary text-black px-4 py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
-                                >
-                                    ENROLL
-                                </button>
+                        <CyberCard>
+                            {/* Enroll New Employee */}
+                            <div className="bg-white/5 p-4 rounded border border-white/10 mb-6">
+                                <label className="block text-xs font-mono text-muted mb-2">ENROLL EMPLOYEE</label>
+                                <div className="flex gap-2">
+                                    <select
+                                        value={selectedEmployee}
+                                        onChange={(e) => setSelectedEmployee(e.target.value)}
+                                        className="flex-1 bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono appearance-none"
+                                    >
+                                        <option value="">SELECT EMPLOYEE TO ENROLL</option>
+                                        {allEmployees
+                                            .filter(emp => !enrollments.some(enr => enr.Employee_ID === emp.Employee_ID))
+                                            .map(emp => (
+                                                <option key={emp.Employee_ID} value={emp.Employee_ID}>
+                                                    {emp.First_Name} {emp.Last_Name} ({emp.Job_Title || 'No Job'})
+                                                </option>
+                                            ))}
+                                    </select>
+                                    <button
+                                        onClick={handleEnroll}
+                                        disabled={!selectedEmployee}
+                                        className="bg-primary text-black px-4 py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                                    >
+                                        ENROLL
+                                    </button>
+                                </div>
                             </div>
-                        </div>
 
-                        {/* List Enrollments */}
-                        <div className="overflow-x-auto">
-                            <table className="w-full text-left border-collapse">
-                                <thead>
-                                    <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase">
-                                        <th className="p-4">Employee</th>
-                                        <th className="p-4">Status</th>
-                                        <th className="p-4">Certificate</th>
-                                        <th className="p-4 text-right">Update Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    {enrollments.length === 0 && (
-                                        <tr>
-                                            <td colSpan="4" className="p-8 text-center text-muted font-mono text-sm">
-                                                NO EMPLOYEES ENROLLED
-                                            </td>
+                            {/* List Enrollments */}
+                            <div className="overflow-x-auto">
+                                <table className="w-full text-left border-collapse">
+                                    <thead>
+                                        <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase">
+                                            <th className="p-4">Employee</th>
+                                            <th className="p-4">Status</th>
+                                            <th className="p-4">Certificate</th>
+                                            <th className="p-4 text-right">Update Status</th>
                                         </tr>
-                                    )}
-                                    {enrollments.map((enr) => (
-                                        <tr key={enr.ET_ID} className="border-b border-white/5 hover:bg-white/5 transition-colors">
-                                            <td className="p-4">
-                                                <div className="font-bold text-white">{enr.First_Name} {enr.Last_Name}</div>
-                                                <div className="text-xs text-muted">{enr.Email}</div>
-                                            </td>
-                                            <td className="p-4">
-                                                <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${enr.Completion_Status === 'Completed' ? 'bg-green-500/20 text-green-500' :
-                                                    enr.Completion_Status === 'Enrolled' ? 'bg-blue-500/20 text-blue-500' :
-                                                        'bg-red-500/20 text-red-500'
-                                                    }`}>
-                                                    {enr.Completion_Status}
-                                                </span>
-                                            </td>
-                                            <td className="p-4 text-sm text-muted">
-                                                {enr.certificates && enr.certificates.length > 0 ? (
-                                                    <div className="space-y-1">
-                                                        {enr.certificates.map(cert => (
-                                                            <div key={cert.Certificate_ID} className="flex items-center gap-2">
-                                                                <span className="text-[10px] font-mono bg-white/10 text-white px-2 py-0.5 rounded">
-                                                                    {cert.certificate_file_path || 'No path'}
-                                                                </span>
-                                                                {cert.Issue_Date && (
-                                                                    <span className="text-[10px] text-muted">
-                                                                        {new Date(cert.Issue_Date).toLocaleDateString()}
+                                    </thead>
+                                    <tbody>
+                                        {enrollments.length === 0 && (
+                                            <tr>
+                                                <td colSpan="4" className="p-8 text-center text-muted font-mono text-sm">
+                                                    NO EMPLOYEES ENROLLED
+                                                </td>
+                                            </tr>
+                                        )}
+                                        {enrollments.map((enr) => (
+                                            <tr key={enr.ET_ID} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                                <td className="p-4">
+                                                    <div className="font-bold text-white">{enr.First_Name} {enr.Last_Name}</div>
+                                                    <div className="text-xs text-muted">{enr.Email}</div>
+                                                </td>
+                                                <td className="p-4">
+                                                    <span className={`px-2 py-0.5 rounded text-[10px] uppercase font-bold ${enr.Completion_Status === 'Completed' ? 'bg-green-500/20 text-green-500' :
+                                                        enr.Completion_Status === 'Enrolled' ? 'bg-blue-500/20 text-blue-500' :
+                                                            'bg-red-500/20 text-red-500'
+                                                        }`}>
+                                                        {enr.Completion_Status}
+                                                    </span>
+                                                </td>
+                                                <td className="p-4 text-sm text-muted">
+                                                    {enr.certificates && enr.certificates.length > 0 ? (
+                                                        <div className="space-y-1">
+                                                            {enr.certificates.map(cert => (
+                                                                <div key={cert.Certificate_ID} className="flex items-center gap-2">
+                                                                    <span className="text-[10px] font-mono bg-white/10 text-white px-2 py-0.5 rounded">
+                                                                        {cert.certificate_file_path || 'No path'}
                                                                     </span>
-                                                                )}
-                                                            </div>
-                                                        ))}
+                                                                    {cert.Issue_Date && (
+                                                                        <span className="text-[10px] text-muted">
+                                                                            {new Date(cert.Issue_Date).toLocaleDateString()}
+                                                                        </span>
+                                                                    )}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <span className="text-xs text-muted">—</span>
+                                                    )}
+                                                </td>
+                                                <td className="p-4 text-right">
+                                                    <div className="flex justify-end gap-2">
+                                                        {enr.Completion_Status !== 'Completed' && (
+                                                            <button
+                                                                onClick={() => handleStatusClick(enr.Employee_ID, 'Completed')}
+                                                                title="Mark as Completed"
+                                                                className="p-1.5 hover:bg-green-500/20 rounded text-muted hover:text-green-500 transition-colors"
+                                                            >
+                                                                <CheckCircle className="w-4 h-4" />
+                                                            </button>
+                                                        )}
+                                                        {enr.Completion_Status !== 'Failed' && (
+                                                            <button
+                                                                onClick={() => handleStatusClick(enr.Employee_ID, 'Failed')}
+                                                                title="Mark as Failed"
+                                                                className="p-1.5 hover:bg-red-500/20 rounded text-muted hover:text-red-500 transition-colors"
+                                                            >
+                                                                <XCircle className="w-4 h-4" />
+                                                            </button>
+                                                        )}
+                                                        <button
+                                                            onClick={() => handleUnenroll(enr.Employee_ID)}
+                                                            title="Remove from Program"
+                                                            className="p-1.5 hover:bg-white/10 rounded text-muted hover:text-white transition-colors"
+                                                        >
+                                                            <Trash2 className="w-4 h-4" />
+                                                        </button>
                                                     </div>
-                                                ) : (
-                                                    <span className="text-xs text-muted">—</span>
-                                                )}
-                                            </td>
-                                            <td className="p-4 text-right">
-                                                <div className="flex justify-end gap-2">
-                                                    {enr.Completion_Status !== 'Completed' && (
-                                                        <button
-                                                            onClick={() => handleStatusClick(enr.Employee_ID, 'Completed')}
-                                                            title="Mark as Completed"
-                                                            className="p-1.5 hover:bg-green-500/20 rounded text-muted hover:text-green-500 transition-colors"
-                                                        >
-                                                            <CheckCircle className="w-4 h-4" />
-                                                        </button>
-                                                    )}
-                                                    {enr.Completion_Status !== 'Failed' && (
-                                                        <button
-                                                            onClick={() => handleStatusClick(enr.Employee_ID, 'Failed')}
-                                                            title="Mark as Failed"
-                                                            className="p-1.5 hover:bg-red-500/20 rounded text-muted hover:text-red-500 transition-colors"
-                                                        >
-                                                            <XCircle className="w-4 h-4" />
-                                                        </button>
-                                                    )}
-                                                    <button
-                                                        onClick={() => handleUnenroll(enr.Employee_ID)}
-                                                        title="Remove from Program"
-                                                        className="p-1.5 hover:bg-white/10 rounded text-muted hover:text-white transition-colors"
-                                                    >
-                                                        <Trash2 className="w-4 h-4" />
-                                                    </button>
-                                                </div>
-                                            </td>
-                                        </tr>
-                                    ))}
-                                </tbody>
-                            </table>
-                        </div>
-                    </CyberCard>
-                </div>
-            )}
+                                                </td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </CyberCard>
+                    </div>
+                )
+            }
 
             {/* Certificate Modal */}
-            {showCertModal && (
-                <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-                    <CyberCard className="w-full max-w-md border border-primary/50">
-                        <h3 className="text-lg font-bold text-white mb-4">Issue Certificate</h3>
-                        <p className="text-sm text-muted mb-3">
-                            Mark enrollment as completed and optionally attach a certificate file path.
-                        </p>
-                        <input
-                            type="text"
-                            value={certPath}
-                            onChange={(e) => setCertPath(e.target.value)}
-                            placeholder="e.g. /certs/et-16.pdf"
-                            className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:border-primary focus:outline-none font-mono mb-4"
-                        />
-                        <div className="flex justify-end gap-3">
-                            <button
-                                onClick={handleCertCancel}
-                                className="text-muted text-sm hover:text-white"
-                            >
-                                Cancel
-                            </button>
-                            <button
-                                onClick={handleCertConfirm}
-                                className="bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90"
-                            >
-                                Confirm
-                            </button>
-                        </div>
-                    </CyberCard>
-                </div>
-            )}
-        </div>
+            {
+                showCertModal && (
+                    <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
+                        <CyberCard className="w-full max-w-md border border-primary/50">
+                            <h3 className="text-lg font-bold text-white mb-4">Issue Certificate</h3>
+                            <p className="text-sm text-muted mb-3">
+                                Mark enrollment as completed and optionally attach a certificate file path.
+                            </p>
+                            <input
+                                type="text"
+                                value={certPath}
+                                onChange={(e) => setCertPath(e.target.value)}
+                                placeholder="e.g. /certs/et-16.pdf"
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:border-primary focus:outline-none font-mono mb-4"
+                            />
+                            <div className="flex justify-end gap-3">
+                                <button
+                                    onClick={handleCertCancel}
+                                    className="text-muted text-sm hover:text-white"
+                                >
+                                    Cancel
+                                </button>
+                                <button
+                                    onClick={handleCertConfirm}
+                                    className="bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90"
+                                >
+                                    Confirm
+                                </button>
+                            </div>
+                        </CyberCard>
+                    </div>
+                )
+            }
+        </div >
     );
 };
 

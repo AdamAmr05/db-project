@@ -3,7 +3,7 @@ import clsx from 'clsx';
 
 const CyberCard = ({ children, className, title, icon: Icon, dither = false }) => {
     return (
-        <div className={clsx('cyber-card flex flex-col', className)}>
+        <div className={clsx('cyber-card flex flex-col overflow-visible', className)}>
             {dither && (
                 <div className="absolute inset-0 dither-bg opacity-20 pointer-events-none" />
             )}

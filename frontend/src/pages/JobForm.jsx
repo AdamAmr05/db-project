@@ -34,6 +34,12 @@ const JobForm = () => {
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
 
+    // Dropdown visibility states
+    const [showDept, setShowDept] = useState(false);
+    const [showLevel, setShowLevel] = useState(false);
+    const [showGrade, setShowGrade] = useState(false);
+    const [showReportsTo, setShowReportsTo] = useState(false);
+
     // Objectives State
     const [objectives, setObjectives] = useState([]);
     const [showObjForm, setShowObjForm] = useState(false);
@@ -234,56 +240,92 @@ const JobForm = () => {
                         </div>
 
                         {/* Department */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">DEPARTMENT</label>
                             <div className="relative">
                                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
-                                <select
-                                    name="Department_ID"
-                                    value={formData.Department_ID}
-                                    onChange={handleChange}
-                                    required
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono appearance-none"
+                                <div
+                                    onClick={() => setShowDept(!showDept)}
+                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <option value="">SELECT DEPARTMENT</option>
-                                    {departments.map(d => (
-                                        <option key={d.Department_ID} value={d.Department_ID}>
-                                            {d.Department_Name}
-                                        </option>
-                                    ))}
-                                </select>
+                                    <span className={formData.Department_ID ? 'text-white' : 'text-muted'}>
+                                        {departments.find(d => d.Department_ID === Number(formData.Department_ID))?.Department_Name || 'SELECT DEPARTMENT'}
+                                    </span>
+                                    <span className="text-muted">▼</span>
+                                </div>
                             </div>
+                            {showDept && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {departments.map(d => (
+                                        <div
+                                            key={d.Department_ID}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Department_ID: d.Department_ID }));
+                                                setShowDept(false);
+                                            }}
+                                        >
+                                            {d.Department_Name}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Level */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">LEVEL</label>
-                            <select
-                                name="Job_Level"
-                                value={formData.Job_Level}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowLevel(!showLevel)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Entry">Entry</option>
-                                <option value="Mid">Mid</option>
-                                <option value="Senior">Senior</option>
-                                <option value="Executive">Executive</option>
-                            </select>
+                                <span>{formData.Job_Level || 'SELECT_LEVEL'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showLevel && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Entry', 'Mid', 'Senior', 'Executive'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Job_Level: opt }));
+                                                setShowLevel(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Grade */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">GRADE</label>
-                            <select
-                                name="Job_Grade"
-                                value={formData.Job_Grade}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            <div
+                                onClick={() => setShowGrade(!showGrade)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="Grade A">Grade A</option>
-                                <option value="Grade B">Grade B</option>
-                                <option value="Grade C">Grade C</option>
-                            </select>
+                                <span>{formData.Job_Grade || 'SELECT_GRADE'}</span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showGrade && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    {['Grade A', 'Grade B', 'Grade C'].map((opt) => (
+                                        <div
+                                            key={opt}
+                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            onClick={() => {
+                                                setFormData(prev => ({ ...prev, Job_Grade: opt }));
+                                                setShowGrade(false);
+                                            }}
+                                        >
+                                            {opt}
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* Category */}
@@ -321,23 +363,44 @@ const JobForm = () => {
                         </div>
 
                         {/* Reports To */}
-                        <div>
+                        <div className="relative">
                             <label className="block text-xs font-mono text-muted mb-1">REPORTS TO (SUPERIOR JOB)</label>
-                            <select
-                                name="Reports_To"
-                                value={formData.Reports_To}
-                                onChange={handleChange}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono appearance-none"
+                            <div
+                                onClick={() => setShowReportsTo(!showReportsTo)}
+                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <option value="">NO SUPERIOR</option>
-                                {potentialManagers
-                                    .filter(j => j.Job_ID !== parseInt(id)) // Prevent self-reference
-                                    .map(job => (
-                                        <option key={job.Job_ID} value={job.Job_ID}>
-                                            {job.Job_Title} ({job.Job_Code})
-                                        </option>
-                                    ))}
-                            </select>
+                                <span className={formData.Reports_To ? 'text-white' : 'text-muted'}>
+                                    {potentialManagers.find(j => j.Job_ID === Number(formData.Reports_To))?.Job_Title || 'NO SUPERIOR'}
+                                </span>
+                                <span className="text-muted">▼</span>
+                            </div>
+                            {showReportsTo && (
+                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    <div
+                                        className="px-4 py-2 text-xs font-mono text-muted hover:bg-primary/20 cursor-pointer"
+                                        onClick={() => {
+                                            setFormData(prev => ({ ...prev, Reports_To: '' }));
+                                            setShowReportsTo(false);
+                                        }}
+                                    >
+                                        NO SUPERIOR
+                                    </div>
+                                    {potentialManagers
+                                        .filter(j => j.Job_ID !== parseInt(id))
+                                        .map(job => (
+                                            <div
+                                                key={job.Job_ID}
+                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                onClick={() => {
+                                                    setFormData(prev => ({ ...prev, Reports_To: job.Job_ID }));
+                                                    setShowReportsTo(false);
+                                                }}
+                                            >
+                                                {job.Job_Title} ({job.Job_Code})
+                                            </div>
+                                        ))}
+                                </div>
+                            )}
                         </div>
                     </div>
 

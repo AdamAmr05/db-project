@@ -128,80 +128,99 @@ const EmployeeAppraisal = () => {
             </div>
 
             {/* Objectives Loop */}
-            {data.objectives.map((obj, index) => (
-                <CyberCard key={obj.Objective_ID} className="group border-l-4 border-l-green-500">
-                    <div className="flex justify-between items-start mb-6">
-                        <div className="flex items-start gap-4">
-                            <div className="p-2 border border-green-500/30">
-                                <Target className="w-5 h-5 text-green-400" />
-                            </div>
-                            <div>
-                                <h3 className="text-lg font-bold text-white">{obj.Title}</h3>
-                                <p className="text-sm text-muted mt-1">{obj.Description}</p>
-                            </div>
+            {data.objectives.length === 0 ? (
+                <CyberCard className="border-l-4 border-l-yellow-500">
+                    <div className="flex items-start gap-4">
+                        <div className="p-2 border border-yellow-500/30">
+                            <AlertCircle className="w-5 h-5 text-yellow-400" />
                         </div>
-                        <div className="text-xs font-mono px-2 py-1 bg-surface border border-border">
-                            WEIGHT: {obj.Weight}%
+                        <div>
+                            <h3 className="text-lg font-bold text-white">No Objectives Configured</h3>
+                            <p className="text-sm text-muted mt-2">
+                                This employee's job role does not have any objectives or KPIs assigned yet.
+                            </p>
+                            <p className="text-xs text-muted mt-2 font-mono">
+                                To enable full performance tracking, an administrator should add objectives and KPIs to the JOB_OBJECTIVE and OBJECTIVE_KPI tables for this job.
+                            </p>
                         </div>
-                    </div>
-
-                    {/* KPIs Table */}
-                    <div className="overflow-x-auto">
-                        <table className="w-full text-sm text-left">
-                            <thead className="bg-surface text-muted text-xs uppercase font-mono">
-                                <tr>
-                                    <th className="px-4 py-3 min-w-[200px]">KPI Metric</th>
-                                    <th className="px-4 py-3">Target</th>
-                                    <th className="px-4 py-3">Actual</th>
-                                    <th className="px-4 py-3">Score (1-5)</th>
-                                    <th className="px-4 py-3 min-w-[200px]">Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody className="divide-y divide-border">
-                                {obj.KPIs.map(kpi => (
-                                    <tr key={kpi.KPI_ID} className="hover:bg-white/5 transition-colors">
-                                        <td className="px-4 py-3 align-top">
-                                            <div className="font-medium text-white">{kpi.KPI_Name}</div>
-                                            <div className="text-xs text-muted mt-1">{kpi.Description}</div>
-                                            <div className="text-[10px] text-green-500 mt-1 font-mono">WEIGHT: {kpi.Weight}%</div>
-                                        </td>
-                                        <td className="px-4 py-3 align-top font-mono">
-                                            {kpi.Target} <span className="text-[10px] text-muted">{kpi.Unit}</span>
-                                        </td>
-                                        <td className="px-4 py-3 align-top">
-                                            <input
-                                                type="number"
-                                                className="bg-black/50 border border-border rounded px-2 py-1 w-24 text-white focus:border-green-500 focus:outline-none font-mono"
-                                                placeholder="Value"
-                                                value={scores[kpi.KPI_ID]?.actual}
-                                                onChange={(e) => handleScoreChange(kpi.KPI_ID, 'actual', e.target.value)}
-                                            />
-                                        </td>
-                                        <td className="px-4 py-3 align-top">
-                                            <input
-                                                type="number"
-                                                min="1" max="5" step="0.1"
-                                                className="bg-black/50 border border-border rounded px-2 py-1 w-20 text-white focus:border-green-500 focus:outline-none font-mono"
-                                                placeholder="1-5"
-                                                value={scores[kpi.KPI_ID]?.score}
-                                                onChange={(e) => handleScoreChange(kpi.KPI_ID, 'score', e.target.value)}
-                                            />
-                                        </td>
-                                        <td className="px-4 py-3 align-top">
-                                            <textarea
-                                                className="bg-black/50 border border-border rounded px-2 py-1 w-full text-white focus:border-green-500 focus:outline-none text-xs resize-none h-16"
-                                                placeholder="Optional comments..."
-                                                value={scores[kpi.KPI_ID]?.comments}
-                                                onChange={(e) => handleScoreChange(kpi.KPI_ID, 'comments', e.target.value)}
-                                            />
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
                     </div>
                 </CyberCard>
-            ))}
+            ) : (
+                data.objectives.map((obj, index) => (
+                    <CyberCard key={obj.Objective_ID} className="group border-l-4 border-l-green-500">
+                        <div className="flex justify-between items-start mb-6">
+                            <div className="flex items-start gap-4">
+                                <div className="p-2 border border-green-500/30">
+                                    <Target className="w-5 h-5 text-green-400" />
+                                </div>
+                                <div>
+                                    <h3 className="text-lg font-bold text-white">{obj.Title}</h3>
+                                    <p className="text-sm text-muted mt-1">{obj.Description}</p>
+                                </div>
+                            </div>
+                            <div className="text-xs font-mono px-2 py-1 bg-surface border border-border">
+                                WEIGHT: {obj.Weight}%
+                            </div>
+                        </div>
+
+                        {/* KPIs Table */}
+                        <div className="overflow-x-auto">
+                            <table className="w-full text-sm text-left">
+                                <thead className="bg-surface text-muted text-xs uppercase font-mono">
+                                    <tr>
+                                        <th className="px-4 py-3 min-w-[200px]">KPI Metric</th>
+                                        <th className="px-4 py-3">Target</th>
+                                        <th className="px-4 py-3">Actual</th>
+                                        <th className="px-4 py-3">Score (1-5)</th>
+                                        <th className="px-4 py-3 min-w-[200px]">Comments</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="divide-y divide-border">
+                                    {obj.KPIs.map(kpi => (
+                                        <tr key={kpi.KPI_ID} className="hover:bg-white/5 transition-colors">
+                                            <td className="px-4 py-3 align-top">
+                                                <div className="font-medium text-white">{kpi.KPI_Name}</div>
+                                                <div className="text-xs text-muted mt-1">{kpi.Description}</div>
+                                                <div className="text-[10px] text-green-500 mt-1 font-mono">WEIGHT: {kpi.Weight}%</div>
+                                            </td>
+                                            <td className="px-4 py-3 align-top font-mono">
+                                                {kpi.Target} <span className="text-[10px] text-muted">{kpi.Unit}</span>
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <input
+                                                    type="number"
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-24 text-white focus:border-green-500 focus:outline-none font-mono"
+                                                    placeholder="Value"
+                                                    value={scores[kpi.KPI_ID]?.actual}
+                                                    onChange={(e) => handleScoreChange(kpi.KPI_ID, 'actual', e.target.value)}
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <input
+                                                    type="number"
+                                                    min="1" max="5" step="0.1"
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-20 text-white focus:border-green-500 focus:outline-none font-mono"
+                                                    placeholder="1-5"
+                                                    value={scores[kpi.KPI_ID]?.score}
+                                                    onChange={(e) => handleScoreChange(kpi.KPI_ID, 'score', e.target.value)}
+                                                />
+                                            </td>
+                                            <td className="px-4 py-3 align-top">
+                                                <textarea
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-full text-white focus:border-green-500 focus:outline-none text-xs resize-none h-16"
+                                                    placeholder="Optional comments..."
+                                                    value={scores[kpi.KPI_ID]?.comments}
+                                                    onChange={(e) => handleScoreChange(kpi.KPI_ID, 'comments', e.target.value)}
+                                                />
+                                            </td>
+                                        </tr>
+                                    ))}
+                                </tbody>
+                            </table>
+                        </div>
+                    </CyberCard>
+                ))
+            )}
 
             {/* Manager Comments Section */}
             <CyberCard className="mt-6">
