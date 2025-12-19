@@ -1,0 +1,221 @@
+{
+  "name": "HR Portal Dark Cyber",
+  "background": "#050505",
+  "foreground": "#FFFFFF",
+  "tableAccent": "#22D3EE",
+  "dataColors": [
+    "#22D3EE",
+    "#60A5FA",
+    "#A78BFA",
+    "#34D399",
+    "#FBBF24",
+    "#FB7185",
+    "#F87171",
+    "#E5E7EB",
+    "#10B981",
+    "#FB923C"
+  ],
+  "textClasses": {
+    "title": {
+      "fontSize": 12,
+      "color": "#FFFFFF"
+    },
+    "header": {
+      "fontSize": 10,
+      "color": "#FFFFFF"
+    },
+    "label": {
+      "fontSize": 10,
+      "color": "#B3B3B3"
+    },
+    "callout": {
+      "fontSize": 30,
+      "color": "#FFFFFF"
+    }
+  },
+  "visualStyles": {
+    "card": {
+      "*": {
+        "*": [
+          {
+            "categoryLabels": [
+              {
+                "show": true,
+                "color": {
+                  "solid": {
+                    "color": "#888888"
+                  }
+                },
+                "fontFamily": "Segoe UI",
+                "fontSize": 10
+              }
+            ],
+            "calloutValue": [
+              {
+                "show": true,
+                "color": {
+                  "solid": {
+                    "color": "#FFFFFF"
+                  }
+                },
+                "fontFamily": "Segoe UI Semibold",
+                "fontSize": 34
+              }
+            ],
+            "background": {
+              "color": {
+                "solid": {
+                  "color": "#0A0A0A"
+                }
+              },
+              "transparency": 0
+            },
+            "border": {
+              "show": true,
+              "color": {
+                "solid": {
+                  "color": "#333333"
+                }
+              },
+              "radius": 0
+            }
+          }
+        ]
+      }
+    },
+    "tableEx": {
+      "*": {
+        "*": [
+          {
+            "columnHeaders": {
+              "fontFamily": "Segoe UI Semibold",
+              "fontSize": 10,
+              "fontColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "backColor": {
+                "solid": {
+                  "color": "#151515"
+                }
+              }
+            },
+            "values": {
+              "fontFamily": "Segoe UI",
+              "fontSize": 10,
+              "fontColor": {
+                "solid": {
+                  "color": "#E5E7EB"
+                }
+              },
+              "backColor": {
+                "solid": {
+                  "color": "#0A0A0A"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "matrix": {
+      "*": {
+        "*": [
+          {
+            "columnHeaders": {
+              "fontFamily": "Segoe UI Semibold",
+              "fontSize": 10,
+              "fontColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "backColor": {
+                "solid": {
+                  "color": "#151515"
+                }
+              }
+            },
+            "rowHeaders": {
+              "fontFamily": "Segoe UI Semibold",
+              "fontSize": 10,
+              "fontColor": {
+                "solid": {
+                  "color": "#FFFFFF"
+                }
+              },
+              "backColor": {
+                "solid": {
+                  "color": "#0A0A0A"
+                }
+              }
+            },
+            "values": {
+              "fontFamily": "Segoe UI",
+              "fontSize": 10,
+              "fontColor": {
+                "solid": {
+                  "color": "#E5E7EB"
+                }
+              },
+              "backColor": {
+                "solid": {
+                  "color": "#0A0A0A"
+                }
+              }
+            }
+          }
+        ]
+      }
+    },
+    "slicer": {
+      "*": {
+        "*": [
+          {
+            "title": [
+              {
+                "show": true,
+                "fontFamily": "Segoe UI Semibold",
+                "fontSize": 10,
+                "color": {
+                  "solid": {
+                    "color": "#FFFFFF"
+                  }
+                }
+              }
+            ],
+            "items": [
+              {
+                "fontFamily": "Segoe UI",
+                "fontSize": 10,
+                "fontColor": {
+                  "solid": {
+                    "color": "#E5E7EB"
+                  }
+                }
+              }
+            ],
+            "background": {
+              "color": {
+                "solid": {
+                  "color": "#0A0A0A"
+                }
+              },
+              "transparency": 0
+            },
+            "border": {
+              "show": true,
+              "color": {
+                "solid": {
+                  "color": "#333333"
+                }
+              },
+              "radius": 0
+            }
+          }
+        ]
+      }
+    }
+  }
+}

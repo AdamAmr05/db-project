@@ -1,0 +1,60 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  body {
+    @apply bg-background text-primary font-sans antialiased selection:bg-white selection:text-black;
+  }
+
+  /* Custom Scrollbar */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    @apply bg-background;
+  }
+
+  ::-webkit-scrollbar-thumb {
+    @apply bg-border hover:bg-muted;
+  }
+
+  /* Remove focus outline from Recharts */
+  .recharts-wrapper {
+    outline: none !important;
+  }
+
+  *:focus {
+    outline: none !important;
+  }
+}
+
+@layer components {
+  .cyber-card {
+    @apply bg-surface border border-border p-6 relative overflow-hidden transition-all duration-200;
+  }
+
+  .cyber-card:hover {
+    @apply border-muted;
+  }
+
+  .cyber-button {
+    @apply bg-white text-black px-4 py-2 font-medium transition-all hover:bg-gray-200 active:translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wider;
+  }
+
+  .cyber-button-outline {
+    @apply bg-transparent border border-border text-white px-4 py-2 font-medium transition-all hover:bg-surfaceHighlight hover:border-white active:translate-y-[1px] text-sm uppercase tracking-wider;
+  }
+
+  .cyber-input {
+    @apply bg-surface border border-border px-4 py-2 w-full focus:outline-none focus:border-white transition-colors placeholder:text-muted;
+  }
+
+  .dither-bg {
+    background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H2V2H0V0Z' fill='%23222222' fill-opacity='0.4'/%3E%3C/svg%3E");
+  }
+}
