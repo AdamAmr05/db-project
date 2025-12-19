@@ -171,6 +171,7 @@ const Dashboard = () => {
     // Training data for grouped bar
     const trainingChartData = trainingData.slice(0, 6).map(d => ({
         name: d.Title?.length > 15 ? d.Title.slice(0, 15) + '...' : d.Title,
+        fullName: d.Title, // Store full name for tooltip
         Assigned: Number(d.TotalAssigned) || 0,
         Completed: Number(d.CompletedCount) || 0
     }));
@@ -278,41 +279,45 @@ const Dashboard = () => {
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 {/* Grouped Bar - Training Completion */}
                 <CyberCard title="Training Completion" className="lg:col-span-2 min-h-[350px]">
-                    <div className="text-[10px] text-muted font-mono mb-4 uppercase">Assigned vs Completed</div>
-                    {trainingChartData.length > 0 ? (
-                        <ResponsiveContainer width="100%" height={280}>
-                            <BarChart data={trainingChartData} layout="vertical">
-                                <XAxis type="number" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} />
-                                <YAxis type="category" dataKey="name" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} width={100} />
-                                <Tooltip
-                                    contentStyle={{ backgroundColor: '#000', border: '1px solid #333', maxWidth: '300px' }}
-                                    itemStyle={{ color: '#fff' }}
-                                    labelStyle={{ color: '#fff', fontWeight: 'bold', whiteSpace: 'normal' }}
-                                    formatter={(value, name, props) => [value, name]}
-                                    labelFormatter={(label, payload) => {
-                                        // Ensure we get the full name from the payload if available, else standard label
-                                        if (payload && payload.length > 0 && payload[0].payload && payload[0].payload.name) {
-                                            return payload[0].payload.name;
-                                        }
-                                        return label;
-                                    }}
-                                />
-                                <Bar dataKey="Assigned" fill="#06b6d4" barSize={12} />
-                                <Bar dataKey="Completed" fill="#3b82f6" barSize={12} />
-                            </BarChart>
-                        </ResponsiveContainer>
-                    ) : (
-                        <div className="text-xs text-muted font-mono text-center py-20">NO TRAINING DATA</div>
-                    )}
-                    {/* Legend */}
-                    <div className="flex justify-center gap-6 mt-2">
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-cyan-500" />
-                            <span className="text-[10px] text-muted font-mono">ASSIGNED</span>
-                        </div>
-                        <div className="flex items-center gap-2">
-                            <div className="w-3 h-3 bg-blue-500" />
-                            <span className="text-[10px] text-muted font-mono">COMPLETED</span>
+                    <div className="flex flex-col h-full">
+                        <div className="text-[10px] text-muted font-mono mb-2 uppercase">Assigned vs Completed</div>
+                        {trainingChartData.length > 0 ? (
+                            <div className="flex-1 min-h-0">
+                                <ResponsiveContainer width="100%" height="100%">
+                                    <BarChart data={trainingChartData} layout="vertical" margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
+                                        <XAxis type="number" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} />
+                                        <YAxis type="category" dataKey="name" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} width={100} />
+                                        <Tooltip
+                                            contentStyle={{ backgroundColor: '#000', border: '1px solid #333', maxWidth: '300px' }}
+                                            itemStyle={{ color: '#fff' }}
+                                            labelStyle={{ color: '#fff', whiteSpace: 'normal' }}
+                                            formatter={(value, name, props) => [value, name]}
+                                            labelFormatter={(label, payload) => {
+                                                // Use the full name from the payload for tooltip display
+                                                if (payload && payload.length > 0 && payload[0].payload && payload[0].payload.fullName) {
+                                                    return payload[0].payload.fullName;
+                                                }
+                                                return label;
+                                            }}
+                                        />
+                                        <Bar dataKey="Assigned" fill="#06b6d4" barSize={14} />
+                                        <Bar dataKey="Completed" fill="#3b82f6" barSize={14} />
+                                    </BarChart>
+                                </ResponsiveContainer>
+                            </div>
+                        ) : (
+                            <div className="flex-1 flex items-center justify-center text-xs text-muted font-mono">NO TRAINING DATA</div>
+                        )}
+                        {/* Legend */}
+                        <div className="flex justify-center gap-6 mt-2 pt-2">
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-cyan-500" />
+                                <span className="text-[10px] text-muted font-mono">ASSIGNED</span>
+                            </div>
+                            <div className="flex items-center gap-2">
+                                <div className="w-3 h-3 bg-blue-500" />
+                                <span className="text-[10px] text-muted font-mono">COMPLETED</span>
+                            </div>
                         </div>
                     </div>
                 </CyberCard>

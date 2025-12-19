@@ -75,7 +75,7 @@ const PerformanceAppraisals = () => {
                         placeholder="Search employees..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-surface border border-border pl-10 pr-4 py-2 text-sm text-white focus:border-green-500 focus:outline-none placeholder-muted/50"
+                        className="w-full bg-surface border border-border pl-10 pr-4 py-2 text-sm text-white focus:border-white focus:outline-none placeholder-muted/50"
                     />
                 </div>
             </div>
@@ -89,7 +89,7 @@ const PerformanceAppraisals = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
                     >
-                        <CyberCard className="h-full group hover:border-green-500/50 transition-colors">
+                        <CyberCard className="h-full group hover:border-white/30 transition-colors">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="p-2 border border-border">
                                     <User className="w-5 h-5 text-muted" />
@@ -97,7 +97,7 @@ const PerformanceAppraisals = () => {
                                 <div className={clsx(
                                     "px-2 py-1 rounded text-[10px] font-mono border",
                                     employee.Overall_Score
-                                        ? "bg-green-500/10 border-green-500/20 text-green-400"
+                                        ? "bg-white/10 border-white/20 text-white"
                                         : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
                                 )}>
                                     {employee.Overall_Score ? 'COMPLETED' : 'PENDING'}
@@ -124,7 +124,7 @@ const PerformanceAppraisals = () => {
                                 </div>
                                 <button
                                     onClick={() => navigate(`/performance/appraisals/${cycle.Cycle_ID}/${employee.Assignment_ID}`)}
-                                    className="p-2 border border-border hover:border-green-500 hover:text-green-400 transition-all duration-300"
+                                    className="p-2 border border-border hover:border-white hover:text-white transition-all duration-300"
                                 >
                                     <ChevronRight className="w-4 h-4" />
                                 </button>

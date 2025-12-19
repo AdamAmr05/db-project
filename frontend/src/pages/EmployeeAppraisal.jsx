@@ -147,11 +147,11 @@ const EmployeeAppraisal = () => {
                 </CyberCard>
             ) : (
                 data.objectives.map((obj, index) => (
-                    <CyberCard key={obj.Objective_ID} className="group border-l-4 border-l-green-500">
+                    <CyberCard key={obj.Objective_ID} className="group border-l-4 border-l-white/20">
                         <div className="flex justify-between items-start mb-6">
                             <div className="flex items-start gap-4">
-                                <div className="p-2 border border-green-500/30">
-                                    <Target className="w-5 h-5 text-green-400" />
+                                <div className="p-2 border border-border">
+                                    <Target className="w-5 h-5 text-muted" />
                                 </div>
                                 <div>
                                     <h3 className="text-lg font-bold text-white">{obj.Title}</h3>
@@ -181,7 +181,7 @@ const EmployeeAppraisal = () => {
                                             <td className="px-4 py-3 align-top">
                                                 <div className="font-medium text-white">{kpi.KPI_Name}</div>
                                                 <div className="text-xs text-muted mt-1">{kpi.Description}</div>
-                                                <div className="text-[10px] text-green-500 mt-1 font-mono">WEIGHT: {kpi.Weight}%</div>
+                                                <div className="text-[10px] text-muted mt-1 font-mono">WEIGHT: {kpi.Weight}%</div>
                                             </td>
                                             <td className="px-4 py-3 align-top font-mono">
                                                 {kpi.Target} <span className="text-[10px] text-muted">{kpi.Unit}</span>
@@ -189,7 +189,7 @@ const EmployeeAppraisal = () => {
                                             <td className="px-4 py-3 align-top">
                                                 <input
                                                     type="number"
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-24 text-white focus:border-green-500 focus:outline-none font-mono"
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-24 text-white focus:border-white focus:outline-none font-mono"
                                                     placeholder="Value"
                                                     value={scores[kpi.KPI_ID]?.actual}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'actual', e.target.value)}
@@ -199,7 +199,7 @@ const EmployeeAppraisal = () => {
                                                 <input
                                                     type="number"
                                                     min="1" max="5" step="0.1"
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-20 text-white focus:border-green-500 focus:outline-none font-mono"
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-20 text-white focus:border-white focus:outline-none font-mono"
                                                     placeholder="1-5"
                                                     value={scores[kpi.KPI_ID]?.score}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'score', e.target.value)}
@@ -207,7 +207,7 @@ const EmployeeAppraisal = () => {
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <textarea
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-full text-white focus:border-green-500 focus:outline-none text-xs resize-none h-16"
+                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-full text-white focus:border-white focus:outline-none text-xs resize-none h-16"
                                                     placeholder="Optional comments..."
                                                     value={scores[kpi.KPI_ID]?.comments}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'comments', e.target.value)}
@@ -249,7 +249,7 @@ const EmployeeAppraisal = () => {
                 <button
                     onClick={handleFinalize}
                     disabled={submitting}
-                    className="flex items-center gap-2 bg-green-500 text-black font-bold px-8 py-3 hover:bg-green-400 transition-all shadow-[0_0_20px_rgba(34,211,100,0.2)] ml-auto"
+                    className="flex items-center gap-2 bg-primary text-black font-bold px-8 py-3 hover:bg-primary/90 transition-all ml-auto"
                 >
                     {submitting ? 'PROCESSING...' : (
                         <>
