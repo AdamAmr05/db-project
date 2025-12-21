@@ -4,7 +4,20 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>frontend</title>
+    <title>HR Portal</title>
+    <script>
+      // Apply theme class immediately to prevent flash
+      (function() {
+        try {
+          var theme = localStorage.getItem('hr-portal-theme');
+          if (theme === 'light') {
+            document.documentElement.classList.add('light');
+          } else if (!theme && window.matchMedia('(prefers-color-scheme: light)').matches) {
+            document.documentElement.classList.add('light');
+          }
+        } catch (e) {}
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

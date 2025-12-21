@@ -15,7 +15,7 @@
   --primary: #FFFFFF;
   --secondary: #888888;
   --muted: #888888;
-  --accent: #3B82F6;
+  --accent: #FFFFFF;
 
   /* Inverted colors for hover effects */
   --primary-inverted: #000000;
@@ -43,7 +43,7 @@
   --primary: #111111;
   --secondary: #555555;
   --muted: #777777;
-  --accent: #2563EB;
+  --accent: #111111;
 
   /* Inverted colors for hover effects */
   --primary-inverted: #FFFFFF;

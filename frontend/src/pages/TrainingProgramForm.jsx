@@ -37,6 +37,7 @@ const TrainingProgramForm = () => {
     const [showStatus, setShowStatus] = useState(false);
     const [showType, setShowType] = useState(false);
     const [showDelivery, setShowDelivery] = useState(false);
+    const [showEmployeeDropdown, setShowEmployeeDropdown] = useState(false);
 
     // Certificate modal state
     const [showCertModal, setShowCertModal] = useState(false);
@@ -384,20 +385,40 @@ const TrainingProgramForm = () => {
                             <div className="bg-surfaceHighlight p-4 rounded border border-border mb-6">
                                 <label className="block text-xs font-mono text-muted mb-2">ENROLL EMPLOYEE</label>
                                 <div className="flex gap-2">
-                                    <select
-                                        value={selectedEmployee}
-                                        onChange={(e) => setSelectedEmployee(e.target.value)}
-                                        className="flex-1 bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono appearance-none"
-                                    >
-                                        <option value="">SELECT EMPLOYEE TO ENROLL</option>
-                                        {allEmployees
-                                            .filter(emp => !enrollments.some(enr => enr.Employee_ID === emp.Employee_ID))
-                                            .map(emp => (
-                                                <option key={emp.Employee_ID} value={emp.Employee_ID}>
-                                                    {emp.First_Name} {emp.Last_Name} ({emp.Job_Title || 'No Job'})
-                                                </option>
-                                            ))}
-                                    </select>
+                                    <div className="flex-1 relative">
+                                        <div
+                                            onClick={() => setShowEmployeeDropdown(!showEmployeeDropdown)}
+                                            className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
+                                        >
+                                            <span className={selectedEmployee ? 'text-primary' : 'text-muted'}>
+                                                {selectedEmployee
+                                                    ? (() => {
+                                                        const emp = allEmployees.find(e => e.Employee_ID === Number(selectedEmployee));
+                                                        return emp ? `${emp.First_Name} ${emp.Last_Name} (${emp.Job_Title || 'No Job'})` : 'SELECT EMPLOYEE TO ENROLL';
+                                                    })()
+                                                    : 'SELECT EMPLOYEE TO ENROLL'}
+                                            </span>
+                                            <span className="text-muted">▼</span>
+                                        </div>
+                                        {showEmployeeDropdown && (
+                                            <div className="absolute z-20 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-60 overflow-y-auto">
+                                                {allEmployees
+                                                    .filter(emp => !enrollments.some(enr => enr.Employee_ID === emp.Employee_ID))
+                                                    .map(emp => (
+                                                        <div
+                                                            key={emp.Employee_ID}
+                                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
+                                                            onClick={() => {
+                                                                setSelectedEmployee(emp.Employee_ID);
+                                                                setShowEmployeeDropdown(false);
+                                                            }}
+                                                        >
+                                                            {emp.First_Name} {emp.Last_Name} ({emp.Job_Title || 'No Job'})
+                                                        </div>
+                                                    ))}
+                                            </div>
+                                        )}
+                                    </div>
                                     <button
                                         onClick={handleEnroll}
                                         disabled={!selectedEmployee}

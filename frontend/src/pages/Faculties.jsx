@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import { Building2, Search, Plus } from 'lucide-react';
 import { facultyService } from '../services/facultyService';
 import CyberCard from '../components/CyberCard';
@@ -6,6 +7,7 @@ import CyberCard from '../components/CyberCard';
 const Faculties = () => {
     const [faculties, setFaculties] = useState([]);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     useEffect(() => {
         loadFaculties();
@@ -29,7 +31,7 @@ const Faculties = () => {
                     <Building2 className="w-6 h-6" /> FACULTY_INDEX
                 </h1>
                 <button
-                    onClick={() => window.location.href = '/faculties/new'}
+                    onClick={() => navigate('/faculties/new')}
                     className="cyber-button flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" /> ADD_FACULTY
@@ -62,7 +64,7 @@ const Faculties = () => {
                                 <button
                                     onClick={(e) => {
                                         e.stopPropagation();
-                                        window.location.href = `/faculties/${faculty.Faculty_ID}`;
+                                        navigate(`/faculties/${faculty.Faculty_ID}`);
                                     }}
                                     className="flex-1 cyber-button-outline text-xs py-2"
                                 >
