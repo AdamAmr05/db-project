@@ -120,7 +120,7 @@ const EmployeeAppraisal = () => {
                     <ChevronLeft className="w-5 h-5 text-muted" />
                 </button>
                 <div>
-                    <h1 className="text-xl font-bold text-white">Employee Appraisal</h1>
+                    <h1 className="text-xl font-bold text-primary">Employee Appraisal</h1>
                     <div className="text-xs text-muted font-mono">
                         APPRAISAL ID: {data.appraisal?.Appraisal_ID || 'NEW'} • CYCLE ID: {cycleId}
                     </div>
@@ -135,7 +135,7 @@ const EmployeeAppraisal = () => {
                             <AlertCircle className="w-5 h-5 text-yellow-400" />
                         </div>
                         <div>
-                            <h3 className="text-lg font-bold text-white">No Objectives Configured</h3>
+                            <h3 className="text-lg font-bold text-primary">No Objectives Configured</h3>
                             <p className="text-sm text-muted mt-2">
                                 This employee's job role does not have any objectives or KPIs assigned yet.
                             </p>
@@ -154,7 +154,7 @@ const EmployeeAppraisal = () => {
                                     <Target className="w-5 h-5 text-muted" />
                                 </div>
                                 <div>
-                                    <h3 className="text-lg font-bold text-white">{obj.Title}</h3>
+                                    <h3 className="text-lg font-bold text-primary">{obj.Title}</h3>
                                     <p className="text-sm text-muted mt-1">{obj.Description}</p>
                                 </div>
                             </div>
@@ -177,9 +177,9 @@ const EmployeeAppraisal = () => {
                                 </thead>
                                 <tbody className="divide-y divide-border">
                                     {obj.KPIs.map(kpi => (
-                                        <tr key={kpi.KPI_ID} className="hover:bg-white/5 transition-colors">
+                                        <tr key={kpi.KPI_ID} className="hover:bg-surfaceHighlight transition-colors">
                                             <td className="px-4 py-3 align-top">
-                                                <div className="font-medium text-white">{kpi.KPI_Name}</div>
+                                                <div className="font-medium text-primary">{kpi.KPI_Name}</div>
                                                 <div className="text-xs text-muted mt-1">{kpi.Description}</div>
                                                 <div className="text-[10px] text-muted mt-1 font-mono">WEIGHT: {kpi.Weight}%</div>
                                             </td>
@@ -189,7 +189,7 @@ const EmployeeAppraisal = () => {
                                             <td className="px-4 py-3 align-top">
                                                 <input
                                                     type="number"
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-24 text-white focus:border-white focus:outline-none font-mono"
+                                                    className="bg-surface border border-border rounded px-2 py-1 w-24 text-primary focus:border-primary focus:outline-none font-mono"
                                                     placeholder="Value"
                                                     value={scores[kpi.KPI_ID]?.actual}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'actual', e.target.value)}
@@ -199,7 +199,7 @@ const EmployeeAppraisal = () => {
                                                 <input
                                                     type="number"
                                                     min="1" max="5" step="0.1"
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-20 text-white focus:border-white focus:outline-none font-mono"
+                                                    className="bg-surface border border-border rounded px-2 py-1 w-20 text-primary focus:border-primary focus:outline-none font-mono"
                                                     placeholder="1-5"
                                                     value={scores[kpi.KPI_ID]?.score}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'score', e.target.value)}
@@ -207,7 +207,7 @@ const EmployeeAppraisal = () => {
                                             </td>
                                             <td className="px-4 py-3 align-top">
                                                 <textarea
-                                                    className="bg-black/50 border border-border rounded px-2 py-1 w-full text-white focus:border-white focus:outline-none text-xs resize-none h-16"
+                                                    className="bg-surface border border-border rounded px-2 py-1 w-full text-primary focus:border-primary focus:outline-none text-xs resize-none h-16"
                                                     placeholder="Optional comments..."
                                                     value={scores[kpi.KPI_ID]?.comments}
                                                     onChange={(e) => handleScoreChange(kpi.KPI_ID, 'comments', e.target.value)}
@@ -224,9 +224,9 @@ const EmployeeAppraisal = () => {
 
             {/* Manager Comments Section */}
             <CyberCard className="mt-6">
-                <h3 className="text-lg font-bold text-white mb-4">Overall Assessment</h3>
+                <h3 className="text-lg font-bold text-primary mb-4">Overall Assessment</h3>
                 <textarea
-                    className="w-full bg-black/50 border border-border rounded p-4 text-white focus:border-cyan-500 focus:outline-none h-32"
+                    className="w-full bg-surface border border-border rounded p-4 text-primary focus:border-accent focus:outline-none h-32"
                     placeholder="Enter overall manager comments and feedback..."
                     value={managerComments}
                     onChange={(e) => setManagerComments(e.target.value)}
@@ -249,7 +249,7 @@ const EmployeeAppraisal = () => {
                 <button
                     onClick={handleFinalize}
                     disabled={submitting}
-                    className="flex items-center gap-2 bg-primary text-black font-bold px-8 py-3 hover:bg-primary/90 transition-all ml-auto"
+                    className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] font-bold px-8 py-3 hover:bg-primary/90 transition-all ml-auto"
                 >
                     {submitting ? 'PROCESSING...' : (
                         <>
@@ -271,7 +271,7 @@ const EmployeeAppraisal = () => {
                             initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
                             className="bg-surface border border-border p-6 w-full max-w-md shadow-2xl"
                         >
-                            <h2 className="text-xl font-bold text-white mb-4 flex items-center gap-2">
+                            <h2 className="text-xl font-bold text-primary mb-4 flex items-center gap-2">
                                 <AlertCircle className="w-6 h-6 text-red-500" />
                                 File an Appeal
                             </h2>
@@ -282,7 +282,7 @@ const EmployeeAppraisal = () => {
                             <textarea
                                 value={appealReason}
                                 onChange={(e) => setAppealReason(e.target.value)}
-                                className="w-full bg-black/50 border border-border px-4 py-3 text-white focus:outline-none focus:border-red-500 font-mono text-sm h-32 resize-none mb-6"
+                                className="w-full bg-surface border border-border px-4 py-3 text-primary focus:outline-none focus:border-red-500 font-mono text-sm h-32 resize-none mb-6"
                                 placeholder="Enter your reason here..."
                                 autoFocus
                             />
@@ -290,13 +290,13 @@ const EmployeeAppraisal = () => {
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={() => setShowAppealModal(false)}
-                                    className="text-muted text-sm hover:text-white px-4 py-2"
+                                    className="text-muted text-sm hover:text-primary px-4 py-2"
                                 >
                                     CANCEL
                                 </button>
                                 <button
                                     onClick={handleSubmitAppeal}
-                                    className="bg-red-500/20 text-red-400 border border-red-500/50 px-6 py-2 text-sm font-bold hover:bg-red-500 hover:text-black transition-all"
+                                    className="bg-red-500/20 text-red-400 border border-red-500/50 px-6 py-2 text-sm font-bold hover:bg-red-500 hover:text-[var(--primary-inverted)] transition-all"
                                 >
                                     SUBMIT APPEAL
                                 </button>

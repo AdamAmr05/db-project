@@ -152,10 +152,10 @@ SELECT AVG(TIMESTAMPDIFF(
     COALESCE(tenure_bounds.LatestEnd, CURDATE()) -- this is the only place coalesce is used, the alternative is to use a case statement to check if the LatestEnd is null and if it is then use the CURDATE(), which is more verbose and less efficient...
 )) AS AvgServiceYears
 FROM (
-    SELECT 
+    SELECT -- this is an inner query that runs first to get the earliest start date and latest end date for each employee
         Employee_ID,
-        MIN(Start_Date) AS EarliestStart,
-        MAX(End_Date) AS LatestEnd
+        MIN(Start_Date) AS EarliestStart, -- earliest start date
+        MAX(End_Date) AS LatestEnd -- latest end date
     FROM JOB_ASSIGNMENT
     WHERE Start_Date IS NOT NULL
     GROUP BY Employee_ID
@@ -221,7 +221,7 @@ CREATE OR REPLACE VIEW View_Certificates_By_Program AS
 SELECT 
     tp.Program_ID,
     tp.Title,
-    COUNT(tc.Certificate_ID) AS CertificatesIssued
+    COUNT(tc.Certificate_ID) AS CertificatesIssued -- see how many certificates have been issued for each program
 FROM TRAINING_PROGRAM tp
 LEFT JOIN EMPLOYEE_TRAINING et ON tp.Program_ID = et.Program_ID
 LEFT JOIN TRAINING_CERTIFICATE tc ON et.ET_ID = tc.ET_ID
@@ -241,7 +241,7 @@ LEFT JOIN UNIVERSITY u ON f.University_ID = u.University_ID
 UNION ALL
 SELECT 
     u.University_Name,
-    NULL AS Faculty_Name,
+    NULL AS Faculty_Name, -- administrative departments have no faculty
     d.Department_Name,
     d.Department_Type
 FROM ADMINISTRATIVE_DEPARTMENT amd

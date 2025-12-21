@@ -45,12 +45,12 @@ const Departments = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">DEPARTMENTS</h1>
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">DEPARTMENTS</h1>
                     <p className="text-muted font-mono text-sm mt-1">MANAGE ORGANIZATIONAL UNITS</p>
                 </div>
                 <Link
                     to="/departments/new"
-                    className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
+                    className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
                 >
                     <Plus className="w-4 h-4" />
                     ADD DEPARTMENT
@@ -65,7 +65,7 @@ const Departments = () => {
                     placeholder="SEARCH DEPARTMENTS..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono text-sm"
+                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono text-sm"
                 />
             </div>
 
@@ -95,7 +95,7 @@ const Departments = () => {
                                 </div>
                             </div>
 
-                            <h3 className="text-xl font-bold text-white mb-1">{dept.Department_Name}</h3>
+                            <h3 className="text-xl font-bold text-primary mb-1">{dept.Department_Name}</h3>
                             <div className="inline-block px-2 py-0.5 bg-secondary/20 rounded text-[10px] font-mono text-secondary mb-4">
                                 {(dept.Department_Type || 'N/A').toUpperCase()}
                             </div>

@@ -56,12 +56,12 @@ const PerformanceAppraisals = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-2xl font-bold text-white tracking-wider flex items-center gap-2">
-                        <Award className="w-6 h-6 text-white" />
+                    <h1 className="text-2xl font-bold text-primary tracking-wider flex items-center gap-2">
+                        <Award className="w-6 h-6 text-primary" />
                         APPRAISALS
                     </h1>
                     <div className="text-xs text-muted font-mono mt-1">
-                        CYCLE: <span className="text-white">{cycle.Cycle_Name}</span> (Due: {new Date(cycle.Submission_Deadline).toLocaleDateString()})
+                        CYCLE: <span className="text-primary">{cycle.Cycle_Name}</span> (Due: {new Date(cycle.Submission_Deadline).toLocaleDateString()})
                     </div>
                 </div>
             </div>
@@ -75,7 +75,7 @@ const PerformanceAppraisals = () => {
                         placeholder="Search employees..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-surface border border-border pl-10 pr-4 py-2 text-sm text-white focus:border-white focus:outline-none placeholder-muted/50"
+                        className="w-full bg-surface border border-border pl-10 pr-4 py-2 text-sm text-primary focus:border-accent focus:outline-none placeholder-muted/50"
                     />
                 </div>
             </div>
@@ -89,7 +89,7 @@ const PerformanceAppraisals = () => {
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ delay: index * 0.05 }}
                     >
-                        <CyberCard className="h-full group hover:border-white/30 transition-colors">
+                        <CyberCard className="h-full group hover:border-muted transition-colors">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="p-2 border border-border">
                                     <User className="w-5 h-5 text-muted" />
@@ -97,7 +97,7 @@ const PerformanceAppraisals = () => {
                                 <div className={clsx(
                                     "px-2 py-1 rounded text-[10px] font-mono border",
                                     employee.Overall_Score
-                                        ? "bg-white/10 border-white/20 text-white"
+                                        ? "bg-surfaceHighlight border-border text-primary"
                                         : "bg-yellow-500/10 border-yellow-500/20 text-yellow-400"
                                 )}>
                                     {employee.Overall_Score ? 'COMPLETED' : 'PENDING'}
@@ -105,7 +105,7 @@ const PerformanceAppraisals = () => {
                             </div>
 
                             <div className="mb-4">
-                                <div className="text-lg font-bold text-white">
+                                <div className="text-lg font-bold text-primary">
                                     {employee.First_Name} {employee.Last_Name}
                                 </div>
                                 <div className="text-xs text-muted font-mono mt-1 flex items-center gap-2">
@@ -118,13 +118,13 @@ const PerformanceAppraisals = () => {
                             <div className="flex justify-between items-center mt-auto pt-4 border-t border-border">
                                 <div>
                                     <div className="text-[10px] text-muted uppercase">Score</div>
-                                    <div className="text-lg font-mono font-bold text-white">
+                                    <div className="text-lg font-mono font-bold text-primary">
                                         {employee.Overall_Score ? employee.Overall_Score : '-'} <span className="text-xs text-muted">/ 5.0</span>
                                     </div>
                                 </div>
                                 <button
                                     onClick={() => navigate(`/performance/appraisals/${cycle.Cycle_ID}/${employee.Assignment_ID}`)}
-                                    className="p-2 border border-border hover:border-white hover:text-white transition-all duration-300"
+                                    className="p-2 border border-border hover:border-primary hover:text-primary transition-all duration-300"
                                 >
                                     <ChevronRight className="w-4 h-4" />
                                 </button>

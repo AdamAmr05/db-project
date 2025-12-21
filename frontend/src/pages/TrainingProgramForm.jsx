@@ -182,12 +182,12 @@ const TrainingProgramForm = () => {
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => navigate('/training')}
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                    className="p-2 hover:bg-surfaceHighlight rounded-full transition-colors"
                 >
-                    <ArrowLeft className="w-6 h-6 text-white" />
+                    <ArrowLeft className="w-6 h-6 text-primary" />
                 </button>
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">
                         {isEdit ? 'MANAGE PROGRAM' : 'NEW PROGRAM'}
                     </h1>
                     <p className="text-muted font-mono text-sm mt-1">
@@ -214,7 +214,7 @@ const TrainingProgramForm = () => {
                                 value={formData.Title}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                             />
                         </div>
 
@@ -226,7 +226,7 @@ const TrainingProgramForm = () => {
                                 value={formData.Program_Code}
                                 onChange={handleChange}
                                 required
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                             />
                         </div>
 
@@ -234,17 +234,17 @@ const TrainingProgramForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">STATUS</label>
                             <div
                                 onClick={() => setShowStatus(!showStatus)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Approval_Status || 'SELECT_STATUS'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showStatus && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Pending', 'Approved', 'Rejected'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Approval_Status: opt }));
                                                 setShowStatus(false);
@@ -261,17 +261,17 @@ const TrainingProgramForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">TYPE</label>
                             <div
                                 onClick={() => setShowType(!showType)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Type || 'SELECT_TYPE'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showType && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Technical', 'Soft Skills', 'Compliance', 'Leadership'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Type: opt }));
                                                 setShowType(false);
@@ -295,19 +295,19 @@ const TrainingProgramForm = () => {
                                     onFocus={() => setShowSuggestions(true)}
                                     onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
                                     placeholder="e.g. Cloud, Security, Coaching"
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 pr-8 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 pr-8 text-primary focus:outline-none focus:border-primary font-mono"
                                     autoComplete="off"
                                 />
                                 <span className="absolute right-3 text-muted pointer-events-none">▼</span>
                             </div>
                             {showSuggestions && existingSubtypes.length > 0 && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {existingSubtypes
                                         .filter(s => s.toLowerCase().includes(formData.Subtype.toLowerCase()))
                                         .map((s, i) => (
                                             <div
                                                 key={i}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData(prev => ({ ...prev, Subtype: s }));
                                                     setShowSuggestions(false);
@@ -324,17 +324,17 @@ const TrainingProgramForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">DELIVERY METHOD</label>
                             <div
                                 onClick={() => setShowDelivery(!showDelivery)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Delivery_Method || 'SELECT_METHOD'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showDelivery && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Online', 'In-Person', 'Hybrid'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Delivery_Method: opt }));
                                                 setShowDelivery(false);
@@ -354,7 +354,7 @@ const TrainingProgramForm = () => {
                                 value={formData.Objectives}
                                 onChange={handleChange}
                                 rows={3}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                             />
                         </div>
                     </div>
@@ -362,7 +362,7 @@ const TrainingProgramForm = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-6 bg-primary text-black font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                        className="w-full mt-6 bg-primary text-[var(--primary-inverted)] font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
                     >
                         <Save className="w-5 h-5" />
                         {loading ? 'SAVING...' : (isEdit ? 'UPDATE PROGRAM' : 'CREATE PROGRAM')}
@@ -374,20 +374,20 @@ const TrainingProgramForm = () => {
             {
                 isEdit && (
                     <div className="space-y-4">
-                        <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-primary tracking-tight flex items-center gap-2">
                             <GraduationCap className="w-5 h-5 text-primary" />
                             ENROLLMENT MANAGEMENT
                         </h2>
 
                         <CyberCard>
                             {/* Enroll New Employee */}
-                            <div className="bg-white/5 p-4 rounded border border-white/10 mb-6">
+                            <div className="bg-surfaceHighlight p-4 rounded border border-border mb-6">
                                 <label className="block text-xs font-mono text-muted mb-2">ENROLL EMPLOYEE</label>
                                 <div className="flex gap-2">
                                     <select
                                         value={selectedEmployee}
                                         onChange={(e) => setSelectedEmployee(e.target.value)}
-                                        className="flex-1 bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono appearance-none"
+                                        className="flex-1 bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono appearance-none"
                                     >
                                         <option value="">SELECT EMPLOYEE TO ENROLL</option>
                                         {allEmployees
@@ -401,7 +401,7 @@ const TrainingProgramForm = () => {
                                     <button
                                         onClick={handleEnroll}
                                         disabled={!selectedEmployee}
-                                        className="bg-primary text-black px-4 py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
+                                        className="bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold disabled:opacity-50 disabled:cursor-not-allowed hover:bg-primary/90 transition-colors"
                                     >
                                         ENROLL
                                     </button>
@@ -412,7 +412,7 @@ const TrainingProgramForm = () => {
                             <div className="overflow-x-auto">
                                 <table className="w-full text-left border-collapse">
                                     <thead>
-                                        <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase">
+                                        <tr className="border-b border-border text-xs font-mono text-muted uppercase">
                                             <th className="p-4">Employee</th>
                                             <th className="p-4">Status</th>
                                             <th className="p-4">Certificate</th>
@@ -428,9 +428,9 @@ const TrainingProgramForm = () => {
                                             </tr>
                                         )}
                                         {enrollments.map((enr) => (
-                                            <tr key={enr.ET_ID} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                            <tr key={enr.ET_ID} className="border-b border-border/50 hover:bg-surfaceHighlight transition-colors">
                                                 <td className="p-4">
-                                                    <div className="font-bold text-white">{enr.First_Name} {enr.Last_Name}</div>
+                                                    <div className="font-bold text-primary">{enr.First_Name} {enr.Last_Name}</div>
                                                     <div className="text-xs text-muted">{enr.Email}</div>
                                                 </td>
                                                 <td className="p-4">
@@ -446,7 +446,7 @@ const TrainingProgramForm = () => {
                                                         <div className="space-y-1">
                                                             {enr.certificates.map(cert => (
                                                                 <div key={cert.Certificate_ID} className="flex items-center gap-2">
-                                                                    <span className="text-[10px] font-mono bg-white/10 text-white px-2 py-0.5 rounded">
+                                                                    <span className="text-[10px] font-mono bg-surfaceHighlight text-primary px-2 py-0.5 rounded">
                                                                         {cert.certificate_file_path || 'No path'}
                                                                     </span>
                                                                     {cert.Issue_Date && (
@@ -484,7 +484,7 @@ const TrainingProgramForm = () => {
                                                         <button
                                                             onClick={() => handleUnenroll(enr.Employee_ID)}
                                                             title="Remove from Program"
-                                                            className="p-1.5 hover:bg-white/10 rounded text-muted hover:text-white transition-colors"
+                                                            className="p-1.5 hover:bg-surfaceHighlight rounded text-muted hover:text-primary transition-colors"
                                                         >
                                                             <Trash2 className="w-4 h-4" />
                                                         </button>
@@ -505,7 +505,7 @@ const TrainingProgramForm = () => {
                 showCertModal && (
                     <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                         <CyberCard className="w-full max-w-md border border-primary/50">
-                            <h3 className="text-lg font-bold text-white mb-4">Issue Certificate</h3>
+                            <h3 className="text-lg font-bold text-primary mb-4">Issue Certificate</h3>
                             <p className="text-sm text-muted mb-3">
                                 Mark enrollment as completed and optionally attach a certificate file path.
                             </p>
@@ -514,18 +514,18 @@ const TrainingProgramForm = () => {
                                 value={certPath}
                                 onChange={(e) => setCertPath(e.target.value)}
                                 placeholder="e.g. /certs/et-16.pdf"
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:border-primary focus:outline-none font-mono mb-4"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:border-primary focus:outline-none font-mono mb-4"
                             />
                             <div className="flex justify-end gap-3">
                                 <button
                                     onClick={handleCertCancel}
-                                    className="text-muted text-sm hover:text-white"
+                                    className="text-muted text-sm hover:text-primary"
                                 >
                                     Cancel
                                 </button>
                                 <button
                                     onClick={handleCertConfirm}
-                                    className="bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90"
+                                    className="bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold hover:bg-primary/90"
                                 >
                                     Confirm
                                 </button>

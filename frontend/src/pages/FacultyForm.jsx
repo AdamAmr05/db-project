@@ -56,10 +56,10 @@ const FacultyForm = () => {
     return (
         <div className="space-y-6 max-w-2xl mx-auto">
             <div className="flex items-center gap-4 mb-8">
-                <button onClick={() => navigate('/faculties')} className="hover:text-white transition-colors">
+                <button onClick={() => navigate('/faculties')} className="hover:text-primary transition-colors">
                     <ArrowLeft className="w-6 h-6" />
                 </button>
-                <h1 className="text-2xl font-bold text-white tracking-wider">
+                <h1 className="text-2xl font-bold text-primary tracking-wider">
                     {isEdit ? 'EDIT_FACULTY_RECORD' : 'NEW_FACULTY_ENTRY'}
                 </h1>
             </div>

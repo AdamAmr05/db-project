@@ -148,15 +148,15 @@ BEGIN
     SELECT COUNT(*) INTO contract_exists FROM CONTRACT WHERE Contract_ID = p_ContractID;
     
     -- Check overlapping active jobs
-    SELECT COUNT(*) INTO active_jobs 
+    SELECT COUNT(*) INTO active_jobs -- this is used to get the number of active jobs for the employee and see if they have any overlapping active jobs
     FROM JOB_ASSIGNMENT 
     WHERE Employee_ID = p_EmpID 
       AND Status = 'Active' 
-      AND (End_Date IS NULL OR End_Date >= p_StartDate);
+      AND (End_Date IS NULL OR End_Date >= p_StartDate); -- null is ongoing and no end date, or end date end on or after the start date
       
-    IF contract_exists = 0 THEN 
+    IF contract_exists = 0 THEN -- this uses the first select 
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Contract ID does not exist.'; -- we give an error if the contract does not exist
-    ELSEIF active_jobs > 0 THEN
+    ELSEIF active_jobs > 0 THEN -- this uses the result from the second select
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Employee has overlapping active jobs.'; -- we give an error if the employee has overlapping active jobs
     ELSE
         INSERT INTO JOB_ASSIGNMENT (Employee_ID, Job_ID, Contract_ID, Start_Date, Status, Assigned_Salary) -- we insert the job assignment if the contract exists and the employee does not have overlapping active jobs
@@ -215,7 +215,7 @@ BEGIN
     
     -- Update the Appraisal table
     UPDATE APPRAISAL
-    SET Overall_Score = total_score
+    SET Overall_Score = total_score -- this is used to update the overall score of the appraisal with the total score of the kpi scores after getting the total score from the employee kpi score table and then updating the appraisal table with the total score here
     WHERE Assignment_ID = p_AssignID AND Cycle_ID = p_CycleID;
 END $$
 
@@ -278,8 +278,8 @@ BEGIN
     FROM EMPLOYEE_TRAINING 
     WHERE ET_ID = p_ET_ID;
     
-    IF status_check = 'Completed' THEN
-        INSERT INTO TRAINING_CERTIFICATE (ET_ID, Issue_Date, certificate_file_path)
+    IF status_check = 'Completed' THEN 
+        INSERT INTO TRAINING_CERTIFICATE (ET_ID, Issue_Date, certificate_file_path) -- this is used to insert the training certificate if the training is completed after getting the file path from the in we passed in
         VALUES (p_ET_ID, CURDATE(), p_FilePath);
     ELSE
         SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Training not completed.';

@@ -45,12 +45,12 @@ const Jobs = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">JOB POSITIONS</h1>
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">JOB POSITIONS</h1>
                     <p className="text-muted font-mono text-sm mt-1">MANAGE ROLES AND RESPONSIBILITIES</p>
                 </div>
                 <Link
                     to="/jobs/new"
-                    className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
+                    className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold hover:opacity-90 transition-colors"
                 >
                     <Plus className="w-4 h-4" />
                     ADD JOB
@@ -65,7 +65,7 @@ const Jobs = () => {
                     placeholder="SEARCH JOBS..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono text-sm"
+                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-accent font-mono text-sm"
                 />
             </div>
 
@@ -76,7 +76,7 @@ const Jobs = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase">
+                                <tr className="border-b border-border text-xs font-mono text-muted uppercase">
                                     <th className="p-4">Job Title</th>
                                     <th className="p-4">Code</th>
                                     <th className="p-4">Department</th>
@@ -87,13 +87,13 @@ const Jobs = () => {
                             </thead>
                             <tbody>
                                 {filteredJobs.map((job) => (
-                                    <tr key={job.Job_ID} className="border-b border-white/5 hover:bg-white/5 transition-colors">
+                                    <tr key={job.Job_ID} className="border-b border-border/50 hover:bg-surfaceHighlight transition-colors">
                                         <td className="p-4">
-                                            <div className="font-bold text-white">{job.Job_Title}</div>
+                                            <div className="font-bold text-primary">{job.Job_Title}</div>
                                             <div className="text-xs text-muted">{job.Job_Category}</div>
                                         </td>
                                         <td className="p-4 font-mono text-sm text-primary">{job.Job_Code}</td>
-                                        <td className="p-4 text-sm text-white">{job.Department_Name || 'N/A'}</td>
+                                        <td className="p-4 text-sm text-primary">{job.Department_Name || 'N/A'}</td>
                                         <td className="p-4">
                                             <span className="inline-block px-2 py-0.5 bg-secondary/20 rounded text-[10px] font-mono text-secondary">
                                                 {job.Job_Level}
@@ -106,7 +106,7 @@ const Jobs = () => {
                                             <div className="flex justify-end gap-2">
                                                 <button
                                                     onClick={() => navigate(`/jobs/${job.Job_ID}`)}
-                                                    className="p-1.5 hover:bg-white/10 rounded text-muted hover:text-white transition-colors"
+                                                    className="p-1.5 hover:bg-surfaceHighlight rounded text-muted hover:text-primary transition-colors"
                                                 >
                                                     <Edit className="w-4 h-4" />
                                                 </button>

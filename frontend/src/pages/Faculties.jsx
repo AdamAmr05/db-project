@@ -25,7 +25,7 @@ const Faculties = () => {
     return (
         <div className="space-y-6">
             <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold text-white tracking-wider flex items-center gap-3">
+                <h1 className="text-2xl font-bold text-primary tracking-wider flex items-center gap-3">
                     <Building2 className="w-6 h-6" /> FACULTY_INDEX
                 </h1>
                 <button
@@ -40,21 +40,21 @@ const Faculties = () => {
                 {loading ? (
                     <div className="col-span-3 text-center text-muted animate-pulse font-mono">SCANNING_DATABASE...</div>
                 ) : faculties.map((faculty) => (
-                    <CyberCard key={faculty.Faculty_ID} title={`ID: ${String(faculty.Faculty_ID).padStart(4, '0')}`} className="hover:border-white transition-colors cursor-pointer">
+                    <CyberCard key={faculty.Faculty_ID} title={`ID: ${String(faculty.Faculty_ID).padStart(4, '0')}`} className="hover:border-primary transition-colors cursor-pointer">
                         <div className="space-y-4">
                             <div>
-                                <h3 className="text-xl font-bold text-white">{faculty.Faculty_Name}</h3>
+                                <h3 className="text-xl font-bold text-primary">{faculty.Faculty_Name}</h3>
                                 <p className="text-xs text-muted font-mono mt-1">{faculty.University_Name || 'Unknown University'}</p>
                             </div>
 
                             <div className="space-y-2 pt-4 border-t border-border">
                                 <div className="flex justify-between text-xs font-mono">
                                     <span className="text-muted">LOCATION</span>
-                                    <span className="text-white text-right">{faculty.Location}</span>
+                                    <span className="text-primary text-right">{faculty.Location}</span>
                                 </div>
                                 <div className="flex justify-between text-xs font-mono">
                                     <span className="text-muted">CONTACT</span>
-                                    <span className="text-white text-right">{faculty.Contact_Email}</span>
+                                    <span className="text-primary text-right">{faculty.Contact_Email}</span>
                                 </div>
                             </div>
 

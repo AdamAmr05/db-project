@@ -59,7 +59,7 @@ const CustomTreemapContent = ({ x, y, width, height, index, name, value, allData
                 width={width}
                 height={height}
                 fill={color}
-                stroke="#000"
+                stroke="var(--border)"
                 strokeWidth={2}
                 className="transition-all duration-300 hover:opacity-90"
             />
@@ -69,7 +69,7 @@ const CustomTreemapContent = ({ x, y, width, height, index, name, value, allData
             <foreignObject x={x} y={y} width={width} height={height}>
                 <div
                     className="w-full h-full p-1 flex flex-col justify-center items-center text-center overflow-hidden"
-                    style={{ color: '#fff' }}
+                    style={{ color: 'var(--primary-inverted)' }}
                 >
                     <span
                         className={`font-mono font-bold leading-none mb-0.5 ${nameSize}`}
@@ -165,7 +165,7 @@ const Dashboard = () => {
     const donutData = statusData.map(d => ({
         name: d.Employment_Status,
         value: Number(d.CountPerStatus) || 0,
-        fill: donutColors[d.Employment_Status] || '#fff'
+        fill: donutColors[d.Employment_Status] || 'var(--primary)'
     }));
 
     // Training data for grouped bar
@@ -181,7 +181,7 @@ const Dashboard = () => {
             {/* Hero Section - Key Metrics (3x2 Grid) */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 <CyberCard title="Total Employees" icon={Users} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">{stats.totalEmployees}</div>
+                    <div className="text-4xl font-bold text-primary mt-2">{stats.totalEmployees}</div>
                     <div className="text-xs text-green-500 mt-2 font-mono flex items-center gap-1">
                         <TrendingUp className="w-3 h-3" />
                         ACTIVE WORKFORCE
@@ -189,27 +189,27 @@ const Dashboard = () => {
                 </CyberCard>
 
                 <CyberCard title="Active Jobs" icon={Briefcase} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">{stats.activeJobs}</div>
+                    <div className="text-4xl font-bold text-primary mt-2">{stats.activeJobs}</div>
                     <div className="text-xs text-muted mt-2 font-mono">OPEN POSITIONS</div>
                 </CyberCard>
 
                 <CyberCard title="Training Programs" icon={GraduationCap} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">{stats.totalTrainingPrograms}</div>
+                    <div className="text-4xl font-bold text-primary mt-2">{stats.totalTrainingPrograms}</div>
                     <div className="text-xs text-muted mt-2 font-mono">ACTIVE MODULES</div>
                 </CyberCard>
 
                 <CyberCard title="Appraisals" icon={Award} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">{stats.pendingAppraisals || 0}</div>
+                    <div className="text-4xl font-bold text-primary mt-2">{stats.pendingAppraisals || 0}</div>
                     <div className="text-xs text-yellow-500 mt-2 font-mono">PENDING REVIEWS</div>
                 </CyberCard>
 
                 <CyberCard title="Departments" icon={Building2} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">{stats.totalDepartments || 0}</div>
+                    <div className="text-4xl font-bold text-primary mt-2">{stats.totalDepartments || 0}</div>
                     <div className="text-xs text-muted mt-2 font-mono">OPERATIONAL UNITS</div>
                 </CyberCard>
 
                 <CyberCard title="Avg. Performance" icon={Activity} className="md:col-span-1">
-                    <div className="text-4xl font-bold text-white mt-2">
+                    <div className="text-4xl font-bold text-primary mt-2">
                         {Number(stats.avgAppraisalScore || 0).toFixed(1)}/5
                     </div>
                     <div className="text-xs text-green-500 mt-2 font-mono flex items-center gap-1">
@@ -230,7 +230,7 @@ const Dashboard = () => {
                                 data={treemapData}
                                 dataKey="size"
                                 aspectRatio={4 / 3}
-                                stroke="#000"
+                                stroke="var(--border)"
                                 content={<CustomTreemapContent allData={treemapData} />}
                             />
                         </ResponsiveContainer>
@@ -258,8 +258,8 @@ const Dashboard = () => {
                                 ))}
                             </Pie>
                             <Tooltip
-                                contentStyle={{ backgroundColor: '#000', border: '1px solid #333' }}
-                                itemStyle={{ color: '#fff' }}
+                                contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)' }}
+                                itemStyle={{ color: 'var(--primary)' }}
                             />
                         </PieChart>
                     </ResponsiveContainer>
@@ -288,9 +288,9 @@ const Dashboard = () => {
                                         <XAxis type="number" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} />
                                         <YAxis type="category" dataKey="name" stroke="#4b5563" tick={{ fill: '#9ca3af', fontSize: 10 }} width={100} />
                                         <Tooltip
-                                            contentStyle={{ backgroundColor: '#000', border: '1px solid #333', maxWidth: '300px' }}
-                                            itemStyle={{ color: '#fff' }}
-                                            labelStyle={{ color: '#fff', whiteSpace: 'normal' }}
+                                            contentStyle={{ backgroundColor: 'var(--tooltip-bg)', border: '1px solid var(--tooltip-border)', maxWidth: '300px' }}
+                                            itemStyle={{ color: 'var(--primary)' }}
+                                            labelStyle={{ color: 'var(--primary)', whiteSpace: 'normal' }}
                                             formatter={(value, name, props) => [value, name]}
                                             labelFormatter={(label, payload) => {
                                                 // Use the full name from the payload for tooltip display
@@ -333,7 +333,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="h-2 bg-secondary/20 overflow-hidden">
                                     <div
-                                        className="h-full bg-white transition-all duration-1000"
+                                        className="h-full bg-primary transition-all duration-1000"
                                         style={{ width: `${(stats.avgAppraisalScore / 5) * 100}%` }}
                                     />
                                 </div>
@@ -345,7 +345,7 @@ const Dashboard = () => {
                                 </div>
                                 <div className="h-2 bg-secondary/20 overflow-hidden">
                                     <div
-                                        className="h-full bg-white transition-all duration-1000"
+                                        className="h-full bg-primary transition-all duration-1000"
                                         style={{ width: `${stats.kpiCompletionRate}%` }}
                                     />
                                 </div>
@@ -356,7 +356,7 @@ const Dashboard = () => {
                     <CyberCard title="Upcoming Deadlines">
                         {stats.upcomingDeadline ? (
                             <div className="p-3 border border-border bg-secondary/5">
-                                <div className="text-sm font-bold text-white">{stats.upcomingDeadline.Cycle_Name}</div>
+                                <div className="text-sm font-bold text-primary">{stats.upcomingDeadline.Cycle_Name}</div>
                                 <div className="text-xs text-muted font-mono mt-1">
                                     DUE: {new Date(stats.upcomingDeadline.Submission_Deadline).toLocaleDateString()}
                                 </div>
@@ -373,7 +373,7 @@ const Dashboard = () => {
                                 <span>System Audit Complete</span>
                             </li>
                             <li className="flex items-center gap-2 text-xs text-muted">
-                                <div className="w-1.5 h-1.5 bg-white" />
+                                <div className="w-1.5 h-1.5 bg-primary" />
                                 <span>New Employee Registered</span>
                             </li>
                         </ul>

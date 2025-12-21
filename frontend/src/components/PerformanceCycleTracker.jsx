@@ -99,11 +99,11 @@ const PerformanceCycleTracker = () => {
                     <span className="truncate flex-1 min-w-0">ACTIVE_CYCLE: {cycle.Cycle_Name.toUpperCase()}</span>
                     {cycles.length > 1 && (
                         <div className="flex items-center gap-2 flex-shrink-0">
-                            <button onClick={handlePrev} className="p-1 hover:bg-white/10 rounded text-muted hover:text-white transition-colors">
+                            <button onClick={handlePrev} className="p-1 hover:bg-surfaceHighlight rounded text-muted hover:text-accent transition-colors">
                                 <span className="text-xs">◀</span>
                             </button>
                             <span className="text-[10px] text-muted font-mono">{currentIndex + 1}/{cycles.length}</span>
-                            <button onClick={handleNext} className="p-1 hover:bg-white/10 rounded text-muted hover:text-white transition-colors">
+                            <button onClick={handleNext} className="p-1 hover:bg-surfaceHighlight rounded text-muted hover:text-accent transition-colors">
                                 <span className="text-xs">▶</span>
                             </button>
                         </div>
@@ -117,7 +117,7 @@ const PerformanceCycleTracker = () => {
                 <div className="flex justify-between items-end mb-8">
                     <div>
                         <div className="text-xs text-muted font-mono mb-1">CURRENT PHASE</div>
-                        <div className="text-xl text-white font-bold tracking-wider flex items-center gap-2">
+                        <div className="text-xl text-primary font-bold tracking-wider flex items-center gap-2">
                             {isUpcoming ? 'UPCOMING' : isPast ? 'COMPLETED' : (progress < 66 ? 'OBJECTIVE SETTING' : 'PERFORMANCE REVIEW')}
                             <span className={`animate-pulse w-2 h-2 rounded-full ${isUpcoming ? 'bg-yellow-500' : isPast ? 'bg-gray-500' : 'bg-green-500'}`} />
                         </div>
@@ -126,14 +126,14 @@ const PerformanceCycleTracker = () => {
                         <div className="text-xs text-muted font-mono mb-1">
                             {isUpcoming ? 'STARTS IN' : isPast ? 'ENDED' : 'TIME REMAINING'}
                         </div>
-                        <div className={`text-2xl font-mono font-bold ${isPast ? 'text-gray-500' : 'text-white'}`}>
+                        <div className={`text-2xl font-mono font-bold ${isPast ? 'text-gray-500' : 'text-primary'}`}>
                             {isUpcoming ? daysToStart : isPast ? Math.abs(daysRemaining) : daysRemaining} <span className="text-sm text-muted">{isPast ? 'DAYS AGO' : 'DAYS'}</span>
                         </div>
                     </div>
                 </div>
 
                 {/* Progress Bar Container */}
-                <div className="relative h-2 bg-gray-800 rounded-full mb-12 overflow-hidden">
+                <div className="relative h-2 bg-border rounded-full mb-12 overflow-hidden">
                     {/* Animated Progress Fill */}
                     <motion.div
                         key={cycle.Cycle_ID} // Reset animation on cycle change
@@ -154,7 +154,7 @@ const PerformanceCycleTracker = () => {
                 {/* Timeline Nodes */}
                 <div className="flex justify-between relative">
                     {/* Connecting Line */}
-                    <div className="absolute top-3 left-0 w-full h-px bg-gray-800 -z-10" />
+                    <div className="absolute top-3 left-0 w-full h-px bg-border -z-10" />
 
                     {stages.map((stage, index) => {
                         const isPast = stage.date && new Date(stage.date) < new Date();
@@ -163,20 +163,20 @@ const PerformanceCycleTracker = () => {
                         return (
                             <div key={index} className="flex flex-col items-center group cursor-default">
                                 <motion.div
-                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center bg-black z-10 transition-colors duration-300
+                                    className={`w-6 h-6 rounded-full border-2 flex items-center justify-center bg-background z-10 transition-colors duration-300
                                         ${isPast ? 'border-green-500 text-green-500' :
-                                            isNext ? 'border-white text-white shadow-[0_0_10px_rgba(255,255,255,0.5)]' :
-                                                'border-gray-700 text-gray-700'}`}
+                                            isNext ? 'border-primary text-primary shadow-[0_0_10px_rgba(128,128,128,0.5)]' :
+                                                'border-muted text-muted'}`}
                                     whileHover={{ scale: 1.2 }}
                                 >
                                     <stage.icon className="w-3 h-3" />
                                 </motion.div>
                                 <div className={`mt-3 text-[10px] font-mono uppercase tracking-wider transition-colors duration-300 whitespace-nowrap
-                                    ${isPast ? 'text-green-500' : isNext ? 'text-white' : 'text-gray-600'}`}>
+                                    ${isPast ? 'text-green-500' : isNext ? 'text-primary' : 'text-muted'}`}>
                                     {stage.label}
                                 </div>
                                 {stage.date && (
-                                    <div className="text-[10px] text-gray-600 font-mono mt-1 whitespace-nowrap">
+                                    <div className="text-[10px] text-muted font-mono mt-1 whitespace-nowrap">
                                         {new Date(stage.date).toLocaleDateString(undefined, { month: 'short', day: 'numeric' })}
                                     </div>
                                 )}
@@ -186,18 +186,18 @@ const PerformanceCycleTracker = () => {
                 </div>
 
                 {/* Footer Info */}
-                <div className="mt-8 grid grid-cols-3 gap-4 border-t border-gray-800 pt-4">
+                <div className="mt-8 grid grid-cols-3 gap-4 border-t border-border pt-4">
                     <div className="text-center">
                         <div className="text-[10px] text-muted uppercase">Submission Deadline</div>
-                        <div className="text-sm text-white font-mono mt-1">
+                        <div className="text-sm text-primary font-mono mt-1">
                             {new Date(cycle.Submission_Deadline).toLocaleDateString()}
                         </div>
                     </div>
-                    <div className="text-center border-l border-gray-800">
+                    <div className="text-center border-l border-border">
                         <div className="text-[10px] text-muted uppercase">Cycle Type</div>
-                        <div className="text-sm text-white font-mono mt-1">{cycle.Cycle_Type}</div>
+                        <div className="text-sm text-primary font-mono mt-1">{cycle.Cycle_Type}</div>
                     </div>
-                    <div className="text-center border-l border-gray-800">
+                    <div className="text-center border-l border-border">
                         <div className="text-[10px] text-muted uppercase">Status</div>
                         <div className="text-sm text-green-400 font-mono mt-1">ACTIVE</div>
                     </div>

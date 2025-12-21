@@ -4,23 +4,91 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ========================================
+   THEME VARIABLES - Dark Mode (Default)
+   ======================================== */
+:root {
+  --background: #050505;
+  --surface: #0A0A0A;
+  --surface-highlight: #151515;
+  --border: #333333;
+  --primary: #FFFFFF;
+  --secondary: #888888;
+  --muted: #888888;
+  --accent: #3B82F6;
+
+  /* Inverted colors for hover effects */
+  --primary-inverted: #000000;
+  --background-inverted: #FFFFFF;
+
+  /* Dither pattern */
+  --dither-pattern: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H2V2H0V0Z' fill='%23222222' fill-opacity='0.4'/%3E%3C/svg%3E");
+
+  /* Grid pattern for layout background */
+  --grid-color: #333333;
+
+  /* Chart tooltip */
+  --tooltip-bg: #000000;
+  --tooltip-border: #333333;
+}
+
+/* ========================================
+   THEME VARIABLES - Light Mode
+   ======================================== */
+:root.light {
+  --background: #FAFAFA;
+  --surface: #FFFFFF;
+  --surface-highlight: #F0F0F0;
+  --border: #E0E0E0;
+  --primary: #111111;
+  --secondary: #555555;
+  --muted: #777777;
+  --accent: #2563EB;
+
+  /* Inverted colors for hover effects */
+  --primary-inverted: #FFFFFF;
+  --background-inverted: #111111;
+
+  /* Dither pattern - lighter version */
+  --dither-pattern: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H2V2H0V0Z' fill='%23CCCCCC' fill-opacity='0.3'/%3E%3C/svg%3E");
+
+  /* Grid pattern for layout background */
+  --grid-color: #CCCCCC;
+
+  /* Chart tooltip */
+  --tooltip-bg: #FFFFFF;
+  --tooltip-border: #E0E0E0;
+}
+
 @layer base {
   body {
-    @apply bg-background text-primary font-sans antialiased selection:bg-white selection:text-black;
+    @apply bg-background text-primary font-sans antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
-  /* Custom Scrollbar */
+  /* Selection styling */
+  ::selection {
+    background: var(--primary);
+    color: var(--background);
+  }
+
+  /* Custom Scrollbar - Dark Mode */
   ::-webkit-scrollbar {
     width: 8px;
     height: 8px;
   }
 
   ::-webkit-scrollbar-track {
-    @apply bg-background;
+    background: var(--background);
   }
 
   ::-webkit-scrollbar-thumb {
-    @apply bg-border hover:bg-muted;
+    background: var(--border);
+    transition: background 0.2s ease;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--muted);
   }
 
   /* Remove focus outline from Recharts */
@@ -35,26 +103,71 @@
 
 @layer components {
   .cyber-card {
-    @apply bg-surface border border-border p-6 relative overflow-hidden transition-all duration-200;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    @apply p-6 relative overflow-hidden transition-all duration-200;
   }
 
   .cyber-card:hover {
-    @apply border-muted;
+    border-color: var(--muted);
   }
 
   .cyber-button {
-    @apply bg-white text-black px-4 py-2 font-medium transition-all hover:bg-gray-200 active:translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wider;
+    background-color: var(--primary);
+    color: var(--primary-inverted);
+    @apply px-4 py-2 font-medium transition-all active:translate-y-[1px] disabled:opacity-50 disabled:cursor-not-allowed text-sm uppercase tracking-wider;
+  }
+
+  .cyber-button:hover {
+    opacity: 0.85;
   }
 
   .cyber-button-outline {
-    @apply bg-transparent border border-border text-white px-4 py-2 font-medium transition-all hover:bg-surfaceHighlight hover:border-white active:translate-y-[1px] text-sm uppercase tracking-wider;
+    background-color: transparent;
+    border: 1px solid var(--border);
+    color: var(--primary);
+    @apply px-4 py-2 font-medium transition-all active:translate-y-[1px] text-sm uppercase tracking-wider;
+  }
+
+  .cyber-button-outline:hover {
+    background-color: var(--surface-highlight);
+    border-color: var(--primary);
   }
 
   .cyber-input {
-    @apply bg-surface border border-border px-4 py-2 w-full focus:outline-none focus:border-white transition-colors placeholder:text-muted;
+    background-color: var(--surface);
+    border: 1px solid var(--border);
+    color: var(--primary);
+    @apply px-4 py-2 w-full transition-colors;
+  }
+
+  .cyber-input::placeholder {
+    color: var(--muted);
+  }
+
+  .cyber-input:focus {
+    border-color: var(--primary);
+    outline: none;
   }
 
   .dither-bg {
-    background-image: url("data:image/svg+xml,%3Csvg width='4' height='4' viewBox='0 0 4 4' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 0H2V2H0V0Z' fill='%23222222' fill-opacity='0.4'/%3E%3C/svg%3E");
+    background-image: var(--dither-pattern);
+  }
+
+  /* Theme-aware text colors */
+  .text-theme-primary {
+    color: var(--primary);
+  }
+
+  .text-theme-muted {
+    color: var(--muted);
+  }
+
+  .bg-theme-surface {
+    background-color: var(--surface);
+  }
+
+  .border-theme {
+    border-color: var(--border);
   }
 }

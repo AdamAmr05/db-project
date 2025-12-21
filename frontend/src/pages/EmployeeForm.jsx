@@ -142,10 +142,10 @@ const EmployeeForm = () => {
     return (
         <div className="space-y-6 max-w-4xl mx-auto">
             <div className="flex items-center gap-4 mb-8">
-                <button onClick={() => navigate('/employees')} className="hover:text-white transition-colors">
+                <button onClick={() => navigate('/employees')} className="hover:text-primary transition-colors">
                     <ArrowLeft className="w-6 h-6" />
                 </button>
-                <h1 className="text-2xl font-bold text-white tracking-wider">
+                <h1 className="text-2xl font-bold text-primary tracking-wider">
                     {isEdit ? 'EDIT_PERSONNEL_FILE' : 'NEW_PERSONNEL_ENTRY'}
                 </h1>
             </div>
@@ -189,17 +189,17 @@ const EmployeeForm = () => {
                                 onClick={() => setShowGender(!showGender)}
                                 className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <span className={formData.Gender ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Gender ? 'text-primary' : 'text-muted'}>
                                     {formData.Gender || 'SELECT_GENDER'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showGender && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Male', 'Female'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Gender: opt }));
                                                 setShowGender(false);
@@ -268,17 +268,17 @@ const EmployeeForm = () => {
                                 onClick={() => setShowStatus(!showStatus)}
                                 className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <span className={formData.Employment_Status ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Employment_Status ? 'text-primary' : 'text-muted'}>
                                     {formData.Employment_Status || 'SELECT_STATUS'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showStatus && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Active', 'Probation', 'Leave', 'Retired'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Employment_Status: opt }));
                                                 setShowStatus(false);
@@ -324,17 +324,17 @@ const EmployeeForm = () => {
                                 onClick={() => setShowDept(!showDept)}
                                 className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <span className={formData.Department_ID ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Department_ID ? 'text-primary' : 'text-muted'}>
                                     {departments.find(d => d.Department_ID === Number(formData.Department_ID))?.Department_Name || 'SELECT_DEPARTMENT'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showDept && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {departments.map(dept => (
                                         <div
                                             key={dept.Department_ID}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Department_ID: dept.Department_ID }));
                                                 setShowDept(false);
@@ -353,17 +353,17 @@ const EmployeeForm = () => {
                                 onClick={() => setShowJob(!showJob)}
                                 className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <span className={formData.Job_ID ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Job_ID ? 'text-primary' : 'text-muted'}>
                                     {filteredJobs.find(j => j.Job_ID === Number(formData.Job_ID))?.Job_Title || 'SELECT_JOB'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showJob && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {filteredJobs.map(job => (
                                         <div
                                             key={job.Job_ID}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Job_ID: job.Job_ID }));
                                                 setShowJob(false);
@@ -382,17 +382,17 @@ const EmployeeForm = () => {
                                 onClick={() => setShowContract(!showContract)}
                                 className="cyber-input cursor-pointer flex justify-between items-center"
                             >
-                                <span className={formData.Contract_ID ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Contract_ID ? 'text-primary' : 'text-muted'}>
                                     {contracts.find(c => c.Contract_ID === Number(formData.Contract_ID))?.Contract_Name || 'SELECT_CONTRACT'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showContract && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {contracts.map(contract => (
                                         <div
                                             key={contract.Contract_ID}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Contract_ID: contract.Contract_ID }));
                                                 setShowContract(false);

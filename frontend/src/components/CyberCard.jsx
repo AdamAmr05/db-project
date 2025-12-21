@@ -23,13 +23,14 @@ const CyberCard = ({ children, className, title, icon: Icon, dither = false }) =
                 {children}
             </div>
 
-            {/* Corner Accents */}
-            <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-white opacity-20" />
-            <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-white opacity-20" />
-            <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-white opacity-20" />
-            <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-white opacity-20" />
+            {/* Corner Accents - using opacity for theme-awareness */}
+            <div className="absolute top-0 left-0 w-2 h-2 border-l border-t border-primary opacity-20" />
+            <div className="absolute top-0 right-0 w-2 h-2 border-r border-t border-primary opacity-20" />
+            <div className="absolute bottom-0 left-0 w-2 h-2 border-l border-b border-primary opacity-20" />
+            <div className="absolute bottom-0 right-0 w-2 h-2 border-r border-b border-primary opacity-20" />
         </div>
     );
 };
 
 export default CyberCard;
+

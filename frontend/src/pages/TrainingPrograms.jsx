@@ -45,12 +45,12 @@ const TrainingPrograms = () => {
         <div className="space-y-6">
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">TRAINING PROGRAMS</h1>
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">TRAINING PROGRAMS</h1>
                     <p className="text-muted font-mono text-sm mt-1">DEVELOP WORKFORCE SKILLS</p>
                 </div>
                 <Link
                     to="/training/new"
-                    className="flex items-center gap-2 bg-primary text-black px-4 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
+                    className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold hover:opacity-90 transition-colors"
                 >
                     <Plus className="w-4 h-4" />
                     NEW PROGRAM
@@ -65,7 +65,7 @@ const TrainingPrograms = () => {
                     placeholder="SEARCH PROGRAMS..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono text-sm"
+                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-accent font-mono text-sm"
                 />
             </div>
 
@@ -82,7 +82,7 @@ const TrainingPrograms = () => {
                                 <div className="flex gap-2">
                                     <button
                                         onClick={() => navigate(`/training/${program.Program_ID}`)}
-                                        className="p-1.5 hover:bg-white/10 rounded text-muted hover:text-white transition-colors"
+                                        className="p-1.5 hover:bg-surfaceHighlight rounded text-muted hover:text-primary transition-colors"
                                     >
                                         <Edit className="w-4 h-4" />
                                     </button>
@@ -96,11 +96,11 @@ const TrainingPrograms = () => {
                             </div>
 
                             <div className="mb-4">
-                                <h3 className="text-xl font-bold text-white mb-1 group-hover:text-primary transition-colors">
+                                <h3 className="text-xl font-bold text-primary mb-1 group-hover:text-accent transition-colors">
                                     {program.Title}
                                 </h3>
                                 <div className="flex items-center gap-2 text-sm text-muted">
-                                    <span className="font-mono text-xs bg-white/5 px-2 py-0.5 rounded">
+                                    <span className="font-mono text-xs bg-surfaceHighlight px-2 py-0.5 rounded">
                                         {program.Program_Code}
                                     </span>
                                     <span>•</span>
@@ -111,7 +111,7 @@ const TrainingPrograms = () => {
                             <div className="space-y-3">
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-muted">Type</span>
-                                    <span className="text-white">{program.Type}</span>
+                                    <span className="text-primary">{program.Type}</span>
                                 </div>
                                 <div className="flex justify-between items-center text-sm">
                                     <span className="text-muted">Status</span>
@@ -120,7 +120,7 @@ const TrainingPrograms = () => {
                                         {program.Approval_Status}
                                     </span>
                                 </div>
-                                <div className="pt-3 border-t border-white/5 flex items-center justify-between">
+                                <div className="pt-3 border-t border-border/50 flex items-center justify-between">
                                     <div className="flex items-center gap-2 text-muted text-sm">
                                         <Users className="w-4 h-4" />
                                         <span>{program.Enrolled_Count} Enrolled</span>

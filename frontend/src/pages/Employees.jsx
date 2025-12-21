@@ -92,11 +92,11 @@ const Employees = () => {
                                 <tr key={emp.Employee_ID} className="border-b border-border/50 hover:bg-surfaceHighlight transition-colors group">
                                     <td className="p-4 text-muted">#{String(emp.Employee_ID).padStart(4, '0')}</td>
                                     <td className="p-4">
-                                        <div className="font-bold text-white">{emp.First_Name} {emp.Last_Name}</div>
+                                        <div className="font-bold text-primary">{emp.First_Name} {emp.Last_Name}</div>
                                         <div className="text-xs text-muted">{emp.Work_Email}</div>
                                     </td>
-                                    <td className="p-4 text-white">{emp.Job_Title || 'N/A'}</td>
-                                    <td className="p-4 text-white">{emp.Department_Name || 'N/A'}</td>
+                                    <td className="p-4 text-primary">{emp.Job_Title || 'N/A'}</td>
+                                    <td className="p-4 text-primary">{emp.Department_Name || 'N/A'}</td>
                                     <td className="p-4">
                                         <span className={`px-2 py-1 text-[10px] border ${emp.Employment_Status === 'Active' ? 'border-green-500 text-green-500' :
                                             emp.Employment_Status === 'Probation' ? 'border-yellow-500 text-yellow-500' :
@@ -109,13 +109,13 @@ const Employees = () => {
                                         <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
                                             <button
                                                 onClick={() => navigate(`/employees/${emp.Employee_ID}`)}
-                                                className="p-2 hover:bg-white hover:text-black transition-colors"
+                                                className="p-2 hover:bg-primary hover:text-[var(--primary-inverted)] transition-colors"
                                             >
                                                 <Edit2 className="w-4 h-4" />
                                             </button>
                                             <button
                                                 onClick={() => handleDelete(emp.Employee_ID)}
-                                                className="p-2 hover:bg-red-500 hover:text-white transition-colors text-red-500"
+                                                className="p-2 hover:bg-red-500 hover:text-primary transition-colors text-red-500"
                                             >
                                                 <Trash2 className="w-4 h-4" />
                                             </button>

@@ -182,12 +182,12 @@ const JobForm = () => {
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => navigate('/jobs')}
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                    className="p-2 hover:bg-surfaceHighlight rounded-full transition-colors"
                 >
-                    <ArrowLeft className="w-6 h-6 text-white" />
+                    <ArrowLeft className="w-6 h-6 text-primary" />
                 </button>
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">
                         {isEdit ? 'EDIT JOB' : 'NEW JOB'}
                     </h1>
                     <p className="text-muted font-mono text-sm mt-1">
@@ -216,7 +216,7 @@ const JobForm = () => {
                                     value={formData.Job_Title}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                     placeholder="e.g. Senior Backend Engineer"
                                 />
                             </div>
@@ -233,7 +233,7 @@ const JobForm = () => {
                                     value={formData.Job_Code}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                     placeholder="e.g. ENG-001"
                                 />
                             </div>
@@ -246,20 +246,20 @@ const JobForm = () => {
                                 <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted" />
                                 <div
                                     onClick={() => setShowDept(!showDept)}
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <span className={formData.Department_ID ? 'text-white' : 'text-muted'}>
+                                    <span className={formData.Department_ID ? 'text-primary' : 'text-muted'}>
                                         {departments.find(d => d.Department_ID === Number(formData.Department_ID))?.Department_Name || 'SELECT DEPARTMENT'}
                                     </span>
                                     <span className="text-muted">▼</span>
                                 </div>
                             </div>
                             {showDept && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {departments.map(d => (
                                         <div
                                             key={d.Department_ID}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Department_ID: d.Department_ID }));
                                                 setShowDept(false);
@@ -277,17 +277,17 @@ const JobForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">LEVEL</label>
                             <div
                                 onClick={() => setShowLevel(!showLevel)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Job_Level || 'SELECT_LEVEL'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showLevel && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Entry', 'Mid', 'Senior', 'Executive'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Job_Level: opt }));
                                                 setShowLevel(false);
@@ -305,17 +305,17 @@ const JobForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">GRADE</label>
                             <div
                                 onClick={() => setShowGrade(!showGrade)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Job_Grade || 'SELECT_GRADE'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showGrade && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Grade A', 'Grade B', 'Grade C'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Job_Grade: opt }));
                                                 setShowGrade(false);
@@ -338,18 +338,18 @@ const JobForm = () => {
                                 onChange={handleChange}
                                 onFocus={() => setShowSuggestions(true)}
                                 onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                 placeholder="e.g. IT, Finance"
                                 autoComplete="off"
                             />
                             {showSuggestions && existingCategories.length > 0 && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {existingCategories
                                         .filter(cat => cat.toLowerCase().includes(formData.Job_Category.toLowerCase()))
                                         .map((cat, i) => (
                                             <div
                                                 key={i}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData(prev => ({ ...prev, Job_Category: cat }));
                                                     setShowSuggestions(false);
@@ -367,15 +367,15 @@ const JobForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">REPORTS TO (SUPERIOR JOB)</label>
                             <div
                                 onClick={() => setShowReportsTo(!showReportsTo)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
-                                <span className={formData.Reports_To ? 'text-white' : 'text-muted'}>
+                                <span className={formData.Reports_To ? 'text-primary' : 'text-muted'}>
                                     {potentialManagers.find(j => j.Job_ID === Number(formData.Reports_To))?.Job_Title || 'NO SUPERIOR'}
                                 </span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showReportsTo && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     <div
                                         className="px-4 py-2 text-xs font-mono text-muted hover:bg-primary/20 cursor-pointer"
                                         onClick={() => {
@@ -390,7 +390,7 @@ const JobForm = () => {
                                         .map(job => (
                                             <div
                                                 key={job.Job_ID}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData(prev => ({ ...prev, Reports_To: job.Job_ID }));
                                                     setShowReportsTo(false);
@@ -420,7 +420,7 @@ const JobForm = () => {
                                     name="Min_Salary"
                                     value={formData.Min_Salary}
                                     onChange={handleChange}
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                 />
                             </div>
                         </div>
@@ -433,7 +433,7 @@ const JobForm = () => {
                                     name="Max_Salary"
                                     value={formData.Max_Salary}
                                     onChange={handleChange}
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                 />
                             </div>
                         </div>
@@ -446,7 +446,7 @@ const JobForm = () => {
                             value={formData.Job_Description}
                             onChange={handleChange}
                             rows={4}
-                            className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                            className="w-full bg-surface border border-border rounded px-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                             placeholder="Detailed job description..."
                         />
                     </div>
@@ -454,7 +454,7 @@ const JobForm = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-6 bg-primary text-black font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                        className="w-full mt-6 bg-primary text-[var(--primary-inverted)] font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
                     >
                         <Save className="w-5 h-5" />
                         {loading ? 'SAVING...' : (isEdit ? 'UPDATE JOB' : 'CREATE JOB')}
@@ -464,15 +464,15 @@ const JobForm = () => {
 
             {/* Objectives & KPIs Section (Edit Mode Only) */}
             {isEdit && (
-                <div className="space-y-6 pt-6 border-t border-white/10">
+                <div className="space-y-6 pt-6 border-t border-border">
                     <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-white tracking-tight flex items-center gap-2">
+                        <h2 className="text-xl font-bold text-primary tracking-tight flex items-center gap-2">
                             <Activity className="w-5 h-5 text-primary" />
                             PERFORMANCE OBJECTIVES
                         </h2>
                         <button
                             onClick={() => setShowObjForm(!showObjForm)}
-                            className="bg-primary/10 text-primary border border-primary/50 px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-black transition-all"
+                            className="bg-primary/10 text-primary border border-primary/50 px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-[var(--primary-inverted)] transition-all"
                         >
                             + ADD OBJECTIVE
                         </button>
@@ -481,32 +481,32 @@ const JobForm = () => {
                     {/* Add Objective Form */}
                     {showObjForm && (
                         <CyberCard className="border border-primary/50">
-                            <h3 className="text-sm font-bold text-white mb-4">NEW OBJECTIVE</h3>
+                            <h3 className="text-sm font-bold text-primary mb-4">NEW OBJECTIVE</h3>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input
                                     placeholder="Title (e.g., Code Quality)"
                                     value={newObj.Objective_Title}
                                     onChange={e => setNewObj({ ...newObj, Objective_Title: e.target.value })}
-                                    className="bg-black/50 border border-border rounded px-4 py-2 text-white font-mono text-sm"
+                                    className="bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
                                 />
                                 <input
                                     type="number"
                                     placeholder="Weight % (0-100)"
                                     value={newObj.Weight}
                                     onChange={e => setNewObj({ ...newObj, Weight: e.target.value })}
-                                    className="bg-black/50 border border-border rounded px-4 py-2 text-white font-mono text-sm"
+                                    className="bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
                                 />
                                 <textarea
                                     placeholder="Description..."
                                     value={newObj.Description}
                                     onChange={e => setNewObj({ ...newObj, Description: e.target.value })}
-                                    className="md:col-span-2 bg-black/50 border border-border rounded px-4 py-2 text-white font-mono text-sm"
+                                    className="md:col-span-2 bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
                                     rows={2}
                                 />
                             </div>
                             <div className="flex justify-end gap-2 mt-4">
-                                <button onClick={() => setShowObjForm(false)} className="text-muted text-xs hover:text-white">CANCEL</button>
-                                <button onClick={handleAddObjective} className="bg-primary text-black text-xs font-bold px-4 py-2 rounded">SAVE OBJECTIVE</button>
+                                <button onClick={() => setShowObjForm(false)} className="text-muted text-xs hover:text-accent">CANCEL</button>
+                                <button onClick={handleAddObjective} className="bg-primary text-[var(--primary-inverted)] text-xs font-bold px-4 py-2 rounded">SAVE OBJECTIVE</button>
                             </div>
                         </CyberCard>
                     )}
@@ -514,10 +514,10 @@ const JobForm = () => {
                     {/* Objectives List */}
                     <div className="space-y-4">
                         {objectives.map(obj => (
-                            <div key={obj.Objective_ID} className="bg-white/5 border border-white/10 rounded-lg p-4">
+                            <div key={obj.Objective_ID} className="bg-surfaceHighlight border border-border rounded-lg p-4">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
-                                        <h3 className="text-lg font-bold text-white">{obj.Objective_Title}</h3>
+                                        <h3 className="text-lg font-bold text-primary">{obj.Objective_Title}</h3>
                                         <p className="text-muted text-sm">{obj.Description}</p>
                                     </div>
                                     <div className="flex items-center gap-4">
@@ -531,15 +531,15 @@ const JobForm = () => {
                                 </div>
 
                                 {/* KPIs */}
-                                <div className="ml-4 pl-4 border-l-2 border-white/10 space-y-3">
+                                <div className="ml-4 pl-4 border-l-2 border-border space-y-3">
                                     {obj.KPIs && obj.KPIs.map(kpi => (
-                                        <div key={kpi.KPI_ID} className="bg-black/30 p-3 rounded flex justify-between items-center">
+                                        <div key={kpi.KPI_ID} className="bg-surfaceHighlight p-3 rounded flex justify-between items-center">
                                             <div>
-                                                <div className="text-white font-mono text-sm font-bold">{kpi.KPI_Name}</div>
+                                                <div className="text-primary font-mono text-sm font-bold">{kpi.KPI_Name}</div>
                                                 <div className="text-muted text-xs">Target: {kpi.Target_Value} {kpi.Measurement_Unit}</div>
                                             </div>
                                             <div className="flex items-center gap-3">
-                                                <span className="text-[10px] font-mono bg-white/10 text-white px-2 py-0.5 rounded">
+                                                <span className="text-[10px] font-mono bg-surfaceHighlight text-primary px-2 py-0.5 rounded">
                                                     W: {kpi.Weight}%
                                                 </span>
                                                 <button onClick={() => handleDeleteKPI(kpi.KPI_ID)} className="text-muted hover:text-red-500">
@@ -551,22 +551,22 @@ const JobForm = () => {
 
                                     {/* Add KPI Button/Form */}
                                     {activeObjId === obj.Objective_ID ? (
-                                        <div className="bg-black/50 p-3 rounded border border-white/10 mt-2">
+                                        <div className="bg-surface p-3 rounded border border-border mt-2">
                                             <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
-                                                <input placeholder="KPI Name" value={newKPI.KPI_Name} onChange={e => setNewKPI({ ...newKPI, KPI_Name: e.target.value })} className="col-span-2 bg-black border border-border rounded px-2 py-1 text-white text-xs" />
-                                                <input placeholder="Target" value={newKPI.Target_Value} onChange={e => setNewKPI({ ...newKPI, Target_Value: e.target.value })} className="bg-black border border-border rounded px-2 py-1 text-white text-xs" />
-                                                <input placeholder="Unit" value={newKPI.Measurement_Unit} onChange={e => setNewKPI({ ...newKPI, Measurement_Unit: e.target.value })} className="bg-black border border-border rounded px-2 py-1 text-white text-xs" />
-                                                <input type="number" placeholder="Weight" value={newKPI.Weight} onChange={e => setNewKPI({ ...newKPI, Weight: e.target.value })} className="bg-black border border-border rounded px-2 py-1 text-white text-xs" />
+                                                <input placeholder="KPI Name" value={newKPI.KPI_Name} onChange={e => setNewKPI({ ...newKPI, KPI_Name: e.target.value })} className="col-span-2 bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
+                                                <input placeholder="Target" value={newKPI.Target_Value} onChange={e => setNewKPI({ ...newKPI, Target_Value: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
+                                                <input placeholder="Unit" value={newKPI.Measurement_Unit} onChange={e => setNewKPI({ ...newKPI, Measurement_Unit: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
+                                                <input type="number" placeholder="Weight" value={newKPI.Weight} onChange={e => setNewKPI({ ...newKPI, Weight: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
                                             </div>
                                             <div className="flex justify-end gap-2">
-                                                <button onClick={() => setActiveObjId(null)} className="text-[10px] text-muted hover:text-white">CANCEL</button>
-                                                <button onClick={() => handleAddKPI(obj.Objective_ID)} className="bg-white/20 text-white text-[10px] font-bold px-3 py-1 rounded hover:bg-white/30">ADD KPI</button>
+                                                <button onClick={() => setActiveObjId(null)} className="text-[10px] text-muted hover:text-accent">CANCEL</button>
+                                                <button onClick={() => handleAddKPI(obj.Objective_ID)} className="bg-white/20 text-primary text-[10px] font-bold px-3 py-1 rounded hover:bg-white/30">ADD KPI</button>
                                             </div>
                                         </div>
                                     ) : (
                                         <button
                                             onClick={() => setActiveObjId(obj.Objective_ID)}
-                                            className="text-xs text-muted hover:text-primary flex items-center gap-1 mt-2"
+                                            className="text-xs text-muted hover:text-accent flex items-center gap-1 mt-2"
                                         >
                                             <Plus className="w-3 h-3" /> ADD KPI
                                         </button>

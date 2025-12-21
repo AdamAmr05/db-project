@@ -41,18 +41,18 @@ const Appeals = () => {
 
     return (
         <div className="space-y-6">
-            <h1 className="text-2xl font-bold text-white tracking-wider flex items-center gap-2">
-                <Gavel className="w-6 h-6 text-white" />
+            <h1 className="text-2xl font-bold text-primary tracking-wider flex items-center gap-2">
+                <Gavel className="w-6 h-6 text-primary" />
                 APPEALS BOARD
             </h1>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 {appeals.map((appeal) => (
                     <motion.div key={appeal.Appeal_ID} layout>
-                        <CyberCard className="h-full group hover:border-white/30 transition-colors">
+                        <CyberCard className="h-full group hover:border-muted transition-colors">
                             <div className="flex justify-between items-start mb-4">
                                 <div>
-                                    <div className="font-bold text-white">{appeal.First_Name} {appeal.Last_Name}</div>
+                                    <div className="font-bold text-primary">{appeal.First_Name} {appeal.Last_Name}</div>
                                     <div className="text-xs text-muted font-mono">{appeal.Job_Title}</div>
                                     <div className="text-[10px] text-muted font-mono mt-1 opacity-50">{appeal.Cycle_Name}</div>
                                 </div>
@@ -66,17 +66,17 @@ const Appeals = () => {
                                 </div>
                             </div>
 
-                            <div className="bg-black/40 p-3 mb-4 border border-border">
+                            <div className="bg-surfaceHighlight p-3 mb-4 border border-border">
                                 <div className="flex items-center gap-2 text-xs text-muted mb-1 font-mono uppercase">
                                     <FileText className="w-3 h-3" /> Reason for Appeal
                                 </div>
-                                <p className="text-sm text-gray-300 italic">"{appeal.Reason}"</p>
+                                <p className="text-sm text-muted italic">"{appeal.Reason}"</p>
                             </div>
 
                             <div className="flex justify-between items-end mt-auto pt-4 border-t border-border">
                                 <div>
                                     <div className="text-[10px] text-muted">Original Score</div>
-                                    <div className="font-mono text-white">{appeal.Original_Score}</div>
+                                    <div className="font-mono text-primary">{appeal.Original_Score}</div>
                                 </div>
                                 {appeal.appeal_outcome_Score && (
                                     <div className="text-right">
@@ -91,7 +91,7 @@ const Appeals = () => {
                                             // Don't pre-fill with original score, force user to enter new one or leave empty
                                             setReviewForm({ status: 'Approved', outcomeScore: '' });
                                         }}
-                                        className="bg-white/10 text-white border border-white/20 px-4 py-1.5 text-xs font-bold hover:bg-white hover:text-black transition-all"
+                                        className="bg-surfaceHighlight text-primary border border-border px-4 py-1.5 text-xs font-bold hover:bg-primary hover:text-[var(--primary-inverted)] transition-all"
                                     >
                                         REVIEW
                                     </button>
@@ -113,7 +113,7 @@ const Appeals = () => {
                             initial={{ scale: 0.9 }} animate={{ scale: 1 }} exit={{ scale: 0.9 }}
                             className="bg-background border border-border p-6 w-full max-w-md shadow-2xl"
                         >
-                            <h2 className="text-xl font-bold text-white mb-4">Review Appeal</h2>
+                            <h2 className="text-xl font-bold text-primary mb-4">Review Appeal</h2>
 
                             <div className="mb-6">
                                 <label className="block text-xs font-mono text-muted mb-2">DECISION</label>
@@ -124,7 +124,7 @@ const Appeals = () => {
                                             "p-3 border text-center transition-all",
                                             reviewForm.status === 'Approved'
                                                 ? "bg-green-500/20 border-green-500 text-green-400"
-                                                : "border-border text-muted hover:border-white"
+                                                : "border-border text-muted hover:border-primary"
                                         )}
                                     >
                                         APPROVE
@@ -135,7 +135,7 @@ const Appeals = () => {
                                             "p-3 border text-center transition-all",
                                             reviewForm.status === 'Rejected'
                                                 ? "bg-red-500/20 border-red-500 text-red-400"
-                                                : "border-border text-muted hover:border-white"
+                                                : "border-border text-muted hover:border-primary"
                                         )}
                                     >
                                         REJECT
@@ -146,14 +146,14 @@ const Appeals = () => {
                             {reviewForm.status === 'Approved' && (
                                 <div className="mb-6">
                                     <label className="block text-xs font-mono text-muted mb-1">
-                                        ADJUSTED SCORE (Original: <span className="text-white">{selectedAppeal.Original_Score}</span>)
+                                        ADJUSTED SCORE (Original: <span className="text-primary">{selectedAppeal.Original_Score}</span>)
                                     </label>
                                     <input
                                         type="number" step="0.1" max="5"
                                         placeholder="Enter new score..."
                                         value={reviewForm.outcomeScore}
                                         onChange={e => setReviewForm(prev => ({ ...prev, outcomeScore: e.target.value }))}
-                                        className="w-full bg-black/50 border border-white px-4 py-2 text-white font-mono focus:border-green-500 focus:outline-none"
+                                        className="w-full bg-surface border border-primary px-4 py-2 text-primary font-mono focus:border-green-500 focus:outline-none"
                                         autoFocus
                                     />
                                     {reviewForm.outcomeScore && parseFloat(reviewForm.outcomeScore) === parseFloat(selectedAppeal.Original_Score) && (
@@ -165,8 +165,8 @@ const Appeals = () => {
                             )}
 
                             <div className="flex justify-end gap-3">
-                                <button onClick={() => setSelectedAppeal(null)} className="text-muted text-sm hover:text-white">CANCEL</button>
-                                <button onClick={handleReviewSubmit} className="bg-white text-black px-4 py-2 font-bold hover:bg-gray-200 transition-colors">
+                                <button onClick={() => setSelectedAppeal(null)} className="text-muted text-sm hover:text-primary">CANCEL</button>
+                                <button onClick={handleReviewSubmit} className="bg-primary text-[var(--primary-inverted)] px-4 py-2 font-bold hover:opacity-90 transition-colors">
                                     SUBMIT DECISION
                                 </button>
                             </div>

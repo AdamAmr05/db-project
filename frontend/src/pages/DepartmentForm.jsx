@@ -109,12 +109,12 @@ const DepartmentForm = () => {
             <div className="flex items-center gap-4">
                 <button
                     onClick={() => navigate('/departments')}
-                    className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                    className="p-2 hover:bg-surfaceHighlight rounded-full transition-colors"
                 >
-                    <ArrowLeft className="w-6 h-6 text-white" />
+                    <ArrowLeft className="w-6 h-6 text-primary" />
                 </button>
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight">
+                    <h1 className="text-3xl font-bold text-primary tracking-tight">
                         {isEdit ? 'EDIT DEPARTMENT' : 'NEW DEPARTMENT'}
                     </h1>
                     <p className="text-muted font-mono text-sm mt-1">
@@ -143,7 +143,7 @@ const DepartmentForm = () => {
                                     value={formData.Department_Name}
                                     onChange={handleChange}
                                     required
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                     placeholder="e.g. Computer Science"
                                 />
                             </div>
@@ -154,17 +154,17 @@ const DepartmentForm = () => {
                             <label className="block text-xs font-mono text-muted mb-1">DEPARTMENT TYPE</label>
                             <div
                                 onClick={() => setShowType(!showType)}
-                                className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                             >
                                 <span>{formData.Department_Type || 'SELECT_TYPE'}</span>
                                 <span className="text-muted">▼</span>
                             </div>
                             {showType && (
-                                <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                     {['Academic', 'Administrative'].map((opt) => (
                                         <div
                                             key={opt}
-                                            className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                            className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                             onClick={() => {
                                                 setFormData(prev => ({ ...prev, Department_Type: opt }));
                                                 setShowType(false);
@@ -183,19 +183,19 @@ const DepartmentForm = () => {
                                 <label className="block text-xs font-mono text-muted mb-1">FACULTY</label>
                                 <div
                                     onClick={() => setShowFaculty(!showFaculty)}
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <span className={formData.Faculty_ID ? 'text-white' : 'text-muted'}>
+                                    <span className={formData.Faculty_ID ? 'text-primary' : 'text-muted'}>
                                         {faculties.find(f => f.Faculty_ID === Number(formData.Faculty_ID))?.Faculty_Name || 'SELECT FACULTY'}
                                     </span>
                                     <span className="text-muted">▼</span>
                                 </div>
                                 {showFaculty && (
-                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                         {faculties.map(f => (
                                             <div
                                                 key={f.Faculty_ID}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData(prev => ({ ...prev, Faculty_ID: f.Faculty_ID }));
                                                     setShowFaculty(false);
@@ -212,19 +212,19 @@ const DepartmentForm = () => {
                                 <label className="block text-xs font-mono text-muted mb-1">UNIVERSITY</label>
                                 <div
                                     onClick={() => setShowUniversity(!showUniversity)}
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                                 >
-                                    <span className={formData.University_ID ? 'text-white' : 'text-muted'}>
+                                    <span className={formData.University_ID ? 'text-primary' : 'text-muted'}>
                                         {universities.find(u => u.University_ID === Number(formData.University_ID))?.University_Name || 'SELECT UNIVERSITY'}
                                     </span>
                                     <span className="text-muted">▼</span>
                                 </div>
                                 {showUniversity && (
-                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    <div className="absolute z-10 w-full mt-1 bg-surface border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                         {universities.map(u => (
                                             <div
                                                 key={u.University_ID}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-primary/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData(prev => ({ ...prev, University_ID: u.University_ID }));
                                                     setShowUniversity(false);
@@ -248,7 +248,7 @@ const DepartmentForm = () => {
                                     name="Location"
                                     value={formData.Location}
                                     onChange={handleChange}
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                     placeholder="e.g. Building C, Floor 2"
                                 />
                             </div>
@@ -264,7 +264,7 @@ const DepartmentForm = () => {
                                     name="Contact_Email"
                                     value={formData.Contact_Email}
                                     onChange={handleChange}
-                                    className="w-full bg-black/50 border border-border rounded pl-10 pr-4 py-2 text-white focus:outline-none focus:border-primary font-mono"
+                                    className="w-full bg-surface border border-border rounded pl-10 pr-4 py-2 text-primary focus:outline-none focus:border-primary font-mono"
                                     placeholder="e.g. cs@university.edu"
                                 />
                             </div>
@@ -274,7 +274,7 @@ const DepartmentForm = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full mt-6 bg-primary text-black font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
+                        className="w-full mt-6 bg-primary text-[var(--primary-inverted)] font-bold py-3 rounded hover:bg-primary/90 transition-colors flex items-center justify-center gap-2"
                     >
                         <Save className="w-5 h-5" />
                         {loading ? 'SAVING...' : (isEdit ? 'UPDATE DEPARTMENT' : 'CREATE DEPARTMENT')}

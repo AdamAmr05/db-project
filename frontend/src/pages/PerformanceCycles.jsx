@@ -85,7 +85,7 @@ const PerformanceCycles = () => {
             {/* Header */}
             <div className="flex justify-between items-center">
                 <div>
-                    <h1 className="text-3xl font-bold text-white tracking-tight flex items-center gap-3">
+                    <h1 className="text-3xl font-bold text-primary tracking-tight flex items-center gap-3">
                         <Clock className="w-8 h-8 text-primary" />
                         PERFORMANCE CYCLES
                     </h1>
@@ -97,7 +97,7 @@ const PerformanceCycles = () => {
                         setFormData({ Cycle_Name: '', Cycle_Type: 'Annual', Start_Date: '', End_Date: '', Submission_Deadline: '' });
                         setShowForm(true);
                     }}
-                    className="bg-primary text-black font-bold px-6 py-2 rounded hover:bg-primary/90 transition-all flex items-center gap-2"
+                    className="bg-primary text-[var(--primary-inverted)] font-bold px-6 py-2 rounded hover:bg-primary/90 transition-all flex items-center gap-2"
                 >
                     <Plus className="w-5 h-5" /> NEW CYCLE
                 </button>
@@ -107,7 +107,7 @@ const PerformanceCycles = () => {
             {showForm && (
                 <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
                     <CyberCard className="w-full max-w-lg border-primary/50 relative">
-                        <h2 className="text-xl font-bold text-white mb-6">
+                        <h2 className="text-xl font-bold text-primary mb-6">
                             {editingCycle ? 'EDIT CYCLE' : 'NEW PERFORMANCE CYCLE'}
                         </h2>
                         <form onSubmit={handleSubmit} className="space-y-4">
@@ -118,24 +118,24 @@ const PerformanceCycles = () => {
                                     value={formData.Cycle_Name}
                                     onChange={e => setFormData({ ...formData, Cycle_Name: e.target.value })}
                                     placeholder="e.g. Q4 2024 Review"
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 text-primary"
                                 />
                             </div>
                             <div className="relative">
                                 <label className="text-xs font-mono text-muted">TYPE</label>
                                 <div
                                     onClick={() => setShowCycleType(!showCycleType)}
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white cursor-pointer flex justify-between items-center font-mono"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 text-primary cursor-pointer flex justify-between items-center font-mono"
                                 >
                                     <span>{formData.Cycle_Type || 'SELECT_TYPE'}</span>
                                     <span className="text-muted">▼</span>
                                 </div>
                                 {showCycleType && (
-                                    <div className="absolute z-10 w-full mt-1 bg-black border border-primary/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
+                                    <div className="absolute z-10 w-full mt-1 bg-surface border border-accent/30 rounded-md shadow-lg max-h-40 overflow-y-auto">
                                         {['Annual', 'Probation', 'Quarterly'].map((opt) => (
                                             <div
                                                 key={opt}
-                                                className="px-4 py-2 text-xs font-mono text-white hover:bg-primary/20 cursor-pointer"
+                                                className="px-4 py-2 text-xs font-mono text-primary hover:bg-accent/20 cursor-pointer"
                                                 onClick={() => {
                                                     setFormData({ ...formData, Cycle_Type: opt });
                                                     setShowCycleType(false);
@@ -154,7 +154,7 @@ const PerformanceCycles = () => {
                                         type="date" required
                                         value={formData.Start_Date}
                                         onChange={e => setFormData({ ...formData, Start_Date: e.target.value })}
-                                        className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
+                                        className="w-full bg-surface border border-border rounded px-4 py-2 text-primary"
                                     />
                                 </div>
                                 <div>
@@ -163,7 +163,7 @@ const PerformanceCycles = () => {
                                         type="date" required
                                         value={formData.End_Date}
                                         onChange={e => setFormData({ ...formData, End_Date: e.target.value })}
-                                        className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
+                                        className="w-full bg-surface border border-border rounded px-4 py-2 text-primary"
                                     />
                                 </div>
                             </div>
@@ -173,12 +173,12 @@ const PerformanceCycles = () => {
                                     type="date" required
                                     value={formData.Submission_Deadline}
                                     onChange={e => setFormData({ ...formData, Submission_Deadline: e.target.value })}
-                                    className="w-full bg-black/50 border border-border rounded px-4 py-2 text-white"
+                                    className="w-full bg-surface border border-border rounded px-4 py-2 text-primary"
                                 />
                             </div>
                             <div className="flex gap-4 pt-4">
-                                <button type="button" onClick={() => setShowForm(false)} className="flex-1 bg-white/10 text-white py-2 rounded hover:bg-white/20">CANCEL</button>
-                                <button type="submit" className="flex-1 bg-primary text-black font-bold py-2 rounded hover:bg-primary/90">SAVE CYCLE</button>
+                                <button type="button" onClick={() => setShowForm(false)} className="flex-1 bg-surfaceHighlight text-primary py-2 rounded hover:bg-border">CANCEL</button>
+                                <button type="submit" className="flex-1 bg-primary text-[var(--primary-inverted)] font-bold py-2 rounded hover:opacity-90">SAVE CYCLE</button>
                             </div>
                         </form>
                     </CyberCard>
@@ -194,7 +194,7 @@ const PerformanceCycles = () => {
                         placeholder="Search cycles..."
                         value={searchTerm}
                         onChange={(e) => setSearchTerm(e.target.value)}
-                        className="w-full bg-black/50 border border-border rounded-lg pl-10 pr-4 py-3 text-white focus:outline-none focus:border-primary font-mono"
+                        className="w-full bg-surface border border-border rounded-lg pl-10 pr-4 py-3 text-primary focus:outline-none focus:border-accent font-mono"
                     />
                 </div>
             </div>
@@ -207,20 +207,20 @@ const PerformanceCycles = () => {
                         <CyberCard key={cycle.Cycle_ID} className={`border-l-4 ${isActive ? 'border-l-primary' : 'border-l-muted'}`}>
                             <div className="flex justify-between items-start">
                                 <div>
-                                    <h3 className="text-xl font-bold text-white">{cycle.Cycle_Name}</h3>
-                                    <span className={`text-xs font-mono px-2 py-0.5 rounded ${isActive ? 'bg-primary/20 text-primary' : 'bg-white/10 text-muted'}`}>
+                                    <h3 className="text-xl font-bold text-primary">{cycle.Cycle_Name}</h3>
+                                    <span className={`text-xs font-mono px-2 py-0.5 rounded ${isActive ? 'bg-primary/20 text-primary' : 'bg-surfaceHighlight text-muted'}`}>
                                         {isActive ? 'ACTIVE' : 'INACTIVE'}
                                     </span>
                                 </div>
                                 <div className="flex gap-2">
-                                    <button onClick={() => handleEdit(cycle)} className="p-2 hover:bg-white/10 rounded text-muted hover:text-white"><Edit2 className="w-4 h-4" /></button>
-                                    <button onClick={() => handleDelete(cycle.Cycle_ID)} className="p-2 hover:bg-white/10 rounded text-muted hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
+                                    <button onClick={() => handleEdit(cycle)} className="p-2 hover:bg-surfaceHighlight rounded text-muted hover:text-primary"><Edit2 className="w-4 h-4" /></button>
+                                    <button onClick={() => handleDelete(cycle.Cycle_ID)} className="p-2 hover:bg-surfaceHighlight rounded text-muted hover:text-red-500"><Trash2 className="w-4 h-4" /></button>
                                 </div>
                             </div>
                             <div className="grid grid-cols-2 gap-4 mt-6 text-sm">
                                 <div>
                                     <div className="text-muted text-xs font-mono">PERIOD</div>
-                                    <div className="text-white">{new Date(cycle.Start_Date).toLocaleDateString()} - {new Date(cycle.End_Date).toLocaleDateString()}</div>
+                                    <div className="text-primary">{new Date(cycle.Start_Date).toLocaleDateString()} - {new Date(cycle.End_Date).toLocaleDateString()}</div>
                                 </div>
                                 <div>
                                     <div className="text-muted text-xs font-mono">DEADLINE</div>

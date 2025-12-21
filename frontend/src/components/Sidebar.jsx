@@ -22,12 +22,12 @@ const Sidebar = () => {
     return (
         <aside className="w-64 bg-background border-r border-border flex flex-col h-screen fixed left-0 top-0 z-50">
             <div className="p-6 border-b border-border flex items-center gap-3">
-                {/* ShieldCheck was removed from imports, so it's removed here to maintain syntactical correctness */}
                 <div>
                     <div>
-                        <h1 className="text-lg font-bold tracking-wider text-white">HR <span className="text-muted">PORTAL</span></h1>
+                        <h1 className="text-lg font-bold tracking-wider text-primary">HR <span className="text-muted">PORTAL</span></h1>
                         <p className="text-[10px] text-muted uppercase tracking-widest">Management System</p>
-                    </div>        </div>
+                    </div>
+                </div>
             </div>
 
             <nav className="flex-1 p-4 space-y-2">
@@ -39,8 +39,8 @@ const Sidebar = () => {
                             clsx(
                                 'flex items-center gap-3 px-4 py-3 text-sm font-medium transition-all duration-200 border border-transparent',
                                 isActive
-                                    ? 'bg-surface border-white text-white shadow-[0_0_10px_rgba(255,255,255,0.1)]'
-                                    : 'text-muted hover:text-white hover:bg-surfaceHighlight hover:border-border'
+                                    ? 'bg-surface border-primary text-primary shadow-[0_0_10px_rgba(128,128,128,0.1)]'
+                                    : 'text-muted hover:text-accent hover:bg-surfaceHighlight hover:border-border'
                             )
                         }
                     >
@@ -56,7 +56,7 @@ const Sidebar = () => {
                     <p className="text-xs text-muted relative z-10">System Status</p>
                     <div className="flex items-center gap-2 mt-2 relative z-10">
                         <div className="w-2 h-2 bg-green-500 animate-pulse" />
-                        <span className="text-xs text-white font-mono">ONLINE</span>
+                        <span className="text-xs text-primary font-mono">ONLINE</span>
                     </div>
                 </div>
             </div>
@@ -65,3 +65,4 @@ const Sidebar = () => {
 };
 
 export default Sidebar;
+
