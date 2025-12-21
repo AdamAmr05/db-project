@@ -30,12 +30,12 @@ const Faculties = () => {
                 <h1 className="text-2xl font-bold text-primary tracking-wider flex items-center gap-3">
                     <Building2 className="w-6 h-6" /> FACULTY_INDEX
                 </h1>
-                <button
+                {/* <button
                     onClick={() => navigate('/faculties/new')}
                     className="cyber-button flex items-center gap-2"
                 >
                     <Plus className="w-4 h-4" /> ADD_FACULTY
-                </button>
+                </button> */}
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">

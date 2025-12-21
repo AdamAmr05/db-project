@@ -48,13 +48,13 @@ const Departments = () => {
                     <h1 className="text-3xl font-bold text-primary tracking-tight">DEPARTMENTS</h1>
                     <p className="text-muted font-mono text-sm mt-1">MANAGE ORGANIZATIONAL UNITS</p>
                 </div>
-                <Link
+                {/* <Link
                     to="/departments/new"
                     className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] px-4 py-2 rounded font-bold hover:bg-primary/90 transition-colors"
                 >
                     <Plus className="w-4 h-4" />
                     ADD DEPARTMENT
-                </Link>
+                </Link> */}
             </div>
 
             {/* Search Bar */}
