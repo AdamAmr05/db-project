@@ -66,20 +66,87 @@ const ChatWidget = () => {
     };
 
     const formatMessage = (content) => {
-        // Simple markdown-like formatting for tables and lists
-        return content.split('\n').map((line, i) => {
-            // Bold text
-            line = line.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
-            // Bullet points
-            if (line.startsWith('• ') || line.startsWith('- ')) {
-                return <div key={i} className="ml-2">{line}</div>;
-            }
-            // Table rows (basic detection)
+        const lines = content.split('\n');
+        const result = [];
+        let tableBuffer = [];
+        let inTable = false;
+
+        // Helper to process inline formatting (bold, code)
+        const processInlineFormatting = (text) => {
+            return text
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/`([^`]+)`/g, '<code class="bg-[var(--surface)] px-1 rounded text-xs">$1</code>');
+        };
+
+        const renderTable = (tableLines) => {
+            if (tableLines.length < 2) return null;
+
+            // Parse header and rows, also process bold formatting in cells
+            const parseRow = (line) => line.split('|')
+                .filter(cell => cell.trim() && !cell.match(/^[-:]+$/))
+                .map(cell => processInlineFormatting(cell.trim()));
+            const header = parseRow(tableLines[0]);
+            const rows = tableLines.slice(2).map(parseRow).filter(r => r.length > 0);
+
+            return (
+                <div className="overflow-x-auto my-2">
+                    <table className="w-full text-xs border border-border">
+                        <thead>
+                            <tr className="bg-[var(--surface)]">
+                                {header.map((cell, i) => (
+                                    <th key={i} className="px-2 py-1 text-left border-b border-border font-mono text-muted" dangerouslySetInnerHTML={{ __html: cell }} />
+                                ))}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {rows.map((row, i) => (
+                                <tr key={i} className="border-b border-border/50 hover:bg-[var(--surface)]">
+                                    {row.map((cell, j) => (
+                                        <td key={j} className="px-2 py-1 font-mono" dangerouslySetInnerHTML={{ __html: cell }} />
+                                    ))}
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            );
+        };
+
+        lines.forEach((line, i) => {
             if (line.startsWith('|')) {
-                return <div key={i} className="font-mono text-xs">{line}</div>;
+                inTable = true;
+                tableBuffer.push(line);
+            } else {
+                if (inTable && tableBuffer.length > 0) {
+                    result.push(<div key={`table-${i}`}>{renderTable(tableBuffer)}</div>);
+                    tableBuffer = [];
+                    inTable = false;
+                }
+
+                // Process inline formatting
+                let formattedLine = processInlineFormatting(line);
+
+                // Bullet points (•, -, or *)
+                if (line.startsWith('• ') || line.startsWith('- ') || line.match(/^\* /)) {
+                    const bulletContent = formattedLine.replace(/^[•\-\*]\s*/, '');
+                    result.push(
+                        <div key={i} className="flex gap-2 ml-1">
+                            <span className="text-muted">•</span>
+                            <span dangerouslySetInnerHTML={{ __html: bulletContent }} />
+                        </div>
+                    );
+                } else {
+                    result.push(<div key={i} dangerouslySetInnerHTML={{ __html: formattedLine || '&nbsp;' }} />);
+                }
             }
-            return <div key={i} dangerouslySetInnerHTML={{ __html: line || '&nbsp;' }} />;
         });
+
+        // Don't forget trailing table
+        if (tableBuffer.length > 0) {
+            result.push(<div key="table-end">{renderTable(tableBuffer)}</div>);
+        }
+
+        return result;
     };
 
     return (
@@ -93,8 +160,8 @@ const ChatWidget = () => {
                 <MessageSquare className="w-6 h-6" />
             </button>
 
-            {/* Chat Panel */}
-            <div className={`fixed bottom-6 right-6 z-50 w-96 h-[32rem] flex flex-col bg-surface border border-border shadow-2xl transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+            {/* Chat Panel - Wider */}
+            <div className={`fixed bottom-6 right-6 z-50 w-[32rem] h-[40rem] flex flex-col bg-surface border border-border shadow-2xl transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-[var(--surface-highlight)]">
                     <div className="flex items-center gap-2">
