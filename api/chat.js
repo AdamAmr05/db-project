@@ -5,27 +5,34 @@ const { SYSTEM_PROMPT } = require('./schema-context');
 // Initialize Gemini
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 
-// Tool definitions for function calling
+// Tool definition for programmatic tool calling - AI writes code
 const tools = [
     {
         functionDeclarations: [
             {
-                name: "executeQuery",
-                description: "Execute a SELECT SQL query against the HR database and return the results. Only SELECT queries are allowed.",
+                name: "runCode",
+                description: `Execute JavaScript code to query and analyze the HR database. 
+                The code has access to an async 'query(sql)' function that executes SELECT queries and returns an array of rows.
+                The code should return the final result that will be shown to the user.
+                Use this for complex queries, data transformations, or when you need to combine multiple queries.`,
                 parameters: {
                     type: "object",
                     properties: {
-                        sql: {
+                        code: {
                             type: "string",
-                            description: "The SQL SELECT query to execute"
+                            description: "JavaScript code to execute. Must return a value. Has access to: query(sql) for database queries."
+                        },
+                        explanation: {
+                            type: "string",
+                            description: "Brief explanation of what the code does"
                         }
                     },
-                    required: ["sql"]
+                    required: ["code"]
                 }
             },
             {
                 name: "describeTable",
-                description: "Get the column names and types for a specific table",
+                description: "Get the column names and types for a specific table. Use this first if unsure about table structure.",
                 parameters: {
                     type: "object",
                     properties: {
@@ -46,14 +53,12 @@ const tools = [
  */
 function isSelectOnly(sql) {
     const normalized = sql.trim().toUpperCase();
-    const forbidden = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE'];
+    const forbidden = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE', 'EXEC', 'EXECUTE'];
 
-    // Must start with SELECT or WITH (for CTEs)
     if (!normalized.startsWith('SELECT') && !normalized.startsWith('WITH')) {
         return false;
     }
 
-    // Check for forbidden keywords
     for (const keyword of forbidden) {
         if (normalized.includes(keyword)) {
             return false;
@@ -64,27 +69,61 @@ function isSelectOnly(sql) {
 }
 
 /**
- * Execute a SQL query (SELECT only)
+ * Create the query function that will be available in the executed code
  */
-async function executeQuery(sql) {
-    if (!isSelectOnly(sql)) {
-        return { error: "Only SELECT queries are allowed. Cannot modify data." };
-    }
+function createQueryFunction() {
+    return async function query(sql) {
+        if (!isSelectOnly(sql)) {
+            throw new Error("Only SELECT queries are allowed");
+        }
 
-    try {
-        // Add LIMIT if not present to prevent huge result sets
         const normalizedSql = sql.trim();
         const hasLimit = normalizedSql.toUpperCase().includes('LIMIT');
         const safeSql = hasLimit ? normalizedSql : `${normalizedSql} LIMIT 100`;
 
         const [rows] = await db.pool.query(safeSql);
+        return rows;
+    };
+}
+
+/**
+ * Execute AI-generated JavaScript code in a controlled environment
+ */
+async function runCode(code, explanation) {
+    console.log('\n┌─────────────────────────────────────');
+    console.log('│ 🤖 AI Generated Code:');
+    if (explanation) {
+        console.log(`│ 📝 ${explanation}`);
+    }
+    console.log('├─────────────────────────────────────');
+    console.log('│ ' + code.replace(/\n/g, '\n│ '));
+    console.log('└─────────────────────────────────────\n');
+
+    try {
+        // Create the query function
+        const query = createQueryFunction();
+
+        // Wrap the code in an async function and execute it
+        // The code has access to 'query' function
+        const asyncFunction = new Function('query', `
+            return (async () => {
+                ${code}
+            })();
+        `);
+
+        const result = await asyncFunction(query);
+
+        console.log(`[Code] Execution successful`);
+
         return {
             success: true,
-            rowCount: rows.length,
-            data: rows
+            result: result
         };
     } catch (error) {
-        return { error: `Query failed: ${error.message}` };
+        console.error(`[Code] Execution error: ${error.message}`);
+        return {
+            error: `Code execution failed: ${error.message}`
+        };
     }
 }
 
@@ -93,7 +132,6 @@ async function executeQuery(sql) {
  */
 async function describeTable(tableName) {
     try {
-        // Sanitize table name to prevent injection
         const safeName = tableName.replace(/[^a-zA-Z0-9_]/g, '');
         const [rows] = await db.pool.query(`DESCRIBE ${safeName}`);
         return {
@@ -119,8 +157,8 @@ async function handleToolCall(functionCall) {
     const { name, args } = functionCall;
 
     switch (name) {
-        case 'executeQuery':
-            return await executeQuery(args.sql);
+        case 'runCode':
+            return await runCode(args.code, args.explanation);
         case 'describeTable':
             return await describeTable(args.tableName);
         default:
@@ -164,27 +202,14 @@ async function chat(req, res) {
         let response = await chatSession.sendMessage(message);
         let result = response.response;
 
-        // Handle tool calls in a loop (AI might need multiple tool calls)
+        // Handle tool calls in a loop
         while (result.candidates[0]?.content?.parts?.some(part => part.functionCall)) {
             const toolCalls = result.candidates[0].content.parts.filter(part => part.functionCall);
             const toolResults = [];
 
             for (const part of toolCalls) {
                 const functionCall = part.functionCall;
-
-                // Log the SQL query clearly
-                if (functionCall.name === 'executeQuery') {
-                    console.log('\n┌─────────────────────────────────────');
-                    console.log('│ 🤖 AI Generated SQL:');
-                    console.log('├─────────────────────────────────────');
-                    console.log('│ ' + functionCall.args.sql.replace(/\n/g, '\n│ '));
-                    console.log('└─────────────────────────────────────\n');
-                } else {
-                    console.log(`[Chat] Tool call: ${functionCall.name}`, functionCall.args);
-                }
-
                 const toolResult = await handleToolCall(functionCall);
-                console.log(`[Chat] Result: ${toolResult.error || `${toolResult.rowCount || toolResult.columns?.length || 0} rows returned`}`);
 
                 toolResults.push({
                     functionResponse: {

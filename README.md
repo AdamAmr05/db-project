@@ -2,14 +2,24 @@
 
 A web application built for a database course project. The core focus is the `db/` directory, which contains the MySQL schema, views, stored procedures, functions, and triggers that power the HR management system.
 
+## Features
+
+### AI Chat Assistant (Programmatic Tool Calling)
+An AI-powered chat widget that uses **programmatic tool calling** to query the database. Instead of traditional tool calling where the AI selects predefined functions, the AI writes JavaScript code that:
+- Executes multiple SQL queries
+- Transforms and combines data
+- Returns formatted results
+
+The generated code runs locally with access to a `query()` function for database access.
+
 ## Database (`db/`)
 
-- `table-creation-MS2.sql` - Schema definition
+- `table-creation-MS2.sql` - Schema definition (20+ tables)
 - `data-insertion-MS2.sql` - Sample data
-- `views.sql` - Database views
-- `functions.sql` - Database functions
-- `procedures.sql` - Stored procedures
-- `triggers.sql` - Database triggers
+- `views.sql` - Database views (20+ pre-aggregated views)
+- `functions.sql` - 15+ stored functions
+- `procedures.sql` - 17+ stored procedures
+- `triggers.sql` - 6 database triggers
 
 ## Environment Variables
 
@@ -21,6 +31,7 @@ DB_USER=root
 DB_NAME=hr_management_system
 DB_PORT=3306
 PORT=3001
+GEMINI_API_KEY=your_gemini_api_key
 ```
 
 ## Running the Database
@@ -52,3 +63,13 @@ npm run dev
 ```
 
 The API runs on `http://localhost:3001/api` and the frontend on `http://localhost:5173`.
+
+## AI Chat Usage
+
+Click the chat bubble in the bottom-right corner and ask questions like:
+- "How many employees do we have?"
+- "Show me the top 5 performers by appraisal score"
+- "Which departments have the best training completion rates?"
+- "Compare salaries across job levels"
+
+The AI will write and execute JavaScript code to query the database and return formatted results.
