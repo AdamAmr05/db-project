@@ -126,11 +126,18 @@ const ChatWidget = () => {
                 // Process inline formatting
                 let formattedLine = processInlineFormatting(line);
 
-                // Bullet points (•, -, or *)
-                if (line.startsWith('• ') || line.startsWith('- ') || line.match(/^\* /)) {
-                    const bulletContent = formattedLine.replace(/^[•\-\*]\s*/, '');
+                // Headers (### or ##)
+                if (line.match(/^#{2,3}\s+/)) {
+                    const headerText = formattedLine.replace(/^#{2,3}\s+/, '');
                     result.push(
-                        <div key={i} className="flex gap-2 ml-1">
+                        <div key={i} className="font-bold text-primary mt-3 mb-1 text-sm uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: headerText }} />
+                    );
+                }
+                // Bullet points (•, -, or * at start of line, with or without leading space)
+                else if (line.match(/^\s*[•\-\*]\s/)) {
+                    const bulletContent = formattedLine.replace(/^\s*[•\-\*]\s+/, '');
+                    result.push(
+                        <div key={i} className="flex gap-2 ml-3">
                             <span className="text-muted">•</span>
                             <span dangerouslySetInnerHTML={{ __html: bulletContent }} />
                         </div>

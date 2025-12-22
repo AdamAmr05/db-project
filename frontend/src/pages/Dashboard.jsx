@@ -69,7 +69,7 @@ const CustomTreemapContent = ({ x, y, width, height, index, name, value, allData
             <foreignObject x={x} y={y} width={width} height={height}>
                 <div
                     className="w-full h-full p-1 flex flex-col justify-center items-center text-center overflow-hidden"
-                    style={{ color: 'var(--primary-inverted)' }}
+                    style={{ color: '#FFFFFF' }}
                 >
                     <span
                         className={`font-mono font-bold leading-none mb-0.5 ${nameSize}`}
