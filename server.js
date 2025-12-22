@@ -7,6 +7,7 @@ const db = require('./db-connection');
 const employees = require('./api/employees');
 const faculties = require('./api/faculties');
 const dashboard = require('./api/dashboard');
+const chat = require('./api/chat');
 
 const cors = require('cors');
 
@@ -104,6 +105,9 @@ app.get('/api/appeals', appeals.getAppeals);
 app.post('/api/appeals', appeals.submitAppeal);
 app.put('/api/appeals/:id', appeals.reviewAppeal);
 
+
+// AI Chat Route
+app.post('/api/chat', chat.chat);
 
 // Dashboard routes
 app.get('/api/dashboard/stats', dashboard.getDashboardStats);
