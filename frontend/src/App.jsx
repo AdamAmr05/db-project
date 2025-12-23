@@ -24,6 +24,8 @@ import PerformanceAppraisals from './pages/PerformanceAppraisals';
 import EmployeeAppraisal from './pages/EmployeeAppraisal';
 import Appeals from './pages/Appeals';
 
+import PowerBiDashboard from './pages/PowerBiDashboard';
+
 function App() {
   return (
     <Router>
@@ -49,6 +51,8 @@ function App() {
         <Route path="/performance/appraisals" element={<Layout><PerformanceAppraisals /></Layout>} />
         <Route path="/performance/appraisals/:cycleId/:assignmentId" element={<Layout><EmployeeAppraisal /></Layout>} />
         <Route path="/appeals" element={<Layout><Appeals /></Layout>} />
+
+        {/* <Route path="/analytics/powerbi" element={<Layout><PowerBiDashboard /></Layout>} /> */}
       </Routes>
     </Router>
   );

@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink, Link, useLocation } from 'react-router-dom';
-import { LayoutDashboard, Users, BookOpen, GraduationCap, Building2, Briefcase, Clock, Activity, Award, Gavel } from 'lucide-react';
+import { LayoutDashboard, Users, BookOpen, GraduationCap, Building2, Briefcase, Clock, Activity, Award, Gavel, BarChart3 } from 'lucide-react';
 import clsx from 'clsx';
 
 const Sidebar = () => {
@@ -17,6 +17,7 @@ const Sidebar = () => {
         { group: 'Performance', icon: Clock, label: 'H.R. Cycles', to: '/performance/cycles' },
         { group: 'Performance', icon: Award, label: 'Appraisals', to: '/performance/appraisals' },
         { group: 'Performance', icon: Gavel, label: 'Appeals', to: '/appeals' },
+        // { icon: BarChart3, label: 'Analytics', to: '/analytics/powerbi' },
     ];
 
     return (

@@ -75,7 +75,8 @@ const ChatWidget = () => {
         const processInlineFormatting = (text) => {
             return text
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
-                .replace(/\*([^*]+)\*/g, '<em>$1</em>')            // *italic*
+                .replace(/\*(?!\s)([^*]+?)(?<!\s)\*/g, '<em>$1</em>') // *italic* (strict: no outer spaces)
+                .replace(/(\d)\*($|\s)/g, '$1<sup class="text-xs text-muted">*</sup>$2') // 8.60* -> 8.60 with superscript
                 .replace(/`([^`]+)`/g, '<code class="bg-[var(--surface)] px-1 rounded text-xs">$1</code>');
         };
 
