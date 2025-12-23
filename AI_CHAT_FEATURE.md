@@ -1,50 +1,61 @@
 # AI Chat Feature - Programmatic Tool Calling
 
-> **Approach**: The AI writes JavaScript code that executes locally to query and analyze the HR database
+## What Is This?
+
+An AI-powered chat widget that uses **programmatic tool calling** - a cutting-edge pattern where the LLM doesn't just call pre-defined functions, but **writes custom JavaScript code** that executes locally to query and analyze the database.
+
+When you ask a question, the AI writes code that:
+- Runs multiple SQL queries via `query(sql)`
+- Transforms and combines data using JavaScript (.map, .filter, .sort)
+- Performs calculations and aggregations
+- Returns the final result for display
+
+This is more powerful than traditional tool calling because the AI can express complex multi-step logic in code rather than making sequential individual tool calls.
+
+---
 
 ## How It Works
 
 ```
-User Question → LLM writes JavaScript code → Code executes locally → Results formatted → Response
+User Question
+     ↓
+LLM writes JavaScript code
+     ↓
+Code executes locally with query() access
+     ↓
+Results returned to LLM
+     ↓
+Formatted response to user
 ```
 
-Instead of the AI making individual tool calls, it writes a complete code block that:
-1. Runs multiple SQL queries via `query(sql)`
-2. Transforms and combines the data
-3. Returns the final result
+**Example - "Show employees with the most training":**
 
-## Example
-
-**User**: "Which department has the best training completion rate?"
-
-**AI-Generated Code**:
+The AI writes:
 ```javascript
-const training = await query(`
-  SELECT d.Department_Name, 
-         COUNT(CASE WHEN et.Completion_Status = 'Completed' THEN 1 END) as completed,
-         COUNT(*) as total
-  FROM EMPLOYEE_TRAINING et
-  JOIN EMPLOYEE e ON et.Employee_ID = e.Employee_ID
-  JOIN JOB_ASSIGNMENT ja ON e.Employee_ID = ja.Employee_ID
-  JOIN JOB j ON ja.Job_ID = j.Job_ID
-  JOIN DEPARTMENT d ON j.Department_ID = d.Department_ID
-  GROUP BY d.Department_Name
-`);
+const employees = await query("SELECT * FROM EMPLOYEE");
+const training = await query("SELECT * FROM EMPLOYEE_TRAINING WHERE Completion_Status = 'Completed'");
 
-const result = training.map(d => ({
-  department: d.Department_Name,
-  rate: ((d.completed / d.total) * 100).toFixed(1) + '%'
-})).sort((a, b) => parseFloat(b.rate) - parseFloat(a.rate));
+const counts = {};
+training.forEach(t => counts[t.Employee_ID] = (counts[t.Employee_ID] || 0) + 1);
+
+const result = employees
+  .filter(e => counts[e.Employee_ID])
+  .map(e => ({ Name: e.First_Name + ' ' + e.Last_Name, Completed: counts[e.Employee_ID] }))
+  .sort((a, b) => b.Completed - a.Completed)
+  .slice(0, 5);
 
 return result;
 ```
 
+---
+
 ## Files
 
-- `api/chat.js` - Gemini integration with `runCode` tool
-- `api/schema-context.js` - Database schema and code examples for AI
-- `frontend/src/components/ChatWidget.jsx` - Chat UI component
-- `frontend/src/services/chatService.js` - API client
+| File | Purpose |
+|------|---------|
+| `api/chat.js` | Gemini integration with `runCode` tool |
+| `api/schema-context.js` | Database schema + code examples for AI |
+| `frontend/src/components/ChatWidget.jsx` | Chat UI component |
 
 ## Security
 

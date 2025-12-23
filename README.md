@@ -5,12 +5,16 @@ A web application built for a database course project. The core focus is the `db
 ## Features
 
 ### AI Chat Assistant (Programmatic Tool Calling)
-An AI-powered chat widget that uses **programmatic tool calling** to query the database. Instead of traditional tool calling where the AI selects predefined functions, the AI writes JavaScript code that:
-- Executes multiple SQL queries
-- Transforms and combines data
-- Returns formatted results
+An AI-powered chat widget that uses **programmatic tool calling** - a cutting-edge pattern introduced by cloudflare and anthropic just recently where the LLM doesn't just call pre-defined functions, but writes custom JavaScript code that executes locally to query and analyze the database.
 
-The generated code runs locally with access to a `query()` function for database access.
+When you ask a question, the AI:
+1. Writes JavaScript code with SQL queries and data transformations
+2. The code runs locally with access to a `query()` function
+3. Results are formatted and returned as a natural language response
+
+This is more powerful than traditional tool calling because the AI can express complex multi-step logic (combining multiple queries, filtering, sorting, aggregating) in a single code execution rather than making sequential individual API calls.
+
+To try it, add a `GEMINI_API_KEY` to your `.env` file. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
 
 ## Database (`db/`)
 

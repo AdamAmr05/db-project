@@ -71,10 +71,11 @@ const ChatWidget = () => {
         let tableBuffer = [];
         let inTable = false;
 
-        // Helper to process inline formatting (bold, code)
+        // Helper to process inline formatting (bold, italic, code)
         const processInlineFormatting = (text) => {
             return text
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
+                .replace(/\*([^*]+)\*/g, '<em>$1</em>')            // *italic*
                 .replace(/`([^`]+)`/g, '<code class="bg-[var(--surface)] px-1 rounded text-xs">$1</code>');
         };
 
