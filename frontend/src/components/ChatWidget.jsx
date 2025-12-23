@@ -139,9 +139,9 @@ const ChatWidget = () => {
                 // Process inline formatting
                 let formattedLine = processInlineFormatting(line);
 
-                // Headers (### or ##)
-                if (line.match(/^#{2,3}\s+/)) {
-                    const headerText = formattedLine.replace(/^#{2,3}\s+/, '');
+                // Headers (## through #####)
+                if (line.match(/^#{2,5}\s+/)) {
+                    const headerText = formattedLine.replace(/^#{2,5}\s+/, '');
                     result.push(
                         <div key={i} className="font-bold text-primary mt-3 mb-1 text-sm uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: headerText }} />
                     );
