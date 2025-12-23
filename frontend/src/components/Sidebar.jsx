@@ -17,7 +17,7 @@ const Sidebar = () => {
         { group: 'Performance', icon: Clock, label: 'H.R. Cycles', to: '/performance/cycles' },
         { group: 'Performance', icon: Award, label: 'Appraisals', to: '/performance/appraisals' },
         { group: 'Performance', icon: Gavel, label: 'Appeals', to: '/appeals' },
-        // { icon: BarChart3, label: 'Analytics', to: '/analytics/powerbi' },
+        { icon: BarChart3, label: 'Analytics', to: '/analytics/powerbi' },
     ];
 
     return (

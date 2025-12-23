@@ -71,9 +71,20 @@ const ChatWidget = () => {
         let tableBuffer = [];
         let inTable = false;
 
+        // Helper to escape HTML characters to prevent XSS
+        const escapeHtml = (text) => {
+            return text
+                .replace(/&/g, "&amp;")
+                .replace(/</g, "&lt;")
+                .replace(/>/g, "&gt;")
+                .replace(/"/g, "&quot;")
+                .replace(/'/g, "&#039;");
+        };
+
         // Helper to process inline formatting (bold, italic, code)
         const processInlineFormatting = (text) => {
-            return text
+            const safeText = escapeHtml(text);
+            return safeText
                 .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
                 .replace(/\*(?!\s)([^*]+?)(?<!\s)\*/g, '<em>$1</em>') // *italic* (strict: no outer spaces)
                 .replace(/(\d)\*($|\s)/g, '$1<sup class="text-xs text-muted">*</sup>$2') // 8.60* -> 8.60 with superscript

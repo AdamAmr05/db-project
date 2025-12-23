@@ -52,7 +52,7 @@ function App() {
         <Route path="/performance/appraisals/:cycleId/:assignmentId" element={<Layout><EmployeeAppraisal /></Layout>} />
         <Route path="/appeals" element={<Layout><Appeals /></Layout>} />
 
-        {/* <Route path="/analytics/powerbi" element={<Layout><PowerBiDashboard /></Layout>} /> */}
+        <Route path="/analytics/powerbi" element={<Layout><PowerBiDashboard /></Layout>} />
       </Routes>
     </Router>
   );
