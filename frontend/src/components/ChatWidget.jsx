@@ -1,6 +1,14 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, X, Send, Loader2, Bot, User } from 'lucide-react';
 import { chatService } from '../services/chatService';
+
+// Size constraints
+const MIN_WIDTH = 320;
+const MIN_HEIGHT = 400;
+const MAX_WIDTH = 800;
+const MAX_HEIGHT = 900;
+const DEFAULT_WIDTH = 512; // 32rem
+const DEFAULT_HEIGHT = 640; // 40rem
 
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -11,6 +19,23 @@ const ChatWidget = () => {
     const [isLoading, setIsLoading] = useState(false);
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
+
+    // Resize state
+    const [size, setSize] = useState(() => {
+        const saved = localStorage.getItem('chatWidgetSize');
+        if (saved) {
+            try {
+                const parsed = JSON.parse(saved);
+                return {
+                    width: Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, parsed.width)),
+                    height: Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, parsed.height))
+                };
+            } catch { /* use defaults */ }
+        }
+        return { width: DEFAULT_WIDTH, height: DEFAULT_HEIGHT };
+    });
+    const [isResizing, setIsResizing] = useState(false);
+    const resizeRef = useRef({ startX: 0, startY: 0, startWidth: 0, startHeight: 0 });
 
     const scrollToBottom = () => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -25,6 +50,52 @@ const ChatWidget = () => {
             inputRef.current.focus();
         }
     }, [isOpen]);
+
+    // Save size to localStorage when it changes
+    useEffect(() => {
+        localStorage.setItem('chatWidgetSize', JSON.stringify(size));
+    }, [size]);
+
+    // Resize handlers
+    const handleResizeStart = useCallback((e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        setIsResizing(true);
+        resizeRef.current = {
+            startX: e.clientX,
+            startY: e.clientY,
+            startWidth: size.width,
+            startHeight: size.height
+        };
+    }, [size]);
+
+    useEffect(() => {
+        if (!isResizing) return;
+
+        const handleMouseMove = (e) => {
+            const { startX, startY, startWidth, startHeight } = resizeRef.current;
+            // Resize from top-left corner (dragging left increases width, dragging up increases height)
+            const deltaX = startX - e.clientX;
+            const deltaY = startY - e.clientY;
+
+            const newWidth = Math.min(MAX_WIDTH, Math.max(MIN_WIDTH, startWidth + deltaX));
+            const newHeight = Math.min(MAX_HEIGHT, Math.max(MIN_HEIGHT, startHeight + deltaY));
+
+            setSize({ width: newWidth, height: newHeight });
+        };
+
+        const handleMouseUp = () => {
+            setIsResizing(false);
+        };
+
+        document.addEventListener('mousemove', handleMouseMove);
+        document.addEventListener('mouseup', handleMouseUp);
+
+        return () => {
+            document.removeEventListener('mousemove', handleMouseMove);
+            document.removeEventListener('mouseup', handleMouseUp);
+        };
+    }, [isResizing]);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -139,8 +210,14 @@ const ChatWidget = () => {
                 // Process inline formatting
                 let formattedLine = processInlineFormatting(line);
 
+                // Horizontal rule (---, ___, ***)
+                if (line.match(/^[-_*]{3,}\s*$/)) {
+                    result.push(
+                        <div key={i} className="my-3 border-t border-border opacity-50" />
+                    );
+                }
                 // Headers (## through #####)
-                if (line.match(/^#{2,5}\s+/)) {
+                else if (line.match(/^#{2,5}\s+/)) {
                     const headerText = formattedLine.replace(/^#{2,5}\s+/, '');
                     result.push(
                         <div key={i} className="font-bold text-primary mt-3 mb-1 text-sm uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: headerText }} />
@@ -180,8 +257,19 @@ const ChatWidget = () => {
                 <MessageSquare className="w-6 h-6" />
             </button>
 
-            {/* Chat Panel - Wider */}
-            <div className={`fixed bottom-6 right-6 z-50 w-[32rem] h-[40rem] flex flex-col bg-surface border border-border shadow-2xl transition-all duration-300 ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}>
+            {/* Chat Panel - Resizable */}
+            <div
+                className={`fixed bottom-6 right-6 z-50 flex flex-col bg-surface border border-border shadow-2xl ${isResizing ? '' : 'transition-all duration-300'} ${isOpen ? 'opacity-100 scale-100' : 'opacity-0 scale-95 pointer-events-none'}`}
+                style={{ width: size.width, height: size.height }}
+            >
+                {/* Resize Handle - Top Left Corner */}
+                <div
+                    onMouseDown={handleResizeStart}
+                    className="absolute -top-1 -left-1 w-4 h-4 cursor-nwse-resize z-20 group"
+                    title="Drag to resize"
+                >
+                    <div className="absolute top-1 left-1 w-2 h-2 border-l-2 border-t-2 border-primary opacity-50 group-hover:opacity-100 transition-opacity" />
+                </div>
                 {/* Header */}
                 <div className="flex items-center justify-between px-4 py-3 border-b border-border bg-[var(--surface-highlight)]">
                     <div className="flex items-center gap-2">
@@ -243,8 +331,7 @@ const ChatWidget = () => {
                     </div>
                 </form>
 
-                {/* Corner Accents */}
-                <div className="absolute top-0 left-0 w-3 h-3 border-l-2 border-t-2 border-primary opacity-30" />
+                {/* Corner Accents (skip top-left, that's the resize handle) */}
                 <div className="absolute top-0 right-0 w-3 h-3 border-r-2 border-t-2 border-primary opacity-30" />
                 <div className="absolute bottom-0 left-0 w-3 h-3 border-l-2 border-b-2 border-primary opacity-30" />
                 <div className="absolute bottom-0 right-0 w-3 h-3 border-r-2 border-b-2 border-primary opacity-30" />
