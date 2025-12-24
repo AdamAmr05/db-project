@@ -73,6 +73,8 @@ cd frontend
 npm install
 npm run dev
 ```
+<img width="3024" height="1900" alt="image" src="https://github.com/user-attachments/assets/50847ff1-a442-4b5c-a400-640bee16b3e0" />
+
 
 The API runs on `http://localhost:3001/api` and the frontend on `http://localhost:5173`.
 
