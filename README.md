@@ -14,10 +14,15 @@ When you ask a question, the AI:
 
 This is more powerful than traditional tool calling because the AI can express complex multi-step logic (combining multiple queries, filtering, sorting, aggregating) in a single code execution rather than making sequential individual API calls.
 
+<img width="3012" height="1896" alt="image" src="https://github.com/user-attachments/assets/0ebd0efe-9ee0-4d8e-aa8c-d79ea8fb6cbf" />
+
+
 To try it, add a `GEMINI_API_KEY` to your `.env` file. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
 
 ### Power BI Analytics Dashboard
 A dedicated "Analytics" page that embeds a live, interactive Power BI dashboard directly inside the web app. This would allow users to explore HR metrics, performance trends, and workforce data or whatever they have in the Power BI dashboard through Power BI's rich visualizations without leaving the application. The embed uses Microsoft's embedded demo mode.
+<img width="3012" height="1896" alt="image" src="https://github.com/user-attachments/assets/d48cf1f1-b4c6-43b3-be89-8402f6959a7a" />
+
 
 ## Database (`db/`)
 
