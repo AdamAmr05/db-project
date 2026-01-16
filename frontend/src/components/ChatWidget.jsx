@@ -1,6 +1,9 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import { MessageSquare, X, Send, Loader2, Bot, User } from 'lucide-react';
-import { chatService } from '../services/chatService';
+import { Renderer, JSONUIProvider } from '@json-render/react';
+import { streamChat } from '../services/chatStream';
+import useUiPatchStream from '../hooks/useUiPatchStream';
+import { registry } from '../json-render/registry';
 
 // Size constraints
 const MIN_WIDTH = 320;
@@ -13,10 +16,19 @@ const DEFAULT_HEIGHT = 640; // 40rem
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
-        { role: 'assistant', content: 'Hello! I can help you query the HR database. Try asking things like:\n\n• "How many employees do we have?"\n• "Show me employees in the IT department"\n• "What\'s the average appraisal score?"' }
+        {
+            role: 'assistant',
+            parts: [
+                {
+                    type: 'text',
+                    content: 'Hello! I can help you query the HR database. Try asking things like:\n\n• "How many employees do we have?"\n• "Show me employees in the IT department"\n• "What\'s the average appraisal score?"'
+                }
+            ]
+        }
     ]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
+    const { trees, updateTree } = useUiPatchStream();
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -103,35 +115,91 @@ const ChatWidget = () => {
 
         const userMessage = input.trim();
         setInput('');
-        setMessages(prev => [...prev, { role: 'user', content: userMessage }]);
+        setMessages(prev => [...prev, { role: 'user', parts: [{ type: 'text', content: userMessage }] }]);
         setIsLoading(true);
 
+        const assistantId = `${Date.now()}-${Math.random().toString(36).slice(2, 6)}`;
+        setMessages(prev => [
+            ...prev,
+            { role: 'assistant', id: assistantId, parts: [{ type: 'text', content: '' }] }
+        ]);
+
+        const history = messages
+            .slice(1)
+            .map(msg => ({
+                role: msg.role,
+                content: msg.parts?.filter(part => part.type === 'text').map(part => part.content || '').join('') || ''
+            }));
+
         try {
-            // Build history for context (exclude the welcome message)
-            const history = messages
-                .slice(1) // Skip welcome message
-                .map(msg => ({ role: msg.role, content: msg.content }));
-
-            const response = await chatService.sendMessage(userMessage, history);
-
-            if (response.data.success) {
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    content: response.data.response
-                }]);
-            } else {
-                setMessages(prev => [...prev, {
-                    role: 'assistant',
-                    content: `Error: ${response.data.error || 'Something went wrong'}`
-                }]);
-            }
+            await streamChat({
+                message: userMessage,
+                history,
+                onText: (text) => {
+                    setMessages(prev =>
+                        prev.map(msg => {
+                            if (msg.id !== assistantId) return msg;
+                            const updatedParts = [...msg.parts];
+                            const lastPart = updatedParts[updatedParts.length - 1];
+                            if (!lastPart || lastPart.type !== 'text') {
+                                updatedParts.push({ type: 'text', content: text });
+                            } else {
+                                lastPart.content += text;
+                            }
+                            return { ...msg, parts: updatedParts };
+                        })
+                    );
+                },
+                onPatch: (payload) => {
+                    const blockId = payload.blockId || 'default';
+                    updateTree(blockId, payload.patch);
+                    setMessages(prev =>
+                        prev.map(msg => {
+                            if (msg.id !== assistantId) return msg;
+                            const updatedParts = [...msg.parts];
+                            const lastPart = updatedParts[updatedParts.length - 1];
+                            if (!lastPart || lastPart.type !== 'ui' || lastPart.blockId !== blockId) {
+                                updatedParts.push({ type: 'ui', blockId });
+                            }
+                            return { ...msg, parts: updatedParts };
+                        })
+                    );
+                },
+                onDone: () => {
+                    setIsLoading(false);
+                },
+                onError: (error) => {
+                    console.error('Chat error:', error);
+                    setMessages(prev =>
+                        prev.map(msg => {
+                            if (msg.id !== assistantId) return msg;
+                            return {
+                                ...msg,
+                                parts: [
+                                    ...msg.parts,
+                                    { type: 'text', content: 'Sorry, I encountered an error. Please try again.' }
+                                ]
+                            };
+                        })
+                    );
+                    setIsLoading(false);
+                }
+            });
         } catch (error) {
             console.error('Chat error:', error);
-            setMessages(prev => [...prev, {
-                role: 'assistant',
-                content: 'Sorry, I encountered an error. Please try again.'
-            }]);
-        } finally {
+            setMessages(prev =>
+                prev.map(msg =>
+                    msg.id === assistantId
+                        ? {
+                            ...msg,
+                            parts: [
+                                ...msg.parts,
+                                { type: 'text', content: 'Sorry, I encountered an error. Please try again.' }
+                            ]
+                        }
+                        : msg
+                )
+            );
             setIsLoading(false);
         }
     };
@@ -287,12 +355,29 @@ const ChatWidget = () => {
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
                     {messages.map((msg, idx) => (
-                        <div key={idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                        <div key={msg.id || idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                             <div className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-border text-primary'}`}>
                                 {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                             </div>
                             <div className={`max-w-[80%] px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-[var(--surface-highlight)] text-primary border border-border'}`}>
-                                {formatMessage(msg.content)}
+                                {msg.parts?.map((part, partIndex) => {
+                                    if (part.type === 'ui') {
+                                        const tree = trees[part.blockId];
+                                        if (!tree) return null;
+                                        return (
+                                            <div key={`${part.blockId}-${partIndex}`} className="my-2">
+                                                <JSONUIProvider registry={registry}>
+                                                    <Renderer tree={tree} registry={registry} />
+                                                </JSONUIProvider>
+                                            </div>
+                                        );
+                                    }
+                                    return (
+                                        <div key={`text-${partIndex}`}>
+                                            {formatMessage(part.content || '')}
+                                        </div>
+                                    );
+                                })}
                             </div>
                         </div>
                     ))}

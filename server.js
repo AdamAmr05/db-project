@@ -108,6 +108,7 @@ app.put('/api/appeals/:id', appeals.reviewAppeal);
 
 // AI Chat Route
 app.post('/api/chat', chat.chat);
+app.post('/api/chat/stream', chat.stream);
 
 // Dashboard routes
 app.get('/api/dashboard/stats', dashboard.getDashboardStats);
