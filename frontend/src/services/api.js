@@ -1,6 +1,6 @@
 import axios from 'axios';
 
-export const API_BASE_URL = 'http://localhost:3001/api';
+export const API_BASE_URL = 'http://localhost:3001/api'; // hard coding it now is fine but remember to change. tyis if deployed or used anywhere else.
 
 const api = axios.create({
     baseURL: API_BASE_URL,

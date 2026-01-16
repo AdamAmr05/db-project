@@ -139,12 +139,17 @@ const ChatWidget = () => {
                     setMessages(prev =>
                         prev.map(msg => {
                             if (msg.id !== assistantId) return msg;
-                            const updatedParts = [...msg.parts];
-                            const lastPart = updatedParts[updatedParts.length - 1];
+                            const parts = msg.parts || [];
+                            const lastPart = parts[parts.length - 1];
+
+                            let updatedParts;
                             if (!lastPart || lastPart.type !== 'text') {
-                                updatedParts.push({ type: 'text', content: text });
+                                // Add new text part
+                                updatedParts = [...parts, { type: 'text', content: text }];
                             } else {
-                                lastPart.content += text;
+                                // Create new part object with appended content (no mutation)
+                                const newLastPart = { ...lastPart, content: lastPart.content + text };
+                                updatedParts = [...parts.slice(0, -1), newLastPart];
                             }
                             return { ...msg, parts: updatedParts };
                         })

@@ -40,6 +40,8 @@ const applyPatch = (tree, patch) => {
         }
     }
 
+    // Note: remove operation deletes the entire element when path is /elements/{key}
+    // Nested path removals (e.g., /elements/foo/bar) are not supported - they will still delete the whole element
     if (patch.op === 'remove' && patch.path.startsWith('/elements/')) {
         const elementKey = patch.path.slice('/elements/'.length).split('/')[0];
         if (elementKey) {

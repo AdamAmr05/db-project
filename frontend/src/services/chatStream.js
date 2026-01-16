@@ -2,6 +2,16 @@ import { API_BASE_URL } from './api';
 
 export async function streamChat({ message, history = [], onText, onPatch, onDone, onError }) {
     console.log('[streamChat] Starting request to', `${API_BASE_URL}/chat/stream`);
+
+    // Guard to ensure onDone is only called once
+    let doneCalled = false;
+    const callDoneOnce = () => {
+        if (!doneCalled) {
+            doneCalled = true;
+            onDone?.();
+        }
+    };
+
     try {
         const response = await fetch(`${API_BASE_URL}/chat/stream`, {
             method: 'POST',
@@ -39,7 +49,7 @@ export async function streamChat({ message, history = [], onText, onPatch, onDon
                     } else if (payload.type === 'ui' && payload.patch) {
                         onPatch?.(payload);
                     } else if (payload.type === 'done') {
-                        onDone?.();
+                        callDoneOnce();
                     } else if (payload.type === 'error') {
                         console.error('[streamChat] Server error:', payload.message);
                         onError?.(new Error(payload.message || 'Server error'));
@@ -59,15 +69,18 @@ export async function streamChat({ message, history = [], onText, onPatch, onDon
                 } else if (payload.type === 'ui' && payload.patch) {
                     onPatch?.(payload);
                 } else if (payload.type === 'done') {
-                    onDone?.();
+                    callDoneOnce();
+                } else if (payload.type === 'error') {
+                    console.error('[streamChat] Server error (buffer):', payload.message);
+                    onError?.(new Error(payload.message || 'Server error'));
                 }
             } catch (err) {
                 console.warn('[streamChat] Failed to parse buffer:', buffer, err);
             }
         }
 
-        // Always call onDone when stream ends
-        onDone?.();
+        // Always call onDone when stream ends (if not already called)
+        callDoneOnce();
     } catch (error) {
         console.error('[streamChat] Fetch error:', error);
         onError?.(error instanceof Error ? error : new Error(String(error)));

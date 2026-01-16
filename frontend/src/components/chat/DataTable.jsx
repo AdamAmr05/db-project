@@ -10,6 +10,20 @@ import {
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui/card';
 
 const DataTable = ({ element }) => {
+    // Guard against null/undefined element
+    if (!element?.props) {
+        return (
+            <Card className="border border-border bg-[var(--surface)] shadow-lg">
+                <CardHeader>
+                    <CardTitle>Data Table</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-xs text-muted font-mono">Invalid element data.</p>
+                </CardContent>
+            </Card>
+        );
+    }
+
     const { title, description, columns, data = [] } = element.props;
 
     if (!columns || !Array.isArray(columns) || columns.length === 0) {
@@ -28,7 +42,7 @@ const DataTable = ({ element }) => {
     return (
         <Card className="border border-border bg-[var(--surface)] shadow-lg">
             <CardHeader>
-                <CardTitle>{title}</CardTitle>
+                <CardTitle>{title || 'Data Table'}</CardTitle>
                 {description && <CardDescription>{description}</CardDescription>}
             </CardHeader>
             <CardContent className="p-0">
@@ -40,7 +54,7 @@ const DataTable = ({ element }) => {
                                     <TableHead
                                         key={col.key}
                                         className={`text-xs font-mono text-muted ${col.align === 'right' ? 'text-right' :
-                                                col.align === 'center' ? 'text-center' : 'text-left'
+                                            col.align === 'center' ? 'text-center' : 'text-left'
                                             }`}
                                     >
                                         {col.label}
@@ -62,7 +76,7 @@ const DataTable = ({ element }) => {
                                             <TableCell
                                                 key={col.key}
                                                 className={`text-xs font-mono ${col.align === 'right' ? 'text-right' :
-                                                        col.align === 'center' ? 'text-center' : 'text-left'
+                                                    col.align === 'center' ? 'text-center' : 'text-left'
                                                     }`}
                                             >
                                                 {row[col.key] ?? '-'}
