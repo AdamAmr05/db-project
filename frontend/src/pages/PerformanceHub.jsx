@@ -21,6 +21,7 @@ import clsx from 'clsx';
 const PerformanceHub = () => {
     const navigate = useNavigate();
     const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const [activeCycle, setActiveCycle] = useState(null);
     const [allCycles, setAllCycles] = useState([]);
     const [stats, setStats] = useState({
@@ -36,6 +37,7 @@ const PerformanceHub = () => {
     }, []);
 
     const loadData = async () => {
+        setError(null);
         try {
             const [cycleRes, allCyclesRes, statsRes, appealsRes] = await Promise.all([
                 dashboardService.getActiveCycle(),
@@ -65,8 +67,9 @@ const PerformanceHub = () => {
                 avgScore: dashStats.avgAppraisalScore || 0,
                 kpiCompletion: dashStats.kpiCompletionRate || 0
             });
-        } catch (error) {
-            console.error('Failed to load performance data:', error);
+        } catch (err) {
+            console.error('Failed to load performance data:', err);
+            setError(err.message || 'Failed to load performance data');
         } finally {
             setLoading(false);
         }
@@ -96,6 +99,23 @@ const PerformanceHub = () => {
 
     return (
         <div className="space-y-8">
+            {/* Error Banner */}
+            {error && (
+                <div className="bg-red-500/10 border border-red-500/30 p-4 flex items-start gap-3">
+                    <AlertCircle className="w-5 h-5 text-red-500 flex-shrink-0 mt-0.5" />
+                    <div>
+                        <div className="font-bold text-red-500 text-sm">Failed to Load Performance Data</div>
+                        <div className="text-xs text-muted mt-1">{error}</div>
+                        <button
+                            onClick={loadData}
+                            className="mt-2 text-xs font-mono text-primary hover:underline"
+                        >
+                            RETRY
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* Header */}
             <div>
                 <h1 className="text-3xl font-bold text-primary tracking-tight flex items-center gap-3">

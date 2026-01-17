@@ -74,7 +74,7 @@ const Employees = () => {
                 <div className="overflow-x-auto">
                     <table className="w-full text-left border-collapse">
                         <thead>
-                            <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase tracking-wider">
+                            <tr className="border-b border-[var(--border-subtle)] text-xs font-mono text-muted uppercase tracking-wider">
                                 <th className="p-4 font-normal">ID</th>
                                 <th className="p-4 font-normal">Employee</th>
                                 <th className="p-4 font-normal">Role</th>
@@ -89,7 +89,7 @@ const Employees = () => {
                                     <td colSpan="6" className="p-8 text-center text-muted animate-pulse">LOADING_DATA...</td>
                                 </tr>
                             ) : filteredEmployees.map((emp) => (
-                                <tr key={emp.Employee_ID} className="border-b border-white/10 hover:bg-surfaceHighlight transition-colors group">
+                                <tr key={emp.Employee_ID} className="border-b border-[var(--border-subtle)] hover:bg-surfaceHighlight transition-colors group">
                                     <td className="p-4 text-muted">#{String(emp.Employee_ID).padStart(4, '0')}</td>
                                     <td className="p-4">
                                         <div className="font-bold text-primary">{emp.First_Name} {emp.Last_Name}</div>
@@ -106,10 +106,10 @@ const Employees = () => {
                                         </span>
                                     </td>
                                     <td className="p-4 text-right">
-                                        <div className="flex items-center justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                                        <div className="flex items-center justify-end gap-2">
                                             <button
                                                 onClick={() => navigate(`/employees/${emp.Employee_ID}`)}
-                                                className="p-2 hover:bg-primary hover:text-[var(--primary-inverted)] transition-colors"
+                                                className="p-2 hover:bg-surfaceHighlight text-muted hover:text-primary transition-colors"
                                             >
                                                 <Edit2 className="w-4 h-4" />
                                             </button>

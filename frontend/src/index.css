@@ -12,6 +12,7 @@
   --surface: #0A0A0A;
   --surface-highlight: #151515;
   --border: #333333;
+  --border-subtle: rgba(255, 255, 255, 0.1);
   --primary: #FFFFFF;
   --secondary: #888888;
   --muted: #888888;
@@ -41,6 +42,7 @@
   --surface: #FFFFFF;
   --surface-highlight: #F0F0F0;
   --border: #E0E0E0;
+  --border-subtle: rgba(0, 0, 0, 0.1);
   --primary: #111111;
   --secondary: #555555;
   --muted: #777777;
