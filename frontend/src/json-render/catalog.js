@@ -35,6 +35,22 @@ export const catalog = createCatalog({
                 data: z.array(z.record(z.string(), z.any())),
                 maxRows: z.number().int().positive().optional()
             })
+        },
+        ActionCard: {
+            description: 'Interactive form for AI-proposed database actions.',
+            props: z.object({
+                title: z.string(),
+                description: z.string().optional(),
+                actionId: z.string(),
+                fields: z.array(z.object({
+                    key: z.string(),
+                    label: z.string().optional(),
+                    value: z.any(),
+                    type: z.enum(['text', 'number', 'date', 'textarea', 'select', 'hidden']).optional(),
+                    editable: z.boolean().optional(),
+                    options: z.array(z.object({ label: z.string(), value: z.any() })).optional()
+                }))
+            })
         }
     }
 });

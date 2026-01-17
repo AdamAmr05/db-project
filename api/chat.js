@@ -11,6 +11,7 @@ const MAX_ROWS = 50;
 // Get component schemas from catalog
 const chartSchema = catalog.components.ChartCard.props;
 const tableSchema = catalog.components.DataTable.props;
+const actionCardSchema = catalog.components.ActionCard.props;
 
 /**
  * Validate that a query is SELECT-only (safety check)
@@ -154,6 +155,26 @@ function createTablePatches(blockId, tableSpec) {
     ];
 }
 
+function createActionPatches(blockId, actionSpec) {
+    const actionKey = `action_${blockId}`;
+
+    const element = {
+        key: actionKey,
+        type: 'ActionCard',
+        props: {
+            title: actionSpec.title,
+            description: actionSpec.description,
+            actionId: actionSpec.actionId,
+            fields: actionSpec.fields || []
+        }
+    };
+
+    return [
+        { op: 'set', path: '/root', value: actionKey },
+        { op: 'set', path: `/elements/${actionKey}`, value: element }
+    ];
+}
+
 async function runChat({ message, history, onText, onUi }) {
     const tools = {
         runCode: tool({
@@ -198,6 +219,20 @@ async function runChat({ message, history, onText, onUi }) {
                 }
                 return { success: true, blockId };
             }
+        }),
+        proposeAction: tool({
+            description: 'Propose a database modification to the user. Use when user asks to update, create, or delete records. Renders an editable form for user approval.',
+            inputSchema: actionCardSchema,
+            execute: async (params) => {
+                const blockId = `${Date.now()}_${Math.random().toString(36).slice(2, 8)}`;
+                const patches = createActionPatches(blockId, params);
+                if (onUi) {
+                    for (const patch of patches) {
+                        onUi({ blockId, patch });
+                    }
+                }
+                return { success: true, blockId, message: 'Action form rendered. Waiting for user approval.' };
+            }
         })
     };
 
@@ -213,7 +248,7 @@ async function runChat({ message, history, onText, onUi }) {
 
     try {
         // Combine HR context with json-render catalog prompt
-        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart. IMPORTANT: Always render results visually using these tools—never output raw code or data arrays as text.`;
+        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart. When user asks to modify/update/create/delete data, use proposeAction to show an approval form. IMPORTANT: Always render results visually using these tools—never output raw code or data arrays as text.`;
 
         const result = streamText({
             model: google(MODEL_NAME),

@@ -110,6 +110,10 @@ app.put('/api/appeals/:id', appeals.reviewAppeal);
 app.post('/api/chat', chat.chat);
 app.post('/api/chat/stream', chat.stream);
 
+// Actions Route (AI-proposed database modifications)
+const actions = require('./api/actions');
+app.post('/api/actions/execute', actions.execute);
+
 // Dashboard routes
 app.get('/api/dashboard/stats', dashboard.getDashboardStats);
 app.get('/api/dashboard/employee-count-by-dept', dashboard.getEmployeeCountByDept);
