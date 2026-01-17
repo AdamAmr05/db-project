@@ -30,6 +30,7 @@
   /* Chart tooltip */
   --tooltip-bg: #000000;
   --tooltip-border: #333333;
+  --tooltip-text: #f5f5f5;
 }
 
 /* ========================================
@@ -58,6 +59,7 @@
   /* Chart tooltip */
   --tooltip-bg: #FFFFFF;
   --tooltip-border: #E0E0E0;
+  --tooltip-text: #111111;
 }
 
 @layer base {

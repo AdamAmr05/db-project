@@ -19,10 +19,10 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui
 const fallbackPalette = ['#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f97316'];
 
 const tooltipStyle = {
-    backgroundColor: '#1a1a1a',
-    border: '1px solid #333',
+    backgroundColor: 'var(--tooltip-bg)',
+    border: '1px solid var(--tooltip-border)',
     borderRadius: '6px',
-    color: '#f5f5f5',
+    color: 'var(--tooltip-text)',
     fontSize: '0.75rem',
     padding: '8px 12px'
 };
@@ -59,7 +59,7 @@ const ChartBlock = ({ element }) => {
                 <ChartComponent {...commonProps}>
                     <XAxis dataKey={xKey} tick={{ fontSize: 10, fill: 'var(--text-muted)' }} />
                     <YAxis tick={{ fontSize: 10, fill: 'var(--text-muted)' }} />
-                    <Tooltip contentStyle={tooltipStyle} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: 'var(--tooltip-text)' }} labelStyle={{ color: 'var(--tooltip-text)' }} />
                     {resolvedSeries.map((serie) => {
                         if (chartType === 'line') {
                             return <Line key={serie.key} dataKey={serie.key} stroke={serie.color} strokeWidth={2} dot={false} />;
@@ -99,7 +99,7 @@ const ChartBlock = ({ element }) => {
         return (
             <ResponsiveContainer width="100%" height={240}>
                 <PieChart>
-                    <Tooltip contentStyle={tooltipStyle} />
+                    <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: 'var(--tooltip-text)' }} labelStyle={{ color: 'var(--tooltip-text)' }} />
                     <Pie data={sanitizedData} dataKey={valueKey} nameKey={nameKey} innerRadius={50} outerRadius={90}>
                         {sanitizedData.map((entry, index) => (
                             <Cell key={`${entry[nameKey]}-${index}`} fill={fallbackPalette[index % fallbackPalette.length]} />
@@ -111,7 +111,7 @@ const ChartBlock = ({ element }) => {
     };
 
     return (
-        <Card className="border border-[#333] bg-[#1a1a1a] shadow-lg">
+        <Card className="border border-[var(--border)] bg-[var(--surface)] shadow-lg">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 {description ? <CardDescription>{description}</CardDescription> : null}
