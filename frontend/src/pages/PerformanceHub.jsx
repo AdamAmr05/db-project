@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion } from 'framer-motion';
+
 import {
     Activity,
     Clock,
@@ -94,11 +94,6 @@ const PerformanceHub = () => {
 
     const daysLeft = activeCycle ? getDaysUntilDeadline(activeCycle.Submission_Deadline) : null;
 
-    const totalAppraisals = (stats?.pendingAppraisals || 0) + (stats?.completedAppraisals || 0);
-    const progressPercent = totalAppraisals > 0
-        ? ((stats?.completedAppraisals || 0) / totalAppraisals) * 100
-        : 0;
-
     return (
         <div className="space-y-8">
             {/* Header */}
@@ -124,21 +119,34 @@ const PerformanceHub = () => {
                                         ACTIVE CYCLE
                                     </span>
                                 </div>
-                                <h2 className="text-2xl font-bold text-primary mb-1">{activeCycle.Cycle_Name}</h2>
-                                <p className="text-sm text-muted">{activeCycle.Description}</p>
-                                <div className="flex items-center gap-4 mt-4 text-xs font-mono">
-                                    <span className="text-muted">
+                                <h2 className="text-2xl font-bold text-primary mb-2">
+                                    {activeCycle.Cycle_Name}
+                                </h2>
+                                <div className="flex flex-wrap gap-4 text-xs text-muted font-mono">
+                                    <div className="flex items-center gap-1">
+                                        <Calendar className="w-3 h-3" />
                                         {new Date(activeCycle.Start_Date).toLocaleDateString()} - {new Date(activeCycle.End_Date).toLocaleDateString()}
-                                    </span>
+                                    </div>
+                                    <div className="flex items-center gap-1">
+                                        <span className="text-primary">TYPE:</span>
+                                        {activeCycle.Cycle_Type}
+                                    </div>
                                 </div>
                             </div>
 
-                            {/* Countdown */}
-                            <div className="lg:text-right">
-                                <div className="text-[10px] font-mono text-muted uppercase mb-1">DEADLINE</div>
-                                <div className="text-4xl font-bold text-primary font-mono">
-                                    {daysLeft}
-                                    <span className="text-lg text-muted ml-1">DAYS</span>
+                            {/* Deadline Countdown */}
+                            <div className="flex flex-col items-center lg:items-end">
+                                <div className="text-[10px] font-mono text-muted uppercase mb-1">
+                                    SUBMISSION DEADLINE
+                                </div>
+                                <div className={clsx(
+                                    "text-4xl font-bold font-mono",
+                                    daysLeft <= 7 ? "text-red-500" : daysLeft <= 14 ? "text-yellow-500" : "text-primary"
+                                )}>
+                                    {daysLeft > 0 ? daysLeft : 0}
+                                </div>
+                                <div className="text-xs font-mono text-muted">
+                                    DAYS LEFT
                                 </div>
                                 <div className="text-xs text-muted mt-1">
                                     {new Date(activeCycle.Submission_Deadline).toLocaleDateString()}
@@ -146,28 +154,14 @@ const PerformanceHub = () => {
                             </div>
                         </div>
 
-                        {/* Progress Bar */}
-                        <div className="mt-6 pt-4 border-t border-border">
-                            <div className="flex justify-between text-[10px] font-mono text-muted mb-2">
-                                <span>CYCLE PROGRESS</span>
-                                <span>{Math.round(progressPercent)}%</span>
-                            </div>
-                            <div className="h-1 bg-surface rounded overflow-hidden">
-                                <div
-                                    className="h-full bg-primary transition-all duration-500"
-                                    style={{ width: `${progressPercent}%` }}
-                                />
-                            </div>
-                        </div>
-
-                        {/* Quick Actions */}
-                        <div className="mt-6 flex flex-wrap gap-3">
+                        {/* Quick Action */}
+                        <div className="mt-6 pt-6 border-t border-border flex flex-wrap gap-3">
                             <button
-                                onClick={() => navigate(`/performance/cycles/${activeCycle.Cycle_ID}`)}
-                                className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] font-bold px-4 py-2 text-xs"
+                                onClick={() => navigate('/performance/appraisals')}
+                                className="flex items-center gap-2 bg-primary text-[var(--primary-inverted)] font-bold px-6 py-2 hover:opacity-90 transition-all text-sm"
                             >
-                                <Award className="w-3 h-3" />
-                                VIEW APPRAISALS
+                                <Award className="w-4 h-4" />
+                                START APPRAISAL
                             </button>
                             <button
                                 onClick={() => navigate(`/performance/cycles`)}
