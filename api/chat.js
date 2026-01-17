@@ -5,7 +5,7 @@ const db = require('../db-connection');
 const { SYSTEM_PROMPT } = require('./schema-context');
 const { catalog, catalogPrompt } = require('./catalog');
 
-const MODEL_NAME = 'gemini-3-flash-preview';
+const MODEL_NAME = 'gemini-flash-latest';
 const MAX_ROWS = 50;
 
 // Get component schemas from catalog
