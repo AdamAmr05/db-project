@@ -1,26 +1,17 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
 import { Check, X, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
 
 const ActionCard = ({ element }) => {
-    // Guard against null/undefined element
-    if (!element?.props) {
-        return (
-            <Card className="border border-border bg-[var(--surface)] shadow-lg">
-                <CardHeader>
-                    <CardTitle>Action</CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <p className="text-xs text-muted font-mono">Invalid action data.</p>
-                </CardContent>
-            </Card>
-        );
-    }
+    // Extract props safely - must be before hooks but we can't early return
+    const props = element?.props || {};
+    const { title, description, fields = [], actionId } = props;
+    const isValid = !!element?.props;
 
-    const { title, description, fields = [], actionId } = element.props;
+    // ALL HOOKS MUST BE AT THE TOP - before any conditional returns
+    const cardRef = useRef(null);
 
-    // Local state for field values and UI state
     const [fieldValues, setFieldValues] = useState(() => {
         const initial = {};
         fields.forEach(field => {
@@ -30,15 +21,8 @@ const ActionCard = ({ element }) => {
     });
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [isDismissed, setIsDismissed] = useState(false);
-    const [result, setResult] = useState(null); // { success: boolean, message: string }
-    const [openSelect, setOpenSelect] = useState(null); // Track which dropdown is open
-
-    if (isDismissed) {
-        return null;
-    }
-
-    // Ref for click-outside handling
-    const cardRef = useRef(null);
+    const [result, setResult] = useState(null);
+    const [openSelect, setOpenSelect] = useState(null);
 
     // Close dropdown when clicking outside
     useEffect(() => {
@@ -51,15 +35,32 @@ const ActionCard = ({ element }) => {
         return () => document.removeEventListener('mousedown', handleClickOutside);
     }, []);
 
+    // Now we can have conditional returns AFTER all hooks
+    if (!isValid) {
+        return (
+            <Card className="border border-border bg-[var(--surface)] shadow-lg">
+                <CardHeader>
+                    <CardTitle>Action</CardTitle>
+                </CardHeader>
+                <CardContent>
+                    <p className="text-xs text-muted font-mono">Invalid action data.</p>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    if (isDismissed) {
+        return null;
+    }
+
     const handleFieldChange = (key, value) => {
         setFieldValues(prev => ({ ...prev, [key]: value }));
     };
 
     const handleApprove = async () => {
         setIsSubmitting(true);
-        setOpenSelect(null); // Close any open dropdowns
+        setOpenSelect(null);
         try {
-            // Call the execute API directly
             const response = await fetch(`${API_BASE_URL}/actions/execute`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -69,9 +70,18 @@ const ActionCard = ({ element }) => {
             if (!response.ok) {
                 throw new Error(data.error || 'Action failed');
             }
-            setResult({ success: true, message: data.message || 'Action completed successfully!' });
+            const resultMessage = data.message || 'Action completed successfully!';
+            setResult({ success: true, message: resultMessage });
+            // Dispatch custom event so ChatWidget can update messages
+            window.dispatchEvent(new CustomEvent('actionComplete', {
+                detail: { actionId, success: true, message: resultMessage, data }
+            }));
         } catch (error) {
-            setResult({ success: false, message: error.message || 'Action failed' });
+            const errorMessage = error.message || 'Action failed';
+            setResult({ success: false, message: errorMessage });
+            window.dispatchEvent(new CustomEvent('actionComplete', {
+                detail: { actionId, success: false, message: errorMessage }
+            }));
         } finally {
             setIsSubmitting(false);
         }

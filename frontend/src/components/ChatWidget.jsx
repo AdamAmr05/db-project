@@ -109,6 +109,24 @@ const ChatWidget = () => {
         };
     }, [isResizing]);
 
+    // Listen for action completion events from ActionCard
+    useEffect(() => {
+        const handleActionComplete = (event) => {
+            const { actionId, success, message } = event.detail;
+            // Add a system message so the AI knows what happened
+            const actionResult = success
+                ? `[ACTION COMPLETED] ${message}`
+                : `[ACTION FAILED] ${message}`;
+            setMessages(prev => [...prev, {
+                role: 'assistant',
+                parts: [{ type: 'text', content: actionResult }],
+                isSystemMessage: true
+            }]);
+        };
+        window.addEventListener('actionComplete', handleActionComplete);
+        return () => window.removeEventListener('actionComplete', handleActionComplete);
+    }, []);
+
     const handleSubmit = async (e) => {
         e.preventDefault();
         if (!input.trim() || isLoading) return;
