@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
-import { Save, ArrowLeft, Briefcase, DollarSign, Building2, Code, Activity, Trash2, Plus } from 'lucide-react';
+import { Save, ArrowLeft, Briefcase, DollarSign, Building2, Code, Activity, Trash2, Plus, Info } from 'lucide-react';
 import { jobService } from '../services/jobService';
 import { departmentService } from '../services/departmentService';
 import { employeeService } from '../services/employeeService'; // Using direct API for employees list if needed
 import { facultyService } from '../services/facultyService'; // Not needed, but good reference
 import CyberCard from '../components/CyberCard';
+import Tooltip from '../components/Tooltip';
 import api from '../services/api';
 
 const JobForm = () => {
@@ -465,14 +466,21 @@ const JobForm = () => {
             {/* Objectives & KPIs Section (Edit Mode Only) */}
             {isEdit && (
                 <div className="space-y-6 pt-6 border-t border-border">
-                    <div className="flex justify-between items-center">
-                        <h2 className="text-xl font-bold text-primary tracking-tight flex items-center gap-2">
-                            <Activity className="w-5 h-5 text-primary" />
-                            PERFORMANCE OBJECTIVES
-                        </h2>
+                    <div className="flex justify-between items-start">
+                        <div>
+                            <h2 className="text-xl font-bold text-primary tracking-tight flex items-center gap-2">
+                                <Activity className="w-5 h-5 text-primary" />
+                                PERFORMANCE OBJECTIVES & KPIs
+                            </h2>
+                            <p className="text-xs text-muted mt-1 max-w-lg">
+                                <span className="text-primary">Objectives</span> are performance goals (e.g., "Code Quality").
+                                Each objective contains <span className="text-primary">KPIs</span> - measurable metrics (e.g., "Bug Rate", "Review Turnaround").
+                                Add objectives first, then click "+ ADD KPI" under each to define metrics.
+                            </p>
+                        </div>
                         <button
                             onClick={() => setShowObjForm(!showObjForm)}
-                            className="bg-primary/10 text-primary border border-primary/50 px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-[var(--primary-inverted)] transition-all"
+                            className="bg-primary/10 text-primary border border-primary/50 px-3 py-1 rounded text-xs font-bold hover:bg-primary hover:text-[var(--primary-inverted)] transition-all whitespace-nowrap"
                         >
                             + ADD OBJECTIVE
                         </button>
@@ -481,23 +489,36 @@ const JobForm = () => {
                     {/* Add Objective Form */}
                     {showObjForm && (
                         <CyberCard className="border border-primary/50">
-                            <h3 className="text-sm font-bold text-primary mb-4">NEW OBJECTIVE</h3>
+                            <div className="flex items-center gap-2 mb-2">
+                                <h3 className="text-sm font-bold text-primary">NEW OBJECTIVE</h3>
+                                <Tooltip text="Objective: A high-level performance goal category (e.g., 'Code Quality', 'Customer Service'). Each objective contains specific KPIs that measure how well the goal is being met.">
+                                    <Info className="w-3 h-3 text-muted" />
+                                </Tooltip>
+                            </div>
+                            <p className="text-[10px] text-muted mb-4">
+                                Create a performance goal category. You'll add specific KPI metrics after saving.
+                            </p>
                             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                 <input
-                                    placeholder="Title (e.g., Code Quality)"
+                                    placeholder="Title (e.g., Code Quality, Teamwork)"
                                     value={newObj.Objective_Title}
                                     onChange={e => setNewObj({ ...newObj, Objective_Title: e.target.value })}
                                     className="bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
                                 />
-                                <input
-                                    type="number"
-                                    placeholder="Weight % (0-100)"
-                                    value={newObj.Weight}
-                                    onChange={e => setNewObj({ ...newObj, Weight: e.target.value })}
-                                    className="bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
-                                />
+                                <div className="flex items-center gap-2">
+                                    <input
+                                        type="number"
+                                        placeholder="Weight % (0-100)"
+                                        value={newObj.Weight}
+                                        onChange={e => setNewObj({ ...newObj, Weight: e.target.value })}
+                                        className="flex-1 bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
+                                    />
+                                    <Tooltip text="Weight (0-100%): How important this objective is relative to others. All objective weights for a job should sum to 100%.">
+                                        <Info className="w-4 h-4 text-muted" />
+                                    </Tooltip>
+                                </div>
                                 <textarea
-                                    placeholder="Description..."
+                                    placeholder="Description (optional)..."
                                     value={newObj.Description}
                                     onChange={e => setNewObj({ ...newObj, Description: e.target.value })}
                                     className="md:col-span-2 bg-surface border border-border rounded px-4 py-2 text-primary font-mono text-sm"
@@ -513,10 +534,19 @@ const JobForm = () => {
 
                     {/* Objectives List */}
                     <div className="space-y-4">
+                        {objectives.length === 0 && !showObjForm && (
+                            <div className="border border-dashed border-border rounded-lg p-8 text-center">
+                                <p className="text-muted text-sm">No objectives configured yet.</p>
+                                <p className="text-xs text-muted mt-1">
+                                    Click <span className="text-primary font-bold">+ ADD OBJECTIVE</span> above to create your first performance goal.
+                                </p>
+                            </div>
+                        )}
                         {objectives.map(obj => (
                             <div key={obj.Objective_ID} className="bg-surfaceHighlight border border-border rounded-lg p-4">
                                 <div className="flex justify-between items-start mb-4">
                                     <div>
+                                        <div className="text-[10px] text-muted font-mono mb-1">OBJECTIVE</div>
                                         <h3 className="text-lg font-bold text-primary">{obj.Objective_Title}</h3>
                                         <p className="text-muted text-sm">{obj.Description}</p>
                                     </div>
@@ -530,10 +560,18 @@ const JobForm = () => {
                                     </div>
                                 </div>
 
+                                {/* KPIs Section Header */}
+                                <div className="text-[10px] text-muted font-mono mb-2 ml-4 pl-4 border-l-2 border-border">
+                                    KPIs ({obj.KPIs?.length || 0})
+                                </div>
+
                                 {/* KPIs */}
                                 <div className="ml-4 pl-4 border-l-2 border-border space-y-3">
+                                    {(!obj.KPIs || obj.KPIs.length === 0) && activeObjId !== obj.Objective_ID && (
+                                        <p className="text-xs text-muted italic">No KPIs yet. Add metrics to track performance.</p>
+                                    )}
                                     {obj.KPIs && obj.KPIs.map(kpi => (
-                                        <div key={kpi.KPI_ID} className="bg-surfaceHighlight p-3 rounded flex justify-between items-center">
+                                        <div key={kpi.KPI_ID} className="bg-surface p-3 rounded flex justify-between items-center border border-border">
                                             <div>
                                                 <div className="text-primary font-mono text-sm font-bold">{kpi.KPI_Name}</div>
                                                 <div className="text-muted text-xs">Target: {kpi.Target_Value} {kpi.Measurement_Unit}</div>
@@ -551,24 +589,70 @@ const JobForm = () => {
 
                                     {/* Add KPI Button/Form */}
                                     {activeObjId === obj.Objective_ID ? (
-                                        <div className="bg-surface p-3 rounded border border-border mt-2">
-                                            <div className="grid grid-cols-2 md:grid-cols-4 gap-2 mb-2">
-                                                <input placeholder="KPI Name" value={newKPI.KPI_Name} onChange={e => setNewKPI({ ...newKPI, KPI_Name: e.target.value })} className="col-span-2 bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
-                                                <input placeholder="Target" value={newKPI.Target_Value} onChange={e => setNewKPI({ ...newKPI, Target_Value: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
-                                                <input placeholder="Unit" value={newKPI.Measurement_Unit} onChange={e => setNewKPI({ ...newKPI, Measurement_Unit: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
-                                                <input type="number" placeholder="Weight" value={newKPI.Weight} onChange={e => setNewKPI({ ...newKPI, Weight: e.target.value })} className="bg-surface border border-border rounded px-2 py-1 text-primary text-xs" />
+                                        <div className="bg-surface p-3 rounded border border-primary/50 mt-2">
+                                            <div className="flex items-center gap-2 mb-3">
+                                                <span className="text-[10px] text-primary font-mono">NEW KPI</span>
+                                                <Tooltip text="KPI: A measurable metric to evaluate performance. Set a target value and score employees 1-5 on how well they met it.">
+                                                    <Info className="w-3 h-3 text-muted" />
+                                                </Tooltip>
+                                            </div>
+                                            <div className="space-y-2 mb-3">
+                                                {/* Row 1: Name */}
+                                                <input
+                                                    placeholder="KPI Name (e.g., Bug Rate, Customer Satisfaction)"
+                                                    value={newKPI.KPI_Name}
+                                                    onChange={e => setNewKPI({ ...newKPI, KPI_Name: e.target.value })}
+                                                    className="w-full bg-surface border border-border rounded px-2 py-1.5 text-primary text-xs"
+                                                />
+                                                {/* Row 2: Target, Unit, Weight */}
+                                                <div className="grid grid-cols-3 gap-2">
+                                                    <div className="flex items-center gap-1">
+                                                        <input
+                                                            placeholder="Target (e.g., 5)"
+                                                            value={newKPI.Target_Value}
+                                                            onChange={e => setNewKPI({ ...newKPI, Target_Value: e.target.value })}
+                                                            className="w-full bg-surface border border-border rounded px-2 py-1.5 text-primary text-xs"
+                                                        />
+                                                        <Tooltip text="Target Value: The goal number employees should aim for (e.g., 5 bugs/month, 95% satisfaction, 30 days to hire).">
+                                                            <Info className="w-3 h-3 text-muted shrink-0" />
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <input
+                                                            placeholder="e.g., %, bugs, days"
+                                                            value={newKPI.Measurement_Unit}
+                                                            onChange={e => setNewKPI({ ...newKPI, Measurement_Unit: e.target.value })}
+                                                            className="w-full bg-surface border border-border rounded px-2 py-1.5 text-primary text-xs"
+                                                        />
+                                                        <Tooltip text="Unit: The label for your target number. Examples: '%' for percentages, 'bugs' for bug count, 'days' for time, 'tasks' for completed work.">
+                                                            <Info className="w-3 h-3 text-muted shrink-0" />
+                                                        </Tooltip>
+                                                    </div>
+                                                    <div className="flex items-center gap-1">
+                                                        <input
+                                                            type="number"
+                                                            placeholder="Weight %"
+                                                            value={newKPI.Weight}
+                                                            onChange={e => setNewKPI({ ...newKPI, Weight: e.target.value })}
+                                                            className="w-full bg-surface border border-border rounded px-2 py-1.5 text-primary text-xs"
+                                                        />
+                                                        <Tooltip text="Weight (0-100%): How important this KPI is relative to others. Higher weight = more impact on overall score.">
+                                                            <Info className="w-3 h-3 text-muted shrink-0" />
+                                                        </Tooltip>
+                                                    </div>
+                                                </div>
                                             </div>
                                             <div className="flex justify-end gap-2">
                                                 <button onClick={() => setActiveObjId(null)} className="text-[10px] text-muted hover:text-accent">CANCEL</button>
-                                                <button onClick={() => handleAddKPI(obj.Objective_ID)} className="bg-white/20 text-primary text-[10px] font-bold px-3 py-1 rounded hover:bg-white/30">ADD KPI</button>
+                                                <button onClick={() => handleAddKPI(obj.Objective_ID)} className="bg-primary text-[var(--primary-inverted)] text-[10px] font-bold px-3 py-1 rounded">SAVE KPI</button>
                                             </div>
                                         </div>
                                     ) : (
                                         <button
                                             onClick={() => setActiveObjId(obj.Objective_ID)}
-                                            className="text-xs text-muted hover:text-accent flex items-center gap-1 mt-2"
+                                            className="text-xs text-primary hover:text-accent flex items-center gap-1 mt-2 border border-dashed border-primary/50 px-3 py-2 rounded hover:bg-primary/10 transition-colors w-full justify-center"
                                         >
-                                            <Plus className="w-3 h-3" /> ADD KPI
+                                            <Plus className="w-3 h-3" /> ADD KPI TO THIS OBJECTIVE
                                         </button>
                                     )}
                                 </div>

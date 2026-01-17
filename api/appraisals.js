@@ -102,11 +102,21 @@ async function getAppraisalDetails(req, res) {
             [assignmentId, cycleId]
         );
 
+        // 5. Fetch Employee and Job info for display
+        const [employeeInfo] = await db.query(`
+            SELECT e.First_Name, e.Last_Name, j.Job_ID, j.Job_Title
+            FROM JOB_ASSIGNMENT ja
+            JOIN EMPLOYEE e ON ja.Employee_ID = e.Employee_ID
+            JOIN JOB j ON ja.Job_ID = j.Job_ID
+            WHERE ja.Assignment_ID = ?
+        `, [assignmentId]);
+
         res.json({
             success: true,
             data: {
                 objectives,
-                appraisal: appraisal || null
+                appraisal: appraisal || null,
+                employee: employeeInfo || null
             }
         });
 

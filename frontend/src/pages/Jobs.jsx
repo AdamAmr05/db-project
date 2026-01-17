@@ -76,7 +76,7 @@ const Jobs = () => {
                     <div className="overflow-x-auto">
                         <table className="w-full text-left border-collapse">
                             <thead>
-                                <tr className="border-b border-border text-xs font-mono text-muted uppercase">
+                                <tr className="border-b border-white/10 text-xs font-mono text-muted uppercase">
                                     <th className="p-4">Job Title</th>
                                     <th className="p-4">Code</th>
                                     <th className="p-4">Department</th>
@@ -87,7 +87,7 @@ const Jobs = () => {
                             </thead>
                             <tbody>
                                 {filteredJobs.map((job) => (
-                                    <tr key={job.Job_ID} className="border-b border-border/50 hover:bg-surfaceHighlight transition-colors">
+                                    <tr key={job.Job_ID} className="border-b border-white/10 hover:bg-surfaceHighlight transition-colors">
                                         <td className="p-4">
                                             <div className="font-bold text-primary">{job.Job_Title}</div>
                                             <div className="text-xs text-muted">{job.Job_Category}</div>

@@ -1,9 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ChevronLeft, Save, Send, Target, AlertCircle, CheckCircle } from 'lucide-react';
+import { ChevronLeft, Save, Send, Target, AlertCircle, CheckCircle, Info } from 'lucide-react';
 import { performanceService } from '../services/performanceService';
 import CyberCard from '../components/CyberCard';
+import Tooltip from '../components/Tooltip';
 import clsx from 'clsx';
 
 const EmployeeAppraisal = () => {
@@ -127,6 +128,77 @@ const EmployeeAppraisal = () => {
                 </div>
             </div>
 
+            {/* Wizard Progress Indicator */}
+            <div className="bg-surface border border-border p-4">
+                <div className="flex items-center justify-between">
+                    {/* Step 1: Employee Info */}
+                    <div className="flex items-center gap-3 flex-1">
+                        <div className="w-8 h-8 flex items-center justify-center border-2 border-primary bg-primary text-[var(--primary-inverted)] font-mono text-sm font-bold">
+                            1
+                        </div>
+                        <div>
+                            <div className="text-xs font-mono text-primary font-bold">EMPLOYEE</div>
+                            <div className="text-[10px] text-muted">
+                                {data.employee?.First_Name} {data.employee?.Last_Name}
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Connector */}
+                    <div className="w-12 h-0.5 bg-primary/50 hidden md:block" />
+
+                    {/* Step 2: KPI Scoring */}
+                    <div className="flex items-center gap-3 flex-1">
+                        <div className={clsx(
+                            "w-8 h-8 flex items-center justify-center border-2 font-mono text-sm font-bold",
+                            data.objectives?.length > 0
+                                ? "border-primary bg-primary text-[var(--primary-inverted)]"
+                                : "border-muted text-muted"
+                        )}>
+                            2
+                        </div>
+                        <div>
+                            <div className={clsx(
+                                "text-xs font-mono font-bold",
+                                data.objectives?.length > 0 ? "text-primary" : "text-muted"
+                            )}>KPI SCORING</div>
+                            <div className="text-[10px] text-muted">
+                                {data.objectives?.length || 0} objectives
+                            </div>
+                        </div>
+                    </div>
+
+                    {/* Connector */}
+                    <div className={clsx(
+                        "w-12 h-0.5 hidden md:block",
+                        data.appraisal?.Overall_Score ? "bg-primary/50" : "bg-muted/30"
+                    )} />
+
+                    {/* Step 3: Review & Submit */}
+                    <div className="flex items-center gap-3 flex-1">
+                        <div className={clsx(
+                            "w-8 h-8 flex items-center justify-center border-2 font-mono text-sm font-bold",
+                            data.appraisal?.Overall_Score
+                                ? "border-green-500 bg-green-500 text-white"
+                                : "border-muted text-muted"
+                        )}>
+                            {data.appraisal?.Overall_Score ? <CheckCircle className="w-4 h-4" /> : '3'}
+                        </div>
+                        <div>
+                            <div className={clsx(
+                                "text-xs font-mono font-bold",
+                                data.appraisal?.Overall_Score ? "text-green-500" : "text-muted"
+                            )}>
+                                {data.appraisal?.Overall_Score ? 'COMPLETED' : 'REVIEW'}
+                            </div>
+                            <div className="text-[10px] text-muted">
+                                {data.appraisal?.Overall_Score ? `Score: ${data.appraisal.Overall_Score}` : 'Finalize'}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             {/* Objectives Loop */}
             {data.objectives.length === 0 ? (
                 <CyberCard className="border-l-4 border-l-yellow-500">
@@ -134,14 +206,23 @@ const EmployeeAppraisal = () => {
                         <div className="p-2 border border-yellow-500/30">
                             <AlertCircle className="w-5 h-5 text-yellow-400" />
                         </div>
-                        <div>
+                        <div className="flex-1">
                             <h3 className="text-lg font-bold text-primary">No Objectives Configured</h3>
                             <p className="text-sm text-muted mt-2">
                                 This employee's job role does not have any objectives or KPIs assigned yet.
                             </p>
                             <p className="text-xs text-muted mt-2 font-mono">
-                                To enable full performance tracking, an administrator should add objectives and KPIs to the JOB_OBJECTIVE and OBJECTIVE_KPI tables for this job.
+                                To score this employee, first configure objectives and KPIs for their job role.
                             </p>
+                            {data.employee?.Job_ID && (
+                                <button
+                                    onClick={() => navigate(`/jobs/${data.employee.Job_ID}`)}
+                                    className="mt-4 flex items-center gap-2 bg-yellow-500/20 text-yellow-400 border border-yellow-500/50 px-4 py-2 text-xs font-bold hover:bg-yellow-500 hover:text-black transition-all"
+                                >
+                                    <Target className="w-4 h-4" />
+                                    CONFIGURE JOB KPIs
+                                </button>
+                            )}
                         </div>
                     </div>
                 </CyberCard>
@@ -164,18 +245,32 @@ const EmployeeAppraisal = () => {
                         </div>
 
                         {/* KPIs Table */}
-                        <div className="overflow-x-auto">
+                        <div className="overflow-visible">
                             <table className="w-full text-sm text-left">
                                 <thead className="bg-surface text-muted text-xs uppercase font-mono">
                                     <tr>
                                         <th className="px-4 py-3 min-w-[200px]">KPI Metric</th>
                                         <th className="px-4 py-3">Target</th>
-                                        <th className="px-4 py-3">Actual</th>
-                                        <th className="px-4 py-3">Score (1-5)</th>
+                                        <th className="px-4 py-3">
+                                            <span className="flex items-center gap-1">
+                                                Actual
+                                                <Tooltip text="What the employee actually achieved for this KPI (e.g., if target is 5 bugs/month, enter how many bugs they actually had).">
+                                                    <Info className="w-3 h-3" />
+                                                </Tooltip>
+                                            </span>
+                                        </th>
+                                        <th className="px-4 py-3">
+                                            <span className="flex items-center gap-1">
+                                                Score (1-5)
+                                                <Tooltip text="Rate 1-5 based on how well they met the target. 1=Poor, 2=Below Expectations, 3=Meets Expectations, 4=Exceeds, 5=Outstanding.">
+                                                    <Info className="w-3 h-3" />
+                                                </Tooltip>
+                                            </span>
+                                        </th>
                                         <th className="px-4 py-3 min-w-[200px]">Comments</th>
                                     </tr>
                                 </thead>
-                                <tbody className="divide-y divide-border">
+                                <tbody className="divide-y divide-white/10">
                                     {obj.KPIs.map(kpi => (
                                         <tr key={kpi.KPI_ID} className="hover:bg-surfaceHighlight transition-colors">
                                             <td className="px-4 py-3 align-top">

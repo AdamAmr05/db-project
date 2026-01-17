@@ -22,6 +22,8 @@ import TrainingProgramForm from './pages/TrainingProgramForm';
 import PerformanceCycles from './pages/PerformanceCycles';
 import PerformanceAppraisals from './pages/PerformanceAppraisals';
 import EmployeeAppraisal from './pages/EmployeeAppraisal';
+import PerformanceHub from './pages/PerformanceHub';
+import CycleDetail from './pages/CycleDetail';
 import Appeals from './pages/Appeals';
 
 import PowerBiDashboard from './pages/PowerBiDashboard';
@@ -47,7 +49,9 @@ function App() {
         <Route path="/training/new" element={<Layout><TrainingProgramForm /></Layout>} />
         <Route path="/training/:id" element={<Layout><TrainingProgramForm /></Layout>} />
 
+        <Route path="/performance" element={<Layout><PerformanceHub /></Layout>} />
         <Route path="/performance/cycles" element={<Layout><PerformanceCycles /></Layout>} />
+        <Route path="/performance/cycles/:id" element={<Layout><CycleDetail /></Layout>} />
         <Route path="/performance/appraisals" element={<Layout><PerformanceAppraisals /></Layout>} />
         <Route path="/performance/appraisals/:cycleId/:assignmentId" element={<Layout><EmployeeAppraisal /></Layout>} />
         <Route path="/appeals" element={<Layout><Appeals /></Layout>} />

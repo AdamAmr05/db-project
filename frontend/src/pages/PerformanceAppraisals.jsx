@@ -82,13 +82,8 @@ const PerformanceAppraisals = () => {
 
             {/* Candidates Grid */}
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {filteredCandidates.map((employee, index) => (
-                    <motion.div
-                        key={employee.Assignment_ID}
-                        initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                    >
+                {filteredCandidates.map((employee) => (
+                    <div key={employee.Assignment_ID}>
                         <CyberCard className="h-full group hover:border-muted transition-colors">
                             <div className="flex justify-between items-start mb-4">
                                 <div className="p-2 border border-border">
@@ -130,7 +125,7 @@ const PerformanceAppraisals = () => {
                                 </button>
                             </div>
                         </CyberCard>
-                    </motion.div>
+                    </div>
                 ))}
             </div>
 

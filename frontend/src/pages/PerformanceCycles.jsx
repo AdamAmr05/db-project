@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Plus, Search, Trash2, Edit2, Clock, AlertCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { Calendar, Plus, Search, Trash2, Edit2, Clock, AlertCircle, Eye } from 'lucide-react';
 import { performanceService } from '../services/performanceService';
 import CyberCard from '../components/CyberCard';
 
 const PerformanceCycles = () => {
+    const navigate = useNavigate();
     const [cycles, setCycles] = useState([]);
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
@@ -226,6 +228,15 @@ const PerformanceCycles = () => {
                                     <div className="text-muted text-xs font-mono">DEADLINE</div>
                                     <div className="text-red-400 font-bold">{new Date(cycle.Submission_Deadline).toLocaleDateString()}</div>
                                 </div>
+                            </div>
+                            <div className="mt-4 pt-4 border-t border-border">
+                                <button
+                                    onClick={() => navigate(`/performance/cycles/${cycle.Cycle_ID}`)}
+                                    className="w-full flex items-center justify-center gap-2 py-2 text-xs font-mono text-primary border border-border hover:bg-surfaceHighlight transition-colors"
+                                >
+                                    <Eye className="w-3 h-3" />
+                                    VIEW APPRAISALS
+                                </button>
                             </div>
                         </CyberCard>
                     );
