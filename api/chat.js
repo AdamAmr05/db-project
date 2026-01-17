@@ -213,7 +213,7 @@ async function runChat({ message, history, onText, onUi }) {
 
     try {
         // Combine HR context with json-render catalog prompt
-        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart.`;
+        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart. IMPORTANT: Always render results visually using these tools—never output raw code or data arrays as text.`;
 
         const result = streamText({
             model: google(MODEL_NAME),
@@ -297,8 +297,8 @@ async function stream(req, res) {
         res.end();
     } catch (error) {
         console.error('[stream] Error:', error);
-        const message = error instanceof Error ? error.message : 'Failed to stream response';
-        write({ type: 'error', message });
+        const errorMessage = error instanceof Error ? error.message : 'Failed to stream response';
+        write({ type: 'error', message: errorMessage });
         res.end();
     }
 }

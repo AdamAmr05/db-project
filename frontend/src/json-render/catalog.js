@@ -33,7 +33,7 @@ export const catalog = createCatalog({
                     align: z.enum(['left', 'center', 'right']).optional()
                 })),
                 data: z.array(z.record(z.string(), z.any())),
-                maxRows: z.number().optional()
+                maxRows: z.number().int().positive().optional()
             })
         }
     }
