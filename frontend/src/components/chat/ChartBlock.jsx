@@ -19,10 +19,12 @@ import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui
 const fallbackPalette = ['#06b6d4', '#3b82f6', '#8b5cf6', '#ec4899', '#f97316'];
 
 const tooltipStyle = {
-    background: 'var(--surface-highlight)',
-    border: '1px solid var(--border)',
-    color: 'var(--text-primary)',
-    fontSize: '0.75rem'
+    backgroundColor: '#1a1a1a',
+    border: '1px solid #333',
+    borderRadius: '6px',
+    color: '#f5f5f5',
+    fontSize: '0.75rem',
+    padding: '8px 12px'
 };
 
 const ChartBlock = ({ element }) => {
@@ -109,7 +111,7 @@ const ChartBlock = ({ element }) => {
     };
 
     return (
-        <Card className="border border-border bg-[var(--surface)] shadow-lg">
+        <Card className="border border-[#333] bg-[#1a1a1a] shadow-lg">
             <CardHeader>
                 <CardTitle>{title}</CardTitle>
                 {description ? <CardDescription>{description}</CardDescription> : null}

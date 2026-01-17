@@ -359,33 +359,44 @@ const ChatWidget = () => {
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((msg, idx) => (
-                        <div key={msg.id || idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
-                            <div className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-border text-primary'}`}>
-                                {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
-                            </div>
-                            <div className={`max-w-[80%] px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-[var(--surface-highlight)] text-primary border border-border'}`}>
-                                {msg.parts?.map((part, partIndex) => {
-                                    if (part.type === 'ui') {
-                                        const tree = trees[part.blockId];
-                                        if (!tree) return null;
+                    {messages.map((msg, idx) => {
+                        // Skip empty assistant messages (waiting for first content)
+                        if (msg.role === 'assistant') {
+                            const hasContent = msg.parts?.some(part =>
+                                (part.type === 'text' && part.content?.trim()) ||
+                                (part.type === 'ui' && trees[part.blockId])
+                            );
+                            if (!hasContent) return null;
+                        }
+
+                        return (
+                            <div key={msg.id || idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+                                <div className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-border text-primary'}`}>
+                                    {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
+                                </div>
+                                <div className={`max-w-[80%] px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-[var(--surface-highlight)] text-primary border border-border'}`}>
+                                    {msg.parts?.map((part, partIndex) => {
+                                        if (part.type === 'ui') {
+                                            const tree = trees[part.blockId];
+                                            if (!tree) return null;
+                                            return (
+                                                <div key={`${part.blockId}-${partIndex}`} className="my-2">
+                                                    <JSONUIProvider registry={registry}>
+                                                        <Renderer tree={tree} registry={registry} />
+                                                    </JSONUIProvider>
+                                                </div>
+                                            );
+                                        }
                                         return (
-                                            <div key={`${part.blockId}-${partIndex}`} className="my-2">
-                                                <JSONUIProvider registry={registry}>
-                                                    <Renderer tree={tree} registry={registry} />
-                                                </JSONUIProvider>
+                                            <div key={`text-${partIndex}`}>
+                                                {formatMessage(part.content || '')}
                                             </div>
                                         );
-                                    }
-                                    return (
-                                        <div key={`text-${partIndex}`}>
-                                            {formatMessage(part.content || '')}
-                                        </div>
-                                    );
-                                })}
+                                    })}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                     {isLoading && (
                         <div className="flex gap-3">
                             <div className="w-7 h-7 rounded flex items-center justify-center flex-shrink-0 bg-border text-primary">
