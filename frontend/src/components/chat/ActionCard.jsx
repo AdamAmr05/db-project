@@ -50,7 +50,18 @@ const ActionCard = ({ element }) => {
     }
 
     if (isDismissed) {
-        return null;
+        return (
+            <Card className="border border-muted/30 bg-muted/5 shadow-lg">
+                <CardContent className="py-4">
+                    <div className="flex items-center gap-3">
+                        <X className="w-5 h-5 text-muted" />
+                        <span className="text-sm font-mono text-muted">
+                            Action cancelled
+                        </span>
+                    </div>
+                </CardContent>
+            </Card>
+        );
     }
 
     const handleFieldChange = (key, value) => {
@@ -89,6 +100,10 @@ const ActionCard = ({ element }) => {
 
     const handleCancel = () => {
         setIsDismissed(true);
+        // Notify ChatWidget that user cancelled so AI knows
+        window.dispatchEvent(new CustomEvent('actionComplete', {
+            detail: { actionId, success: false, message: 'Action cancelled by user', cancelled: true }
+        }));
     };
 
     const renderField = (field) => {
