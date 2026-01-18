@@ -430,20 +430,35 @@ const ChatWidget = () => {
 
                 {/* Input */}
                 <form onSubmit={handleSubmit} className="p-3 border-t border-border bg-[var(--surface-highlight)]">
-                    <div className="flex gap-2">
-                        <input
+                    <div className="flex gap-2 items-end">
+                        <textarea
                             ref={inputRef}
-                            type="text"
                             value={input}
-                            onChange={(e) => setInput(e.target.value)}
+                            onChange={(e) => {
+                                setInput(e.target.value);
+                                // Auto-resize
+                                e.target.style.height = 'auto';
+                                e.target.style.height = Math.min(e.target.scrollHeight, 120) + 'px';
+                            }}
+                            onKeyDown={(e) => {
+                                // Submit on Enter (without shift)
+                                if (e.key === 'Enter' && !e.shiftKey) {
+                                    e.preventDefault();
+                                    if (input.trim() && !isLoading) {
+                                        handleSubmit(e);
+                                    }
+                                }
+                            }}
                             placeholder="Ask about the database..."
-                            className="flex-1 px-3 py-2 bg-surface border border-border text-primary text-sm focus:border-primary outline-none transition-colors placeholder:text-muted font-mono"
+                            className="flex-1 px-3 py-2 bg-surface border border-border text-primary text-sm focus:border-primary outline-none transition-colors placeholder:text-muted font-mono resize-none overflow-hidden"
+                            style={{ minHeight: '38px', maxHeight: '120px' }}
                             disabled={isLoading}
+                            rows={1}
                         />
                         <button
                             type="submit"
                             disabled={!input.trim() || isLoading}
-                            className="px-3 py-2 bg-primary text-[var(--primary-inverted)] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                            className="px-3 py-2 bg-primary text-[var(--primary-inverted)] disabled:opacity-50 disabled:cursor-not-allowed transition-opacity h-[38px]"
                         >
                             <Send className="w-4 h-4" />
                         </button>
