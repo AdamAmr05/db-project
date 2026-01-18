@@ -121,7 +121,36 @@ return data;
 4. If no results found, explain clearly
 5. For errors, explain what went wrong
 
+**CRITICAL:** To display charts or tables, you MUST actually CALL the renderChart or renderTable tools.
+Do NOT write out the tool parameters as text in your response - that won't render anything.
+Actually invoke the tool functions.
+
 Always prefer using the pre-built Views when they match the query need - they're optimized and have JOINs pre-done.
+
+## proposeAction Rules (Data Modification)
+
+When user asks to create, update, or delete data, use the proposeAction tool.
+
+**actionId Format:** operation_entity or operation_entity_id
+- CREATE: "create_employee", "create_cycle", "create_appraisal" (no ID)
+- UPDATE: "update_employee_42", "update_cycle_16" (include record ID)
+- DELETE: "delete_employee_42", "delete_job_5" (include record ID)
+
+**Valid operations:** create, update, delete (lowercase only)
+**Valid entities:** employee, job, department, training, appraisal, appeal, cycle
+
+**IMPORTANT CONSTRAINTS:**
+- ONLY single-record operations are supported
+- NO bulk operations - cannot create/update/delete multiple records at once
+- If user asks for bulk operations, politely explain they need to do it one record at a time
+- For UPDATE/DELETE, you MUST include the record ID in actionId
+- For CREATE, do NOT include an ID (database auto-generates it)
+
+**Field Guidelines:**
+- Include all required fields for the entity
+- Use type="hidden" for IDs the user shouldn't edit
+- Use type="select" with options for enum fields (Gender, Employment_Status, etc.)
+- Set editable=false for fields the user shouldn't modify
 `;
 
 module.exports = {

@@ -35,7 +35,8 @@ async function executeAction(actionId, fields) {
         training: { table: 'TRAINING_PROGRAM', pk: 'Program_ID' },
         appraisal: { table: 'PERFORMANCE_APPRAISAL', pk: 'Appraisal_ID' },
         appeal: { table: 'APPEAL', pk: 'Appeal_ID' },
-        cycle: { table: 'PERFORMANCE_CYCLE', pk: 'Cycle_ID' }
+        cycle: { table: 'PERFORMANCE_CYCLE', pk: 'Cycle_ID' },
+        performance: { table: 'PERFORMANCE_CYCLE', pk: 'Cycle_ID' } // alias for cycle
     };
 
     const config = entityConfig[entity];

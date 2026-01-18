@@ -243,12 +243,21 @@ async function runChat({ message, history, onText, onUi }) {
 
     messages.push({ role: 'user', content: message });
 
-    console.log('[runChat] Calling streamText with model:', MODEL_NAME);
-    console.log('[runChat] API key present:', !!process.env.GOOGLE_GENERATIVE_AI_API_KEY);
+    console.log('\n' + '='.repeat(60));
+    console.log('🤖 CHAT REQUEST');
+    console.log('='.repeat(60));
+    console.log('Model:', MODEL_NAME);
+    console.log('Message:', message.slice(0, 100) + (message.length > 100 ? '...' : ''));
+    console.log('History length:', history.length, 'messages');
+    console.log('-'.repeat(60));
 
     try {
-        // Combine HR context with json-render catalog prompt
-        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart. When user asks to modify/update/create/delete data, use proposeAction to show an approval form. IMPORTANT: Always render results visually using these tools—never output raw code or data arrays as text.`;
+        // Combine HR context (includes proposeAction rules) with json-render catalog prompt
+        const fullSystemPrompt = `${SYSTEM_PROMPT}\n\n## UI Components\n${catalogPrompt}\n\nWhen showing structured data, prefer using renderTable. When showing trends or distributions, use renderChart. When user asks to modify/update/create/delete data, use proposeAction to show an approval form.\n\nIMPORTANT: Always render results visually using these tools—never output raw code or data arrays as text.`;
+
+        console.log('📝 SYSTEM PROMPT (first 500 chars):');
+        console.log(fullSystemPrompt.slice(0, 500) + '...');
+        console.log('-'.repeat(60));
 
         const result = streamText({
             model: google(MODEL_NAME),
@@ -258,28 +267,47 @@ async function runChat({ message, history, onText, onUi }) {
             stopWhen: stepCountIs(10)
         });
 
-        console.log('[runChat] streamText returned, iterating fullStream...');
+        console.log('⏳ Streaming response...');
+        console.log('-'.repeat(60));
 
-        let chunkCount = 0;
+        let textChunks = 0;
+        let toolCalls = [];
+        let totalText = '';
+
         for await (const part of result.fullStream) {
-            console.log('[runChat] Part type:', part.type, 'Full part:', JSON.stringify(part, null, 0));
             if (part.type === 'text-delta') {
-                chunkCount++;
-                const textValue = part.text; // AI SDK v6 uses 'text' not 'textDelta'
-                console.log('[runChat] Text delta value:', JSON.stringify(textValue), 'type:', typeof textValue);
-                onText?.(textValue);
+                textChunks++;
+                totalText += part.text || '';
+                onText?.(part.text);
             } else if (part.type === 'tool-call') {
-                console.log('[runChat] Tool call:', part.toolName);
+                toolCalls.push(part.toolName);
+                console.log(`🔧 Tool call: ${part.toolName}`);
             } else if (part.type === 'tool-result') {
-                console.log('[runChat] Tool result for:', part.toolName);
+                console.log(`✅ Tool result: ${part.toolName}`);
+            } else if (part.type === 'finish') {
+                console.log('-'.repeat(60));
+                console.log('📊 TOKEN USAGE:');
+                console.log(`   Input:  ${part.totalUsage?.inputTokens || 'N/A'}`);
+                console.log(`   Output: ${part.totalUsage?.outputTokens || 'N/A'}`);
+                console.log(`   Total:  ${part.totalUsage?.totalTokens || 'N/A'}`);
+                if (part.totalUsage?.cachedInputTokens) {
+                    console.log(`   Cached: ${part.totalUsage.cachedInputTokens}`);
+                }
             } else if (part.type === 'error') {
-                console.error('[runChat] Stream error:', part.error);
+                console.error('❌ Stream error:', part.error);
             }
         }
 
-        console.log('[runChat] Stream finished, total text chunks:', chunkCount);
+        console.log('-'.repeat(60));
+        console.log('📤 RESPONSE SUMMARY:');
+        console.log(`   Text chunks: ${textChunks}`);
+        console.log(`   Tool calls: ${toolCalls.length > 0 ? toolCalls.join(', ') : 'none'}`);
+        console.log(`   Response preview: ${totalText.slice(0, 150)}${totalText.length > 150 ? '...' : ''}`);
+        console.log('='.repeat(60) + '\n');
+
     } catch (err) {
-        console.error('[runChat] Error during streaming:', err);
+        console.error('❌ Error during streaming:', err.message);
+        console.log('='.repeat(60) + '\n');
         throw err;
     }
 }
