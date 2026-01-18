@@ -377,7 +377,7 @@ const ChatWidget = () => {
 
                 {/* Messages */}
                 <div className="flex-1 overflow-y-auto p-4 space-y-4">
-                    {messages.map((msg, idx) => {
+                    {messages.filter(msg => !msg.isSystemMessage).map((msg, idx) => {
                         // Skip empty assistant messages (waiting for first content)
                         if (msg.role === 'assistant') {
                             const hasContent = msg.parts?.some(part =>
