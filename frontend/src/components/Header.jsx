@@ -1,8 +1,9 @@
 import React from 'react';
 import { useLocation } from 'react-router-dom';
 import ThemeToggle from './ThemeToggle';
+import clsx from 'clsx';
 
-const Header = () => {
+const Header = ({ isCollapsed }) => {
     const location = useLocation();
 
     const getTitle = () => {
@@ -10,12 +11,16 @@ const Header = () => {
             case '/': return 'System Dashboard';
             case '/employees': return 'Employee Database';
             case '/faculties': return 'Faculty Management';
+            case '/chat': return 'AI Chat';
             default: return 'System';
         }
     };
 
     return (
-        <header className="h-16 border-b border-border bg-background/80 backdrop-blur-sm flex items-center px-8 sticky top-0 z-40 ml-64">
+        <header className={clsx(
+            'h-16 border-b border-border bg-background/80 backdrop-blur-sm flex items-center px-8 sticky top-0 z-40 transition-all duration-300',
+            isCollapsed ? 'ml-16' : 'ml-64'
+        )}>
             <div className="flex items-center gap-4">
                 <div className="h-4 w-1 bg-primary" />
                 <h2 className="text-sm font-mono text-primary uppercase tracking-widest">
@@ -33,4 +38,3 @@ const Header = () => {
 };
 
 export default Header;
-
