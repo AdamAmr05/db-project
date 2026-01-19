@@ -21,10 +21,20 @@ export const ChatProvider = ({ children }) => {
     const { trees, updateTree } = useUiPatchStream();
     const inputRef = useRef(null);
 
+    // Track completed actions { actionId: { success, message } }
+    const [completedActions, setCompletedActions] = useState({});
+
     // Listen for action completion events from ActionCard
     useEffect(() => {
         const handleActionComplete = (event) => {
-            const { actionId, success, message } = event.detail;
+            const { actionId, success, message, cancelled } = event.detail;
+
+            // Mark this action as completed so all instances sync
+            setCompletedActions(prev => ({
+                ...prev,
+                [actionId]: { success, message, cancelled }
+            }));
+
             // Add a system message so the AI knows what happened
             const actionResult = success
                 ? `[ACTION COMPLETED] ${message}`
@@ -150,7 +160,8 @@ export const ChatProvider = ({ children }) => {
         isLoading,
         trees,
         inputRef,
-        handleSubmit
+        handleSubmit,
+        completedActions
     };
 
     return (

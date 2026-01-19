@@ -2,12 +2,17 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from '../ui/card';
 import { Check, X, Loader2 } from 'lucide-react';
 import { API_BASE_URL } from '../../services/api';
+import { useChatContext } from '../../context/ChatContext';
 
 const ActionCard = ({ element }) => {
     // Extract props safely - must be before hooks but we can't early return
     const props = element?.props || {};
     const { title, description, fields = [], actionId } = props;
     const isValid = !!element?.props;
+
+    // Get completed actions from context for sync across instances
+    const { completedActions } = useChatContext();
+    const completedAction = actionId ? completedActions[actionId] : null;
 
     // ALL HOOKS MUST BE AT THE TOP - before any conditional returns
     const cardRef = useRef(null);
@@ -44,6 +49,40 @@ const ActionCard = ({ element }) => {
                 </CardHeader>
                 <CardContent>
                     <p className="text-xs text-muted font-mono">Invalid action data.</p>
+                </CardContent>
+            </Card>
+        );
+    }
+
+    // Check if this action was completed elsewhere (sync from context)
+    if (completedAction) {
+        if (completedAction.cancelled) {
+            return (
+                <Card className="border border-muted/30 bg-muted/5 shadow-lg">
+                    <CardContent className="py-4">
+                        <div className="flex items-center gap-3">
+                            <X className="w-5 h-5 text-muted" />
+                            <span className="text-sm font-mono text-muted">
+                                Action cancelled
+                            </span>
+                        </div>
+                    </CardContent>
+                </Card>
+            );
+        }
+        return (
+            <Card className={`border shadow-lg ${completedAction.success ? 'border-green-500/50 bg-green-500/5' : 'border-red-500/50 bg-red-500/5'}`}>
+                <CardContent className="py-4">
+                    <div className="flex items-center gap-3">
+                        {completedAction.success ? (
+                            <Check className="w-5 h-5 text-green-500" />
+                        ) : (
+                            <X className="w-5 h-5 text-red-500" />
+                        )}
+                        <span className={`text-sm font-mono ${completedAction.success ? 'text-green-500' : 'text-red-500'}`}>
+                            {completedAction.message}
+                        </span>
+                    </div>
                 </CardContent>
             </Card>
         );
