@@ -40,9 +40,9 @@ const ChatPage = () => {
     };
 
     return (
-        <div className="flex flex-col h-full max-w-4xl mx-auto" style={{ maxHeight: 'calc(100vh - 100px)' }}>
+        <div className="flex flex-col w-full max-w-4xl mx-auto h-[calc(100vh-7rem)] -mb-4">
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto py-4 space-y-4">
+            <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-2">
                 {messages.filter(msg => !msg.isSystemMessage).map((msg, idx) => {
                     // Skip empty assistant messages (waiting for first content)
                     if (msg.role === 'assistant') {
@@ -95,8 +95,8 @@ const ChatPage = () => {
             </div>
 
             {/* Input Area - more compact, right-padded to avoid bubble overlap */}
-            <div className="py-3 border-t border-border">
-                <form onSubmit={onFormSubmit} className="flex gap-2 items-end pr-16">
+            <div className="pt-3 pb-1 border-t border-border mt-auto">
+                <form onSubmit={onFormSubmit} className="flex gap-2 items-end">
                     <textarea
                         ref={inputRef}
                         value={input}
