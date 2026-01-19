@@ -100,7 +100,13 @@ const ChartBlock = ({ element }) => {
             <ResponsiveContainer width="100%" height={240}>
                 <PieChart>
                     <Tooltip contentStyle={tooltipStyle} itemStyle={{ color: 'var(--tooltip-text)' }} labelStyle={{ color: 'var(--tooltip-text)' }} />
-                    <Pie data={sanitizedData} dataKey={valueKey} nameKey={nameKey} innerRadius={50} outerRadius={90}>
+                    <Pie
+                        data={sanitizedData}
+                        dataKey={valueKey}
+                        nameKey={nameKey}
+                        innerRadius={50}
+                        outerRadius={90}
+                    >
                         {sanitizedData.map((entry, index) => (
                             <Cell key={`${entry[nameKey]}-${index}`} fill={fallbackPalette[index % fallbackPalette.length]} />
                         ))}
@@ -121,4 +127,8 @@ const ChartBlock = ({ element }) => {
     );
 };
 
-export default ChartBlock;
+// Memoize to prevent re-renders during streaming (which interrupts animations)
+export default React.memo(ChartBlock, (prevProps, nextProps) => {
+    // Only re-render if the element props actually changed
+    return JSON.stringify(prevProps.element?.props) === JSON.stringify(nextProps.element?.props);
+});
