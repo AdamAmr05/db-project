@@ -68,7 +68,8 @@ async function executeAction(actionId, fields) {
         const [result] = await db.pool.query(sql, values);
         return {
             success: true,
-            message: `Updated ${entity} #${id}`,
+            // REMOVED ID from message
+            message: `Updated ${entity}`,
             affectedRows: result.affectedRows
         };
     }
@@ -93,7 +94,8 @@ async function executeAction(actionId, fields) {
         const [result] = await db.pool.query(sql, values);
         return {
             success: true,
-            message: `Created new ${entity} with ID ${result.insertId}`,
+            // REMOVED ID from message
+            message: `Created new ${entity}`,
             insertId: result.insertId
         };
     }
@@ -107,7 +109,8 @@ async function executeAction(actionId, fields) {
         const [result] = await db.pool.query(sql, [id]);
         return {
             success: true,
-            message: `Deleted ${entity} #${id}`,
+            // REMOVED ID from message
+            message: `Deleted ${entity}`,
             affectedRows: result.affectedRows
         };
     }

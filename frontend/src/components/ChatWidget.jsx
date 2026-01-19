@@ -13,6 +13,121 @@ const MAX_HEIGHT = 900;
 const DEFAULT_WIDTH = 512; // 32rem
 const DEFAULT_HEIGHT = 640; // 40rem
 
+// Helper to escape HTML characters to prevent XSS
+const escapeHtml = (text) => {
+    return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+};
+
+// Helper to process inline formatting (bold, italic, code)
+const processInlineFormatting = (text) => {
+    const safeText = escapeHtml(text);
+    return safeText
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
+        .replace(/\*(?!\s)([^*]+?)(?<!\s)\*/g, '<em>$1</em>') // *italic* (strict: no outer spaces)
+        .replace(/(\d)\*($|\s)/g, '$1<sup class="text-xs text-muted">*</sup>$2') // 8.60* -> 8.60 with superscript
+        .replace(/`([^`]+)`/g, '<code class="bg-[var(--surface)] px-1 rounded text-xs">$1</code>');
+};
+
+const renderTable = (tableLines) => {
+    if (tableLines.length < 2) return null;
+
+    // Parse header and rows, also process bold formatting in cells
+    const parseRow = (line) => line.split('|')
+        .filter(cell => cell.trim() && !cell.match(/^[-:]+$/))
+        .map(cell => processInlineFormatting(cell.trim()));
+    const header = parseRow(tableLines[0]);
+    const rows = tableLines.slice(2).map(parseRow).filter(r => r.length > 0);
+
+    return (
+        <div className="overflow-x-auto my-2">
+            <table className="w-full text-xs border border-border">
+                <thead>
+                    <tr className="bg-[var(--surface)]">
+                        {header.map((cell, i) => (
+                            <th key={i} className="px-2 py-1 text-left border-b border-border font-mono text-muted" dangerouslySetInnerHTML={{ __html: cell }} />
+                        ))}
+                    </tr>
+                </thead>
+                <tbody>
+                    {rows.map((row, i) => (
+                        <tr key={i} className="border-b border-border/50 hover:bg-[var(--surface)]">
+                            {row.map((cell, j) => (
+                                <td key={j} className="px-2 py-1 font-mono" dangerouslySetInnerHTML={{ __html: cell }} />
+                            ))}
+                        </tr>
+                    ))}
+                </tbody>
+            </table>
+        </div>
+    );
+};
+
+const formatMessage = (content) => {
+    const lines = content.split('\n');
+    const result = [];
+    let tableBuffer = [];
+    let inTable = false;
+
+    lines.forEach((line, i) => {
+        if (line.startsWith('|')) {
+            inTable = true;
+            tableBuffer.push(line);
+        } else {
+            if (inTable && tableBuffer.length > 0) {
+                result.push(<div key={`table-${i}`}>{renderTable(tableBuffer)}</div>);
+                tableBuffer = [];
+                inTable = false;
+            }
+
+            // Process inline formatting
+            let formattedLine = processInlineFormatting(line);
+
+            // Horizontal rule (---, ___, ***)
+            if (line.match(/^[-_*]{3,}\s*$/)) {
+                result.push(
+                    <div key={i} className="my-3 border-t border-border opacity-50" />
+                );
+            }
+            // Headers (## through #####)
+            else if (line.match(/^#{2,5}\s+/)) {
+                const headerText = formattedLine.replace(/^#{2,5}\s+/, '');
+                result.push(
+                    <div key={i} className="font-bold text-primary mt-3 mb-1 text-sm uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: headerText }} />
+                );
+            }
+            // Bullet points (•, -, or * at start of line, with or without leading space)
+            else if (line.match(/^\s*[•\-\*]\s/)) {
+                const bulletContent = formattedLine.replace(/^\s*[•\-\*]\s+/, '');
+                result.push(
+                    <div key={i} className="flex gap-2 ml-3">
+                        <span className="text-muted">•</span>
+                        <span dangerouslySetInnerHTML={{ __html: bulletContent }} />
+                    </div>
+                );
+            } else {
+                result.push(<div key={i} dangerouslySetInnerHTML={{ __html: formattedLine || '&nbsp;' }} />);
+            }
+        }
+    });
+
+    // Don't forget trailing table
+    if (tableBuffer.length > 0) {
+        result.push(<div key="table-end">{renderTable(tableBuffer)}</div>);
+    }
+
+    return result;
+};
+
+// Memoized bubble component to prevent re-renders when typing
+const ChatBubble = React.memo(({ content }) => {
+    return <div>{formatMessage(content)}</div>;
+});
+
 const ChatWidget = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [messages, setMessages] = useState([
@@ -133,6 +248,13 @@ const ChatWidget = () => {
 
         const userMessage = input.trim();
         setInput('');
+
+        // Reset textarea height
+        if (inputRef.current) {
+            inputRef.current.style.height = 'auto'; // Reset to auto first to calculate correct scrollHeight
+            inputRef.current.style.height = '38px'; // Reset to min size
+        }
+
         setMessages(prev => [...prev, { role: 'user', parts: [{ type: 'text', content: userMessage }] }]);
         setIsLoading(true);
 
@@ -227,116 +349,6 @@ const ChatWidget = () => {
         }
     };
 
-    const formatMessage = (content) => {
-        const lines = content.split('\n');
-        const result = [];
-        let tableBuffer = [];
-        let inTable = false;
-
-        // Helper to escape HTML characters to prevent XSS
-        const escapeHtml = (text) => {
-            return text
-                .replace(/&/g, "&amp;")
-                .replace(/</g, "&lt;")
-                .replace(/>/g, "&gt;")
-                .replace(/"/g, "&quot;")
-                .replace(/'/g, "&#039;");
-        };
-
-        // Helper to process inline formatting (bold, italic, code)
-        const processInlineFormatting = (text) => {
-            const safeText = escapeHtml(text);
-            return safeText
-                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')  // **bold**
-                .replace(/\*(?!\s)([^*]+?)(?<!\s)\*/g, '<em>$1</em>') // *italic* (strict: no outer spaces)
-                .replace(/(\d)\*($|\s)/g, '$1<sup class="text-xs text-muted">*</sup>$2') // 8.60* -> 8.60 with superscript
-                .replace(/`([^`]+)`/g, '<code class="bg-[var(--surface)] px-1 rounded text-xs">$1</code>');
-        };
-
-        const renderTable = (tableLines) => {
-            if (tableLines.length < 2) return null;
-
-            // Parse header and rows, also process bold formatting in cells
-            const parseRow = (line) => line.split('|')
-                .filter(cell => cell.trim() && !cell.match(/^[-:]+$/))
-                .map(cell => processInlineFormatting(cell.trim()));
-            const header = parseRow(tableLines[0]);
-            const rows = tableLines.slice(2).map(parseRow).filter(r => r.length > 0);
-
-            return (
-                <div className="overflow-x-auto my-2">
-                    <table className="w-full text-xs border border-border">
-                        <thead>
-                            <tr className="bg-[var(--surface)]">
-                                {header.map((cell, i) => (
-                                    <th key={i} className="px-2 py-1 text-left border-b border-border font-mono text-muted" dangerouslySetInnerHTML={{ __html: cell }} />
-                                ))}
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {rows.map((row, i) => (
-                                <tr key={i} className="border-b border-border/50 hover:bg-[var(--surface)]">
-                                    {row.map((cell, j) => (
-                                        <td key={j} className="px-2 py-1 font-mono" dangerouslySetInnerHTML={{ __html: cell }} />
-                                    ))}
-                                </tr>
-                            ))}
-                        </tbody>
-                    </table>
-                </div>
-            );
-        };
-
-        lines.forEach((line, i) => {
-            if (line.startsWith('|')) {
-                inTable = true;
-                tableBuffer.push(line);
-            } else {
-                if (inTable && tableBuffer.length > 0) {
-                    result.push(<div key={`table-${i}`}>{renderTable(tableBuffer)}</div>);
-                    tableBuffer = [];
-                    inTable = false;
-                }
-
-                // Process inline formatting
-                let formattedLine = processInlineFormatting(line);
-
-                // Horizontal rule (---, ___, ***)
-                if (line.match(/^[-_*]{3,}\s*$/)) {
-                    result.push(
-                        <div key={i} className="my-3 border-t border-border opacity-50" />
-                    );
-                }
-                // Headers (## through #####)
-                else if (line.match(/^#{2,5}\s+/)) {
-                    const headerText = formattedLine.replace(/^#{2,5}\s+/, '');
-                    result.push(
-                        <div key={i} className="font-bold text-primary mt-3 mb-1 text-sm uppercase tracking-wide" dangerouslySetInnerHTML={{ __html: headerText }} />
-                    );
-                }
-                // Bullet points (•, -, or * at start of line, with or without leading space)
-                else if (line.match(/^\s*[•\-\*]\s/)) {
-                    const bulletContent = formattedLine.replace(/^\s*[•\-\*]\s+/, '');
-                    result.push(
-                        <div key={i} className="flex gap-2 ml-3">
-                            <span className="text-muted">•</span>
-                            <span dangerouslySetInnerHTML={{ __html: bulletContent }} />
-                        </div>
-                    );
-                } else {
-                    result.push(<div key={i} dangerouslySetInnerHTML={{ __html: formattedLine || '&nbsp;' }} />);
-                }
-            }
-        });
-
-        // Don't forget trailing table
-        if (tableBuffer.length > 0) {
-            result.push(<div key="table-end">{renderTable(tableBuffer)}</div>);
-        }
-
-        return result;
-    };
-
     return (
         <>
             {/* Floating Button */}
@@ -407,7 +419,7 @@ const ChatWidget = () => {
                                         }
                                         return (
                                             <div key={`text-${partIndex}`}>
-                                                {formatMessage(part.content || '')}
+                                                <ChatBubble content={part.content || ''} />
                                             </div>
                                         );
                                     })}
