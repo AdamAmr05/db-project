@@ -28,7 +28,7 @@ This is more powerful than traditional tool calling because the AI can express c
 <img width="3012" height="1896" alt="image" src="https://github.com/user-attachments/assets/0ebd0efe-9ee0-4d8e-aa8c-d79ea8fb6cbf" />
 (chat window is resizable)
 
-To try it, add a `GEMINI_API_KEY` to your `.env` file. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
+To try it, add a `GOOGLE_GENERATIVE_AI_API_KEY` to your `.env` file. Get a free API key from [Google AI Studio](https://aistudio.google.com/apikey).
 
 ### Power BI Analytics Dashboard
 A dedicated "Analytics" page that embeds a live, interactive Power BI dashboard directly inside the web app. This would allow users to explore HR metrics, performance trends, and workforce data or whatever they have in the Power BI dashboard through Power BI's rich visualizations without leaving the application. The embed uses Microsoft's embedded demo mode.
@@ -54,7 +54,7 @@ DB_USER=root
 DB_NAME=hr_management_system
 DB_PORT=3306
 PORT=3001
-GEMINI_API_KEY=your_gemini_api_key
+GOOGLE_GENERATIVE_AI_API_KEY=your_gemini_api_key
 ```
 
 ## Running the Database
