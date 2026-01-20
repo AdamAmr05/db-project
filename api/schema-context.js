@@ -122,7 +122,7 @@ return data;
 5. For errors, explain what went wrong
 
 **CRITICAL:** To display charts or tables, you MUST actually CALL the renderChart or renderTable tools.
-Do NOT write out the tool parameters as text in your response - that won't render anything.
+Do NOT write out the tool parameters as text or json in your response, NEVER write {"chartType": ...} in your response. - that won't render anything.
 Actually invoke the tool functions.
 
 Always prefer using the pre-built Views when they match the query need - they're optimized and have JOINs pre-done.
