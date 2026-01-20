@@ -1,5 +1,5 @@
-import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { BrowserRouter as Router, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import Layout from './components/Layout';
 import { ChatProvider } from './context/ChatContext';
 
@@ -30,39 +30,62 @@ import Appeals from './pages/Appeals';
 import PowerBiDashboard from './pages/PowerBiDashboard';
 import ChatPage from './pages/ChatPage';
 
+const AppShell = () => {
+  const location = useLocation();
+  const [isPowerBiMounted, setIsPowerBiMounted] = useState(false);
+  const showAnalytics = location.pathname === '/analytics/powerbi';
+
+  useEffect(() => {
+    if (showAnalytics && !isPowerBiMounted) {
+      setIsPowerBiMounted(true);
+    }
+  }, [showAnalytics, isPowerBiMounted]);
+
+  return (
+    <Layout>
+      {isPowerBiMounted ? (
+        <div className={showAnalytics ? 'block' : 'hidden'}>
+          <PowerBiDashboard />
+        </div>
+      ) : null}
+      <div className={showAnalytics ? 'hidden' : 'block'}>
+        <Outlet />
+      </div>
+    </Layout>
+  );
+};
+
 function App() {
   return (
     <ChatProvider>
       <Router>
         <Routes>
-          <Route path="/" element={<Layout><Dashboard /></Layout>} />
-          <Route path="/employees" element={<Layout><Employees /></Layout>} />
-          <Route path="/employees/new" element={<Layout><EmployeeForm /></Layout>} />
-          <Route path="/employees/:id" element={<Layout><EmployeeForm /></Layout>} />
-          <Route path="/faculties" element={<Layout><Faculties /></Layout>} />
-          <Route path="/faculties/new" element={<Layout><FacultyForm /></Layout>} />
-          <Route path="/faculties/:id" element={<Layout><FacultyForm /></Layout>} />
-          <Route path="/departments" element={<Layout><Departments /></Layout>} />
-          <Route path="/departments/new" element={<Layout><DepartmentForm /></Layout>} />
-          <Route path="/departments/:id" element={<Layout><DepartmentForm /></Layout>} />
-          <Route path="/jobs" element={<Layout><Jobs /></Layout>} />
-          <Route path="/jobs/new" element={<Layout><JobForm /></Layout>} />
-          <Route path="/jobs/:id" element={<Layout><JobForm /></Layout>} />
-          <Route path="/training" element={<Layout><TrainingPrograms /></Layout>} />
-          <Route path="/training/new" element={<Layout><TrainingProgramForm /></Layout>} />
-          <Route path="/training/:id" element={<Layout><TrainingProgramForm /></Layout>} />
-
-          <Route path="/performance" element={<Layout><PerformanceHub /></Layout>} />
-          <Route path="/performance/cycles" element={<Layout><PerformanceCycles /></Layout>} />
-          <Route path="/performance/cycles/:id" element={<Layout><CycleDetail /></Layout>} />
-          <Route path="/performance/appraisals" element={<Layout><PerformanceAppraisals /></Layout>} />
-          <Route path="/performance/appraisals/:cycleId/:assignmentId" element={<Layout><EmployeeAppraisal /></Layout>} />
-          <Route path="/appeals" element={<Layout><Appeals /></Layout>} />
-
-          <Route path="/analytics/powerbi" element={<Layout><PowerBiDashboard /></Layout>} />
-
-          {/* AI Chat Page */}
-          <Route path="/chat" element={<Layout><ChatPage /></Layout>} />
+          <Route element={<AppShell />}>
+            <Route path="/" element={<Dashboard />} />
+            <Route path="/employees" element={<Employees />} />
+            <Route path="/employees/new" element={<EmployeeForm />} />
+            <Route path="/employees/:id" element={<EmployeeForm />} />
+            <Route path="/faculties" element={<Faculties />} />
+            <Route path="/faculties/new" element={<FacultyForm />} />
+            <Route path="/faculties/:id" element={<FacultyForm />} />
+            <Route path="/departments" element={<Departments />} />
+            <Route path="/departments/new" element={<DepartmentForm />} />
+            <Route path="/departments/:id" element={<DepartmentForm />} />
+            <Route path="/jobs" element={<Jobs />} />
+            <Route path="/jobs/new" element={<JobForm />} />
+            <Route path="/jobs/:id" element={<JobForm />} />
+            <Route path="/training" element={<TrainingPrograms />} />
+            <Route path="/training/new" element={<TrainingProgramForm />} />
+            <Route path="/training/:id" element={<TrainingProgramForm />} />
+            <Route path="/performance" element={<PerformanceHub />} />
+            <Route path="/performance/cycles" element={<PerformanceCycles />} />
+            <Route path="/performance/cycles/:id" element={<CycleDetail />} />
+            <Route path="/performance/appraisals" element={<PerformanceAppraisals />} />
+            <Route path="/performance/appraisals/:cycleId/:assignmentId" element={<EmployeeAppraisal />} />
+            <Route path="/appeals" element={<Appeals />} />
+            <Route path="/analytics/powerbi" element={<></>} />
+            <Route path="/chat" element={<ChatPage />} />
+          </Route>
         </Routes>
       </Router>
     </ChatProvider>

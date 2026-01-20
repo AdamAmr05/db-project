@@ -21,20 +21,18 @@ const TREEMAP_PALETTE = [
     '#0891b2', // Cyan 600
 ];
 
-const CustomTreemapContent = ({ x, y, width, height, index, name, value, allData }) => {
-    // Relaxed threshold: Show more items even if small, but hide absolute micros
+const CustomTreemapContent = ({ x, y, width, height, index, name, value, depth, allData }) => {
+    if (depth === 0 || name === 'root') return null;
+
     if (width < 30 || height < 30) return null;
 
     const color = TREEMAP_PALETTE[index % TREEMAP_PALETTE.length];
 
-    // Lookup real value if `allData` is provided (handling damped sizes)
     const realValue = allData ? (allData.find(d => d.name === name)?.realValue || value) : value;
 
-    // Dynamic font size based on box dimensions
     const isSmall = width < 80 || height < 60;
     const isVerySmall = width < 50 || height < 50;
 
-    // Determine font sizes
     const nameSize = isVerySmall ? 'text-[9px]' : (isSmall ? 'text-[10px]' : 'text-xs');
     const valueSize = isVerySmall ? 'text-[8px]' : 'text-[10px]';
 
