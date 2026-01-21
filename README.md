@@ -18,7 +18,7 @@ When you ask a question, the AI:
 3. Results are formatted and returned as natural language responses with interactive tables and charts rendered inline
 
 The assistant maintains synchronized state across the floating chat widget and full chat page, so conversations persist seamlessly. The assistant knows everything and can find anything in the system, employees, jobs, departments, training, performance cycles, appraisals, and appeals, so responses are fast and directly relevant.
-It renders interactive tables for structured data and charts (bar, line, pie, area and more) for trends and distributions, all rendered inline and streamed in real time as the AI processes the query, so insights appear instantly alongside clear explanations.
+It renders interactive tables for structured data and charts (bar, line, pie, area and more) for trends and distributions. **Charts and tables stream inline as the narrative is written** - as the AI processes your query, visualizations materialize mid-sentence exactly where they belong, so insights appear instantly alongside clear explanations.
 ![Chat-insight-charts](https://github.com/user-attachments/assets/37f38fe1-171e-4c30-90eb-eca7f4d44582)
 
 
@@ -26,7 +26,7 @@ Beyond analysis, when you request changes (create/update/delete records), the AI
 ![AI-Action](https://github.com/user-attachments/assets/1e81fd44-ebbc-4f75-ad1b-d4d2233446c1)
 
 
-This is more powerful than traditional tool calling because the AI can express complex multi-step logic (combining multiple queries, filtering, sorting, aggregating) in a single code execution rather than making sequential individual API calls, though when needed because this isnt a small task and inherently requires many steps, it .
+This is more powerful than traditional tool calling because the AI can express complex multi-step logic (combining multiple queries, filtering, sorting, aggregating) in a single code execution rather than making sequential individual API calls. For complex analyses that require exploration, the AI uses multi-turn reasoning - running queries, analyzing results, then digging deeper based on what it finds.
 
 <img width="3012" height="1896" alt="image" src="https://github.com/user-attachments/assets/0ebd0efe-9ee0-4d8e-aa8c-d79ea8fb6cbf" />
 (chat window is resizable)
