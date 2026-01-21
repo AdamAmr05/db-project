@@ -3,6 +3,9 @@
 A web application built for a database course project. The core focus is the `db/` directory, which contains the MySQL schema, views, stored procedures, functions, and triggers that power the HR management system.
 ![Full-main-dashboard](https://github.com/user-attachments/assets/01f24ba7-4a29-49b9-add3-48d728f6dcfb)
 
+This project is a database focused build. The primary work is the SQL schema, views, procedures, functions, triggers, and the AI query pipeline. The web app is a functional demo layer, not a production grade or enterprise system. Security, scalability, and operational hardening are intentionally out of scope for this version.
+In a production setting for the AI this would require sandboxed execution, a form of role based access control, and better token efficiency and cost controls.
+
 
 ## Features
 
