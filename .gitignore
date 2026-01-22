@@ -36,3 +36,6 @@ build/
 # Remotion video project (local only)
 remotion-video/
 
+# Large video files (keep local)
+*.mp4
+

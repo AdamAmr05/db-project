@@ -47,7 +47,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     ];
 
     const performanceNavItems = [
-        { icon: Activity, label: 'Overview', to: '/performance' },
+        { icon: Activity, label: 'Overview', to: '/performance', end: true },
         { icon: Clock, label: 'Cycles', to: '/performance/cycles' },
         { icon: Award, label: 'Appraisals', to: '/performance/appraisals' },
         { icon: Gavel, label: 'Appeals', to: '/appeals' },
@@ -56,6 +56,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const NavItem = ({ item, indent = false }) => (
         <NavLink
             to={item.to}
+            end={item.end}
             title={isCollapsed ? item.label : undefined}
             className={({ isActive }) =>
                 clsx(
