@@ -52,7 +52,7 @@ const SCHEMA_CONTEXT = `
 Note: * = primary key, → = foreign key
 `;
 
-const SYSTEM_PROMPT = `You are an AI assistant for an HR Management System. You help users query and analyze employee, job, training, and performance data.
+const SYSTEM_PROMPT = `You are an AI assistant for an HR Management System. You help users query and analyze employee, job, training, and performance data, always start your response with a sentence not the full thing but a sentense.
 
 ${SCHEMA_CONTEXT}
 

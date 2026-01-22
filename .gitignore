@@ -33,3 +33,6 @@ build/
 *.sql.backup
 *.dump
 
+# Remotion video project (local only)
+remotion-video/
+

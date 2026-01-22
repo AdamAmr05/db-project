@@ -1,0 +1,168 @@
+/* ========================================
+   PRESENTATION STYLES
+   Using the same design tokens as the HR app
+   ======================================== */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+:root {
+    /* Light mode - matching the app */
+    --background: #FAFAFA;
+    --surface: #FFFFFF;
+    --surface-highlight: #F0F0F0;
+    --border: #E0E0E0;
+    --primary: #111111;
+    --secondary: #555555;
+    --muted: #777777;
+
+    /* Accent blue from the poster */
+    --accent-blue: #4A90A4;
+    --accent-blue-dark: #2C5F6E;
+
+    /* Slide dimensions */
+    --slide-width: 100vw;
+    --slide-height: 100vh;
+}
+
+body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    background: var(--background);
+    color: var(--primary);
+    overflow: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Slide container */
+.presentation {
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+    overflow: hidden;
+}
+
+.slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 60px 80px;
+}
+
+/* Typography */
+.slide h1 {
+    font-size: 4rem;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    line-height: 1.1;
+    text-align: center;
+}
+
+.slide h2 {
+    font-size: 2.5rem;
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.slide p {
+    font-size: 1.5rem;
+    font-weight: 400;
+    color: var(--secondary);
+    line-height: 1.6;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* Image containers */
+.slide-image {
+    max-width: 90%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 12px;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+}
+
+/* Stats grid */
+.stats-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 40px;
+    margin-top: 40px;
+}
+
+.stat-item {
+    text-align: center;
+}
+
+.stat-number {
+    font-size: 4rem;
+    font-weight: 700;
+    color: var(--accent-blue);
+}
+
+.stat-label {
+    font-size: 1rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-top: 8px;
+}
+
+/* Progress indicator */
+.progress-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    height: 3px;
+    background: var(--accent-blue);
+    transition: width 0.3s ease;
+    z-index: 100;
+}
+
+/* Slide counter */
+.slide-counter {
+    position: fixed;
+    bottom: 20px;
+    right: 30px;
+    font-size: 0.875rem;
+    color: var(--muted);
+    font-variant-numeric: tabular-nums;
+}
+
+/* Keyboard hints */
+.keyboard-hints {
+    position: fixed;
+    bottom: 20px;
+    left: 30px;
+    font-size: 0.75rem;
+    color: var(--muted);
+    opacity: 0.5;
+}
+
+/* Utility classes */
+.text-accent {
+    color: var(--accent-blue);
+}
+
+.text-muted {
+    color: var(--muted);
+}
+
+.mt-4 {
+    margin-top: 1rem;
+}
+
+.mt-8 {
+    margin-top: 2rem;
+}
+
+.mt-12 {
+    margin-top: 3rem;
+}
