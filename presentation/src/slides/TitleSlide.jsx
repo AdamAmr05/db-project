@@ -15,20 +15,12 @@ export default function TitleSlide() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 style={{ fontSize: '3.5rem', maxWidth: '900px' }}
             >
-                AI-Powered HR Management
+                Unified HR Management
                 <br />
                 <span className="text-accent">&amp; Analytics System</span>
             </motion.h1>
 
-            <motion.p
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.6 }}
-                className="mt-8"
-                style={{ fontSize: '1.25rem' }}
-            >
-                A Database Course Project
-            </motion.p>
+
 
             <motion.div
                 initial={{ opacity: 0 }}

@@ -15,9 +15,9 @@ import ThanksSlide from './slides/ThanksSlide'
 
 const slides = [
     { id: 'title', component: TitleSlide },
-    { id: 'poster', component: PosterSlide },
-    { id: 'dashboard', component: DashboardSlide },
     { id: 'database', component: DatabaseSlide },
+    // { id: 'poster', component: PosterSlide },
+    { id: 'dashboard', component: DashboardSlide },
     { id: 'entities', component: EntityManagementSlide },
     { id: 'performance', component: PerformanceSlide },
     { id: 'analytics', component: AnalyticsSlide },
