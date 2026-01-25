@@ -64,19 +64,20 @@ const ChatPage = () => {
                         );
                         if (!hasContent) return null;
                     }
+                    const hasUi = msg.parts?.some(part => part.type === 'ui' && trees[part.blockId]);
 
                     return (
                         <div key={msg.id || idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                             <div className={`w-8 h-8 rounded-lg flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-surface border border-border text-primary'}`}>
                                 {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                             </div>
-                            <div className={`max-w-[85%] px-4 py-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-surface border border-border text-primary'}`}>
+                            <div className={`max-w-[85%] ${hasUi ? 'w-full' : ''} px-4 py-3 rounded-lg text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-surface border border-border text-primary'}`}>
                                 {msg.parts?.map((part, partIndex) => {
                                     if (part.type === 'ui') {
                                         const tree = trees[part.blockId];
                                         if (!tree) return null;
                                         return (
-                                            <div key={`${part.blockId}-${partIndex}`} className="my-2">
+                                            <div key={`${part.blockId}-${partIndex}`} className="my-2 w-full">
                                                 <JSONUIProvider registry={registry}>
                                                     <Renderer tree={tree} registry={registry} />
                                                 </JSONUIProvider>

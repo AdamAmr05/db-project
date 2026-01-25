@@ -289,19 +289,20 @@ const ChatWidget = () => {
                             );
                             if (!hasContent) return null;
                         }
+                        const hasUi = msg.parts?.some(part => part.type === 'ui' && trees[part.blockId]);
 
                         return (
                             <div key={msg.id || idx} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
                                 <div className={`w-7 h-7 rounded flex items-center justify-center flex-shrink-0 ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-border text-primary'}`}>
                                     {msg.role === 'user' ? <User className="w-4 h-4" /> : <Bot className="w-4 h-4" />}
                                 </div>
-                                <div className={`max-w-[80%] px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-[var(--surface-highlight)] text-primary border border-border'}`}>
+                                <div className={`max-w-[80%] ${hasUi ? 'w-full' : ''} px-3 py-2 text-sm ${msg.role === 'user' ? 'bg-primary text-[var(--primary-inverted)]' : 'bg-[var(--surface-highlight)] text-primary border border-border'}`}>
                                     {msg.parts?.map((part, partIndex) => {
                                         if (part.type === 'ui') {
                                             const tree = trees[part.blockId];
                                             if (!tree) return null;
                                             return (
-                                                <div key={`${part.blockId}-${partIndex}`} className="my-2">
+                                                <div key={`${part.blockId}-${partIndex}`} className="my-2 w-full">
                                                     <JSONUIProvider registry={registry}>
                                                         <Renderer tree={tree} registry={registry} />
                                                     </JSONUIProvider>
