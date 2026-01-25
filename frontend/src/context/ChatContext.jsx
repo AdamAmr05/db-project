@@ -18,7 +18,7 @@ export const ChatProvider = ({ children }) => {
     const [messages, setMessages] = useState([INITIAL_MESSAGE]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
-    const { trees, updateTree } = useUiPatchStream();
+    const { trees, updateTree, clearTrees } = useUiPatchStream();
     const inputRef = useRef(null);
 
     // Track completed actions { actionId: { success, message } }
@@ -152,6 +152,14 @@ export const ChatProvider = ({ children }) => {
         }
     }, [isLoading, messages, updateTree]);
 
+    const clearChat = useCallback(() => {
+        setMessages([INITIAL_MESSAGE]);
+        setInput('');
+        setIsLoading(false);
+        clearTrees();
+        setCompletedActions({});
+    }, [clearTrees]);
+
     const value = {
         messages,
         setMessages,
@@ -161,7 +169,8 @@ export const ChatProvider = ({ children }) => {
         trees,
         inputRef,
         handleSubmit,
-        completedActions
+        completedActions,
+        clearChat
     };
 
     return (

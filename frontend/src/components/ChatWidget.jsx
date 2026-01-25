@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect, useCallback } from 'react';
-import { MessageSquare, X, Send, Loader2, Bot, User } from 'lucide-react';
+import { MessageSquare, X, Send, Loader2, Bot, User, Trash2 } from 'lucide-react';
 import { Renderer, JSONUIProvider } from '@json-render/react';
 import { useChatContext } from '../context/ChatContext';
 import { registry } from '../json-render/registry';
@@ -129,7 +129,7 @@ export const ChatBubble = React.memo(({ content }) => {
 
 const ChatWidget = () => {
     // Get shared state from context
-    const { messages, input, setInput, isLoading, trees, handleSubmit } = useChatContext();
+    const { messages, input, setInput, isLoading, trees, handleSubmit, clearChat } = useChatContext();
 
     const [isOpen, setIsOpen] = useState(false);
     const messagesEndRef = useRef(null);
@@ -257,12 +257,25 @@ const ChatWidget = () => {
                         <Bot className="w-5 h-5 text-primary" />
                         <span className="font-mono text-sm uppercase tracking-wider text-primary">AI_ASSISTANT</span>
                     </div>
-                    <button
-                        onClick={() => setIsOpen(false)}
-                        className="p-1 hover:bg-border rounded transition-colors"
-                    >
-                        <X className="w-5 h-5 text-muted" />
-                    </button>
+                    <div className="flex items-center gap-1">
+                        <button
+                            onClick={clearChat}
+                            className="p-1 hover:bg-border rounded transition-colors"
+                            title="Clear chat"
+                            aria-label="Clear chat"
+                            type="button"
+                        >
+                            <Trash2 className="w-4 h-4 text-muted" />
+                        </button>
+                        <button
+                            onClick={() => setIsOpen(false)}
+                            className="p-1 hover:bg-border rounded transition-colors"
+                            aria-label="Close chat"
+                            type="button"
+                        >
+                            <X className="w-5 h-5 text-muted" />
+                        </button>
+                    </div>
                 </div>
 
                 {/* Messages */}

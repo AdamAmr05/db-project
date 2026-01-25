@@ -33,7 +33,7 @@ async function executeAction(actionId, fields) {
         job: { table: 'JOB', pk: 'Job_ID' },
         department: { table: 'DEPARTMENT', pk: 'Department_ID' },
         training: { table: 'TRAINING_PROGRAM', pk: 'Program_ID' },
-        appraisal: { table: 'PERFORMANCE_APPRAISAL', pk: 'Appraisal_ID' },
+        appraisal: { table: 'APPRAISAL', pk: 'Appraisal_ID' },
         appeal: { table: 'APPEAL', pk: 'Appeal_ID' },
         cycle: { table: 'PERFORMANCE_CYCLE', pk: 'Cycle_ID' },
         performance: { table: 'PERFORMANCE_CYCLE', pk: 'Cycle_ID' } // alias for cycle
@@ -75,10 +75,19 @@ async function executeAction(actionId, fields) {
     }
 
     if (operation === 'create') {
-        // Exclude ID fields - let DB auto-increment
-        const insertFields = Object.entries(fields)
-            .filter(([key]) => !key.toLowerCase().endsWith('_id'))
+        // Exclude only the table's primary key on create (allow foreign keys like Assignment_ID)
+        const pkLower = pk.toLowerCase();
+        let insertFields = Object.entries(fields)
+            .filter(([key]) => key.toLowerCase() !== pkLower)
             .filter(([, value]) => value !== undefined && value !== null && value !== '');
+
+        // For appraisals, ensure Appraisal_Date is set if missing
+        if (entity === 'appraisal') {
+            const hasAppraisalDate = insertFields.some(([key]) => key.toLowerCase() === 'appraisal_date');
+            if (!hasAppraisalDate) {
+                insertFields = [...insertFields, ['Appraisal_Date', new Date().toISOString().slice(0, 10)]];
+            }
+        }
 
         if (insertFields.length === 0) {
             throw new Error('No fields to insert');

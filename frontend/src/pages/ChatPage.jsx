@@ -1,12 +1,12 @@
 import React, { useRef, useEffect } from 'react';
-import { Send, Loader2, Bot, User } from 'lucide-react';
+import { Send, Loader2, Bot, User, Trash2 } from 'lucide-react';
 import { Renderer, JSONUIProvider } from '@json-render/react';
 import { useChatContext } from '../context/ChatContext';
 import { ChatBubble } from '../components/ChatWidget';
 import { registry } from '../json-render/registry';
 
 const ChatPage = () => {
-    const { messages, input, setInput, isLoading, trees, handleSubmit } = useChatContext();
+    const { messages, input, setInput, isLoading, trees, handleSubmit, clearChat } = useChatContext();
     const messagesEndRef = useRef(null);
     const inputRef = useRef(null);
 
@@ -43,6 +43,18 @@ const ChatPage = () => {
         <div className="flex flex-col w-full max-w-4xl mx-auto h-[calc(100vh-7rem)] -mb-4">
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto py-4 space-y-4 pr-2">
+                <div className="flex justify-end">
+                    <button
+                        type="button"
+                        onClick={clearChat}
+                        className="flex items-center gap-2 text-xs font-mono text-muted border border-border px-3 py-1 rounded hover:text-primary hover:border-primary transition-colors"
+                        title="Clear chat"
+                        aria-label="Clear chat"
+                    >
+                        <Trash2 className="w-3 h-3" />
+                        Clear
+                    </button>
+                </div>
                 {messages.filter(msg => !msg.isSystemMessage).map((msg, idx) => {
                     // Skip empty assistant messages (waiting for first content)
                     if (msg.role === 'assistant') {
