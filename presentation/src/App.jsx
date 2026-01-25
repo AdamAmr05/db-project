@@ -48,12 +48,16 @@ function App() {
         const handleKeyDown = (e) => {
             switch (e.key) {
                 case 'ArrowRight':
+                case 'ArrowDown':
+                case 'PageDown':
                 case ' ':
                 case 'Enter':
                     e.preventDefault()
                     nextSlide()
                     break
                 case 'ArrowLeft':
+                case 'ArrowUp':
+                case 'PageUp':
                 case 'Backspace':
                     e.preventDefault()
                     prevSlide()

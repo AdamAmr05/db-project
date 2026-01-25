@@ -15,7 +15,7 @@ export default function TitleSlide() {
                 transition={{ duration: 0.8, delay: 0.2 }}
                 style={{ fontSize: '3.5rem', maxWidth: '900px' }}
             >
-                Unified HR Management
+                AI-Powered HR Management
                 <br />
                 <span className="text-accent">&amp; Analytics System</span>
             </motion.h1>
