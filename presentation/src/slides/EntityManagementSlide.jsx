@@ -109,7 +109,7 @@ export default function EntityManagementSlide() {
     useEffect(() => {
         const startDelay = setTimeout(() => {
             focusCard(entities[0].id)
-        }, 4500)
+        }, 6000)
         return () => clearTimeout(startDelay)
     }, [focusCard])
 
@@ -125,7 +125,7 @@ export default function EntityManagementSlide() {
                 setCycleIndex(nextIndex)
                 focusCard(entities[nextIndex].id)
             }, 1100)
-        }, 4500)
+        }, 6000)
 
         return () => clearTimeout(hideTimer)
     }, [focusedId, cycleIndex, unfocusCard, focusCard])
