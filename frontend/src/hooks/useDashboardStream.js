@@ -31,6 +31,20 @@ const applyPatch = (tree, patch) => {
             } else {
                 const element = nextTree.elements[elementKey];
                 if (element) {
+                    if (pathParts[1] === 'children') {
+                        const childIndex = pathParts[2];
+                        const children = Array.isArray(element.children) ? [...element.children] : [];
+                        if (patch.op === 'add') {
+                            if (childIndex === '-' || childIndex === undefined) {
+                                children.push(patch.value);
+                            } else {
+                                const index = Math.max(0, parseInt(childIndex, 10));
+                                children.splice(index, 0, patch.value);
+                            }
+                            nextTree.elements[elementKey] = { ...element, children };
+                            return nextTree;
+                        }
+                    }
                     const propPath = `/${pathParts.slice(1).join('/')}`;
                     const updated = { ...element };
                     setByPath(updated, propPath, patch.value);
@@ -58,7 +72,12 @@ export default function useDashboardStream({ api, onComplete, onError }) {
     const abortControllerRef = useRef(null);
     const treeRef = useRef(null);
 
+    const abort = useCallback(() => {
+        abortControllerRef.current?.abort();
+    }, []);
+
     const clear = useCallback(() => {
+        abortControllerRef.current?.abort();
         treeRef.current = null;
         setTree(null);
         setError(null);
@@ -146,6 +165,7 @@ export default function useDashboardStream({ api, onComplete, onError }) {
         isStreaming,
         error,
         send,
-        clear
+        clear,
+        abort
     };
 }

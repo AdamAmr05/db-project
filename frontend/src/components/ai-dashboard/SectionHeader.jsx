@@ -1,28 +1,39 @@
 import React from 'react';
 
-const SectionHeader = ({ element }) => {
+const SectionHeader = ({ element, children }) => {
     const props = element?.props || {};
-    const { title, subtitle, eyebrow } = props;
+    const { title, subtitle, eyebrow, marginTop } = props;
+    const hasHeader = !!(title || subtitle || eyebrow);
+    const spacingStyle = marginTop ? { marginTop: `${Number(marginTop) * 4}px` } : undefined;
 
-    if (!title && !subtitle && !eyebrow) {
+    if (!hasHeader && !children) {
         return null;
     }
 
     return (
-        <div className="space-y-1">
-            {eyebrow && (
-                <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted">
-                    {eyebrow}
+        <div className="space-y-4" style={spacingStyle}>
+            {hasHeader && (
+                <div className="space-y-1">
+                    {eyebrow && (
+                        <div className="text-[10px] font-mono uppercase tracking-[0.3em] text-muted">
+                            {eyebrow}
+                        </div>
+                    )}
+                    {title && (
+                        <h3 className="text-sm font-semibold text-primary tracking-wide uppercase">
+                            {title}
+                        </h3>
+                    )}
+                    {subtitle && (
+                        <p className="text-xs text-muted">{subtitle}</p>
+                    )}
                 </div>
             )}
-            {title && (
-                <h3 className="text-sm font-semibold text-primary tracking-wide uppercase">
-                    {title}
-                </h3>
-            )}
-            {subtitle && (
-                <p className="text-xs text-muted">{subtitle}</p>
-            )}
+            {children ? (
+                <div className="space-y-4">
+                    {children}
+                </div>
+            ) : null}
         </div>
     );
 };

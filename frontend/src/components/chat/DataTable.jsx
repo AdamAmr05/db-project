@@ -50,16 +50,19 @@ const DataTable = ({ element }) => {
                     <Table>
                         <TableHeader>
                             <TableRow className="bg-[var(--surface-highlight)]">
-                                {columns.map((col) => (
+                                {columns.map((col) => {
+                                    const label = col.label ?? col.header ?? col.key;
+                                    return (
                                     <TableHead
                                         key={col.key}
                                         className={`text-xs font-mono text-muted ${col.align === 'right' ? 'text-right' :
                                             col.align === 'center' ? 'text-center' : 'text-left'
                                             }`}
                                     >
-                                        {col.label}
+                                        {label}
                                     </TableHead>
-                                ))}
+                                    );
+                                })}
                             </TableRow>
                         </TableHeader>
                         <TableBody>

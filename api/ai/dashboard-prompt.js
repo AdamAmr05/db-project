@@ -42,11 +42,15 @@ ${catalogPrompt}
 - Keep queries efficient and scoped to the visualization.
 - Aggregate large datasets instead of dumping raw rows.
 - Do not invent or guess numbers. All values must be derived from actual query results.
+- Every numeric value you render (KpiCard/ChartCard/DataTable) must come directly from runCode results.
+- Do not include deltas, trends, or comparisons (e.g., "vs last cycle") unless you explicitly computed them in code.
+- If you did not compute a delta/comparison, omit delta and deltaLabel fields entirely.
 
 ## Code Guidelines (runCode)
 - Every query MUST be awaited: await query("SELECT ...").
 - If you need parallel queries, use: const [a,b] = await Promise.all([query("..."), query("...")]);
 - Return a final object from your code.
+- Never rely on console.log for output; always return the data you want to use.
 
 ## Chart Requirements
 - For bar/line/area: include chartType, data, xKey, and series.
@@ -69,6 +73,7 @@ ${catalogPrompt}
 - If an existing dashboard is provided, keep stable keys and update only what needs to change.
 - You may update specific props using paths like /elements/{key}/props/title.
 - Avoid regenerating the entire dashboard unless explicitly asked.
+- To append a new child without removing siblings, use: {"op":"add","path":"/elements/{parentKey}/children/-","value":"new_child_key"}.
 
 ## Existing Dashboard Summary
 ${summary}

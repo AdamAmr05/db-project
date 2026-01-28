@@ -73,7 +73,17 @@ function createRunCode({ defaultLimit } = {}) {
 
             const result = await asyncFunction(query);
 
+            if (typeof result === 'undefined') {
+                throw new Error('runCode must return a value. Do not rely on console.log; return an object or array.');
+            }
+
             console.log('[Code] Execution successful');
+            console.log('[Code] Result (full):');
+            try {
+                console.log(JSON.stringify(result, null, 2));
+            } catch {
+                console.log(result);
+            }
 
             return {
                 success: true,

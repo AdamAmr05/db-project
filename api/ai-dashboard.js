@@ -114,9 +114,53 @@ async function stream(req, res) {
             stopWhen: stepCountIs(20)
         });
 
+        let patchBuffer = '';
+
         for await (const part of result.fullStream) {
             if (part.type === 'text-delta') {
-                res.write(part.text || '');
+                const text = part.text || '';
+                res.write(text);
+
+                patchBuffer += text;
+                const lines = patchBuffer.split('\n');
+                patchBuffer = lines.pop() ?? '';
+                for (const line of lines) {
+                    const trimmed = line.trim();
+                    if (!trimmed) continue;
+                    console.log('[AI Dashboard] JSONL:', trimmed);
+                    try {
+                        const patch = JSON.parse(trimmed);
+                        if (patch?.op === 'add' && typeof patch.path === 'string' && patch.path.includes('/children/')) {
+                            console.log('[AI Dashboard] Append patch:', patch.path, patch.value);
+                        }
+                    } catch {
+                        // ignore parse errors for partial lines
+                    }
+                }
+            } else if (part.type === 'tool-call') {
+                console.log('[AI Dashboard] Tool call:', part.toolName);
+            } else if (part.type === 'tool-result') {
+                console.log('[AI Dashboard] Tool result:', part.toolName);
+            } else if (part.type === 'finish') {
+                console.log('[AI Dashboard] Token usage:', {
+                    input: part.totalUsage?.inputTokens,
+                    output: part.totalUsage?.outputTokens,
+                    total: part.totalUsage?.totalTokens,
+                    cached: part.totalUsage?.cachedInputTokens
+                });
+            }
+        }
+
+        if (patchBuffer.trim()) {
+            const trimmed = patchBuffer.trim();
+            console.log('[AI Dashboard] JSONL:', trimmed);
+            try {
+                const patch = JSON.parse(trimmed);
+                if (patch?.op === 'add' && typeof patch.path === 'string' && patch.path.includes('/children/')) {
+                    console.log('[AI Dashboard] Append patch:', patch.path, patch.value);
+                }
+            } catch {
+                // ignore parse errors
             }
         }
 

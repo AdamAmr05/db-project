@@ -18,7 +18,7 @@ const AiDashboard = () => {
     const inputRef = useRef(null);
     const lastTreeRef = useRef(null);
 
-    const { tree, isStreaming, error, send, clear } = useDashboardStream({
+    const { tree, isStreaming, error, send, clear, abort } = useDashboardStream({
         api: `${API_BASE_URL}/ai-dashboard/stream`
     });
 
@@ -44,6 +44,9 @@ const AiDashboard = () => {
     };
 
     const handleReset = () => {
+        if (isStreaming) {
+            abort();
+        }
         clear();
         setHistory([]);
         lastTreeRef.current = null;
@@ -70,6 +73,7 @@ const AiDashboard = () => {
                             type="button"
                             onClick={handleReset}
                             className="flex items-center gap-2 text-xs font-mono text-muted border border-border px-3 py-1 rounded hover:text-primary hover:border-primary transition-colors"
+                            disabled={isStreaming}
                         >
                             <Trash2 className="w-3 h-3" />
                             Clear
