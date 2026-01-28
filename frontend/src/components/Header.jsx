@@ -12,6 +12,7 @@ const Header = ({ isCollapsed }) => {
             case '/employees': return 'Employee Database';
             case '/faculties': return 'Faculty Management';
             case '/chat': return 'AI Chat';
+            case '/ai-dashboard': return 'AI Dashboard Studio';
             default: return 'System';
         }
     };

@@ -14,6 +14,7 @@ import {
     BarChart3,
     ChevronDown,
     MessageSquare,
+    Sparkles,
     ChevronLeft,
     ChevronRight
 } from 'lucide-react';
@@ -39,6 +40,7 @@ const Sidebar = ({ isCollapsed, setIsCollapsed }) => {
     const mainNavItems = [
         { icon: LayoutDashboard, label: 'Dashboard', to: '/' },
         { icon: MessageSquare, label: 'Chat', to: '/chat' },
+        { icon: Sparkles, label: 'AI Dashboard', to: '/ai-dashboard' },
         { icon: Users, label: 'Employees', to: '/employees' },
         { icon: Building2, label: 'Departments', to: '/departments' },
         { icon: BookOpen, label: 'Faculties', to: '/faculties' },

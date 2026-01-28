@@ -4,89 +4,16 @@ const { z } = require('zod');
 const db = require('../db-connection');
 const { SYSTEM_PROMPT } = require('./schema-context');
 const { catalog, catalogPrompt } = require('./catalog');
+const { createRunCode } = require('./ai/db-tools');
 
 const MODEL_NAME = 'gemini-3-flash-preview';
 const MAX_ROWS = 50;
+const runCode = createRunCode({ defaultLimit: 100 });
 
 // Get component schemas from catalog
 const chartSchema = catalog.components.ChartCard.props;
 const tableSchema = catalog.components.DataTable.props;
 const actionCardSchema = catalog.components.ActionCard.props;
-
-/**
- * Validate that a query is SELECT-only (safety check)
- */
-function isSelectOnly(sql) {
-    const normalized = sql.trim().toUpperCase();
-    const forbidden = ['INSERT', 'UPDATE', 'DELETE', 'DROP', 'CREATE', 'ALTER', 'TRUNCATE', 'GRANT', 'REVOKE', 'EXEC', 'EXECUTE'];
-
-    if (!normalized.startsWith('SELECT') && !normalized.startsWith('WITH')) {
-        return false;
-    }
-
-    for (const keyword of forbidden) {
-        if (normalized.includes(keyword)) {
-            return false;
-        }
-    }
-
-    return true;
-}
-
-/**
- * Create the query function that will be available in the executed code
- */
-function createQueryFunction() {
-    return async function query(sql) {
-        if (!isSelectOnly(sql)) {
-            throw new Error('Only SELECT queries are allowed');
-        }
-
-        const normalizedSql = sql.trim();
-        const hasLimit = normalizedSql.toUpperCase().includes('LIMIT');
-        const safeSql = hasLimit ? normalizedSql : `${normalizedSql} LIMIT 100`;
-
-        const [rows] = await db.pool.query(safeSql);
-        return rows;
-    };
-}
-
-/**
- * Execute AI-generated JavaScript code in a controlled environment
- */
-async function runCode(code, explanation) {
-    console.log('\n┌─────────────────────────────────────');
-    console.log('│ 🤖 AI Generated Code:');
-    if (explanation) {
-        console.log(`│ 📝 ${explanation}`);
-    }
-    console.log('├─────────────────────────────────────');
-    console.log('│ ' + code.replace(/\n/g, '\n│ '));
-    console.log('└─────────────────────────────────────\n');
-
-    try {
-        const query = createQueryFunction();
-        const asyncFunction = new Function('query', `
-            return (async () => {
-                ${code}
-            })();
-        `);
-
-        const result = await asyncFunction(query);
-
-        console.log('[Code] Execution successful');
-
-        return {
-            success: true,
-            result: result
-        };
-    } catch (error) {
-        console.error(`[Code] Execution error: ${error.message}`);
-        return {
-            error: `Code execution failed: ${error.message}`
-        };
-    }
-}
 
 /**
  * Describe a table's structure

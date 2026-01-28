@@ -8,6 +8,7 @@ const employees = require('./api/employees');
 const faculties = require('./api/faculties');
 const dashboard = require('./api/dashboard');
 const chat = require('./api/chat');
+const aiDashboard = require('./api/ai-dashboard');
 
 const cors = require('cors');
 
@@ -110,6 +111,9 @@ app.put('/api/appeals/:id', appeals.reviewAppeal);
 app.post('/api/chat', chat.chat);
 app.post('/api/chat/stream', chat.stream);
 
+// AI Dashboard Route (json-render streaming)
+app.post('/api/ai-dashboard/stream', aiDashboard.stream);
+
 // Actions Route (AI-proposed database modifications)
 const actions = require('./api/actions');
 app.post('/api/actions/execute', actions.execute);
@@ -149,4 +153,3 @@ app.listen(PORT, () => {
 });
 
 module.exports = app;
-

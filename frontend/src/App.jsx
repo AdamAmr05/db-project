@@ -29,6 +29,7 @@ import Appeals from './pages/Appeals';
 
 import PowerBiDashboard from './pages/PowerBiDashboard';
 import ChatPage from './pages/ChatPage';
+import AiDashboard from './pages/AiDashboard';
 
 const AppShell = () => {
   const location = useLocation();
@@ -85,6 +86,7 @@ function App() {
             <Route path="/appeals" element={<Appeals />} />
             <Route path="/analytics/powerbi" element={<></>} />
             <Route path="/chat" element={<ChatPage />} />
+            <Route path="/ai-dashboard" element={<AiDashboard />} />
           </Route>
         </Routes>
       </Router>
