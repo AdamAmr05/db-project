@@ -40,9 +40,9 @@ export default function AiDashboardVideoSlide() {
                     boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.2)',
                     display: 'inline-block',
                     position: 'relative',
-                    // Match the source video (approx 16:10) to avoid bars
-                    width: 'min(85vw, calc(75vh * 16 / 10))',
-                    aspectRatio: '16 / 10',
+                    // Match the source video dimensions (1674x1080) to avoid bars
+                    width: 'min(85vw, calc(75vh * 1674 / 1080))',
+                    aspectRatio: '1674 / 1080',
                     background: 'var(--surface)',
                     border: '1px solid var(--border)',
                 }}
