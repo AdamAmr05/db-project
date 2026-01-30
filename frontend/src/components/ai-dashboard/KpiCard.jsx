@@ -1,7 +1,5 @@
 import React from 'react';
 import { TrendingUp, TrendingDown, Minus } from 'lucide-react';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '../ui/card';
-
 const trendConfig = {
     up: {
         icon: TrendingUp,
@@ -30,12 +28,14 @@ const KpiCard = ({ element }) => {
     const TrendIcon = trendStyle.icon;
 
     return (
-        <Card className="border border-border bg-[var(--surface)] shadow-lg h-full flex flex-col">
-            <CardHeader className="space-y-1">
-                <CardTitle>{title || 'Metric'}</CardTitle>
-                {subtitle && <CardDescription>{subtitle}</CardDescription>}
-            </CardHeader>
-            <CardContent className="flex flex-1 flex-col gap-3">
+        <div className="h-full flex flex-col gap-2">
+            <div className="space-y-1">
+                <p className="text-xs font-semibold uppercase tracking-wide text-primary">
+                    {title || 'Metric'}
+                </p>
+                {subtitle && <p className="text-xs text-muted">{subtitle}</p>}
+            </div>
+            <div className="flex-1 flex flex-col gap-3">
                 <div className="text-3xl font-semibold text-primary tracking-tight">
                     {value ?? '—'}
                 </div>
@@ -52,8 +52,8 @@ const KpiCard = ({ element }) => {
                         <span className="text-muted/40">&nbsp;</span>
                     )}
                 </div>
-            </CardContent>
-        </Card>
+            </div>
+        </div>
     );
 };
 

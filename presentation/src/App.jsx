@@ -22,6 +22,7 @@ import PerformanceSlide from './slides/PerformanceSlide'
 import AnalyticsSlide from './slides/AnalyticsSlide'
 import OneMoreThingSlide from './slides/OneMoreThingSlide'
 import AIRevealSlide from './slides/AIRevealSlide'
+import AiDashboardVideoSlide from './slides/AiDashboardVideoSlide'
 import ThanksSlide from './slides/ThanksSlide'
 
 const slides = [
@@ -34,6 +35,7 @@ const slides = [
     { id: 'analytics', component: AnalyticsSlide },
     { id: 'one-more-thing', component: OneMoreThingSlide },
     { id: 'ai-reveal', component: AIRevealSlide },
+    { id: 'ai-dashboard-video', component: AiDashboardVideoSlide },
     { id: 'thanks', component: ThanksSlide },
 ]
 
@@ -43,6 +45,7 @@ const slideAssets = {
     'ai-reveal': [aiChat, aiAction],
     entities: [employees, jobs, training, departments],
     poster: [poster],
+    'ai-dashboard-video': [],
 }
 
 function App() {

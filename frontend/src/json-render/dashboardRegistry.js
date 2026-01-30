@@ -2,8 +2,8 @@ import DashboardShell from '../components/ai-dashboard/DashboardShell';
 import SectionHeader from '../components/ai-dashboard/SectionHeader';
 import { Grid, GridItem } from '../components/ai-dashboard/DashboardGrid';
 import KpiCard from '../components/ai-dashboard/KpiCard';
-import ChartBlock from '../components/chat/ChartBlock';
-import DataTable from '../components/chat/DataTable';
+import ChartBlockFlat from '../components/ai-dashboard/ChartBlockFlat';
+import DataTableFlat from '../components/ai-dashboard/DataTableFlat';
 
 export const dashboardRegistry = {
     DashboardShell,
@@ -11,6 +11,6 @@ export const dashboardRegistry = {
     Grid,
     GridItem,
     KpiCard,
-    ChartCard: ChartBlock,
-    DataTable
+    ChartCard: ChartBlockFlat,
+    DataTable: DataTableFlat
 };

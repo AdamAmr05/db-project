@@ -98,7 +98,7 @@ const AiDashboard = () => {
                                 }
                             }}
                             placeholder="Build a dashboard for Q4 performance across departments with KPIs, trend charts, and a top performers table."
-                            className="w-full bg-surface border border-border text-primary text-sm focus:border-primary outline-none transition-colors placeholder:text-muted font-mono resize-none overflow-hidden p-4 min-h-[72px]"
+                            className="w-full bg-surface border border-border text-primary text-sm focus:border-primary outline-none transition-colors placeholder:text-muted font-mono resize-none overflow-hidden p-4 pr-28 min-h-[72px]"
                             disabled={isStreaming}
                             rows={2}
                         />
