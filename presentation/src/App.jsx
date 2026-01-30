@@ -1,6 +1,17 @@
 import { useState, useEffect, useCallback } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
+// Assets for prefetching upcoming slides
+import dashboard from './assets/Full-main-dashboard.jpeg'
+import analytics from './assets/PowerBI embed.jpeg'
+import aiAction from './assets/AI action.jpeg'
+import aiChat from './assets/AI chat.jpeg'
+import poster from './assets/HR system FINAL Poster2.jpg'
+import employees from './assets/Employees.png'
+import jobs from './assets/Job Positions.png'
+import training from './assets/Training programs.png'
+import departments from './assets/Departments.png'
+
 // Import slides
 import TitleSlide from './slides/TitleSlide'
 import PosterSlide from './slides/PosterSlide'
@@ -26,8 +37,39 @@ const slides = [
     { id: 'thanks', component: ThanksSlide },
 ]
 
+const slideAssets = {
+    dashboard: [dashboard],
+    analytics: [analytics],
+    'ai-reveal': [aiChat, aiAction],
+    entities: [employees, jobs, training, departments],
+    poster: [poster],
+}
+
 function App() {
     const [currentSlide, setCurrentSlide] = useState(0)
+
+    // Prefetch the next slide's assets to reduce bandwidth on first load
+    useEffect(() => {
+        const nextSlide = slides[currentSlide + 1];
+        if (!nextSlide) return;
+        const assets = slideAssets[nextSlide.id] || [];
+        if (!assets.length) return;
+
+        const preload = () => {
+            assets.forEach((src) => {
+                const img = new Image();
+                img.src = src;
+            });
+        };
+
+        if (typeof window !== 'undefined' && 'requestIdleCallback' in window) {
+            const handle = window.requestIdleCallback(preload);
+            return () => window.cancelIdleCallback?.(handle);
+        }
+
+        const timeout = setTimeout(preload, 200);
+        return () => clearTimeout(timeout);
+    }, [currentSlide]);
 
     const goToSlide = useCallback((index) => {
         if (index >= 0 && index < slides.length) {
