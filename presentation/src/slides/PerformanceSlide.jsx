@@ -1,19 +1,7 @@
 import { motion } from 'framer-motion'
-import { useRef, useEffect } from 'react'
-import performanceVideo from '../assets/Performance hub demo.mp4'
 
 export default function PerformanceSlide() {
-    const videoRef = useRef(null)
-
-    // Auto-play when slide becomes visible
-    useEffect(() => {
-        if (videoRef.current) {
-            videoRef.current.currentTime = 0
-            videoRef.current.play().catch(() => {
-                // Autoplay might be blocked, that's ok
-            })
-        }
-    }, [])
+    const embedUrl = 'https://www.youtube.com/embed/vkGLCaRv_90?autoplay=1&mute=1&controls=0&playsinline=1&rel=0&modestbranding=1&vq=hd720'
 
     return (
         <motion.div
@@ -44,20 +32,24 @@ export default function PerformanceSlide() {
                     boxShadow: '0 25px 60px -12px rgba(0, 0, 0, 0.2)',
                     display: 'inline-block',
                     position: 'relative',
+                    width: 'min(90vw, calc(75vh * 16 / 9))',
+                    aspectRatio: '16 / 9',
                 }}
             >
-                <video
-                    ref={videoRef}
-                    src={performanceVideo}
-                    controls
-                    muted
+                <iframe
+                    src={embedUrl}
+                    title="Performance Hub Demo"
+                    frameBorder="0"
+                    allow="autoplay; encrypted-media; fullscreen; picture-in-picture"
+                    allowFullScreen
                     style={{
-                        maxHeight: '75vh',
-                        maxWidth: '90vw',
+                        width: '100%',
+                        height: '100%',
                         display: 'block',
-                        // Slight scale to hide black edges
+                        border: 0,
+                        // Slight scale to hide thin letterbox edges
                         transform: 'scale(1.01)',
-                        margin: '-0.5%',
+                        transformOrigin: 'center',
                     }}
                 />
                 {/* Right edge cover to hide black line */}
