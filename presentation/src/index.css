@@ -37,12 +37,12 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-/* Slide container */
 .presentation {
     width: 100vw;
     height: 100vh;
     position: relative;
     overflow: hidden;
+    touch-action: pan-y;
 }
 
 .slide {

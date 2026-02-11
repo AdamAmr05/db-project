@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef } from 'react'
 import { AnimatePresence } from 'framer-motion'
 
 // Assets for prefetching upcoming slides
@@ -129,25 +129,25 @@ function App() {
     }, [nextSlide, prevSlide, goToSlide])
 
     // Swipe support
-    const [touchStart, setTouchStart] = useState(null)
-    const [touchEnd, setTouchEnd] = useState(null)
+    const touchStart = useRef(null)
+    const touchEnd = useRef(null)
 
     // Minimum swipe distance (in px)
     const minSwipeDistance = 50
 
     const onTouchStart = (e) => {
-        setTouchEnd(null) // Reset on start
-        setTouchStart(e.targetTouches[0].clientX)
+        touchEnd.current = null // Reset on start
+        touchStart.current = e.targetTouches[0].clientX
     }
 
     const onTouchMove = (e) => {
-        setTouchEnd(e.targetTouches[0].clientX)
+        touchEnd.current = e.targetTouches[0].clientX
     }
 
     const onTouchEnd = () => {
-        if (!touchStart || !touchEnd) return
+        if (!touchStart.current || !touchEnd.current) return
 
-        const distance = touchStart - touchEnd
+        const distance = touchStart.current - touchEnd.current
         const isLeftSwipe = distance > minSwipeDistance
         const isRightSwipe = distance < -minSwipeDistance
 
