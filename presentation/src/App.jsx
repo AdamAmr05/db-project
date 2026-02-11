@@ -128,10 +128,45 @@ function App() {
         return () => window.removeEventListener('keydown', handleKeyDown)
     }, [nextSlide, prevSlide, goToSlide])
 
+    // Swipe support
+    const [touchStart, setTouchStart] = useState(null)
+    const [touchEnd, setTouchEnd] = useState(null)
+
+    // Minimum swipe distance (in px)
+    const minSwipeDistance = 50
+
+    const onTouchStart = (e) => {
+        setTouchEnd(null) // Reset on start
+        setTouchStart(e.targetTouches[0].clientX)
+    }
+
+    const onTouchMove = (e) => {
+        setTouchEnd(e.targetTouches[0].clientX)
+    }
+
+    const onTouchEnd = () => {
+        if (!touchStart || !touchEnd) return
+
+        const distance = touchStart - touchEnd
+        const isLeftSwipe = distance > minSwipeDistance
+        const isRightSwipe = distance < -minSwipeDistance
+
+        if (isLeftSwipe) {
+            nextSlide()
+        } else if (isRightSwipe) {
+            prevSlide()
+        }
+    }
+
     const CurrentSlideComponent = slides[currentSlide].component
 
     return (
-        <div className="presentation">
+        <div
+            className="presentation"
+            onTouchStart={onTouchStart}
+            onTouchMove={onTouchMove}
+            onTouchEnd={onTouchEnd}
+        >
             <AnimatePresence mode="wait">
                 <CurrentSlideComponent key={slides[currentSlide].id} />
             </AnimatePresence>
