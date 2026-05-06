@@ -5,7 +5,7 @@ export default function PerformanceSlide() {
 
     return (
         <motion.div
-            className="slide"
+            className="slide video-slide video-slide--performance"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -23,6 +23,7 @@ export default function PerformanceSlide() {
 
             {/* Wrapper to clip edges */}
             <motion.div
+                className="video-frame video-frame--performance"
                 initial={{ opacity: 0, scale: 0.98 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ duration: 0.7, delay: 0.3 }}

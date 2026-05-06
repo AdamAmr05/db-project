@@ -167,9 +167,15 @@ function App() {
             onTouchMove={onTouchMove}
             onTouchEnd={onTouchEnd}
         >
-            <AnimatePresence mode="wait">
-                <CurrentSlideComponent key={slides[currentSlide].id} />
-            </AnimatePresence>
+            <div className="slide-stage">
+                <AnimatePresence mode="wait">
+                    <CurrentSlideComponent key={slides[currentSlide].id} />
+                </AnimatePresence>
+            </div>
+
+            <div className="mobile-disclaimer">
+                Open on desktop for the best presentation experience.
+            </div>
 
             {/* Progress bar */}
             <div

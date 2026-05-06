@@ -16,10 +16,34 @@ const entities = [
 export default function EntityManagementSlide() {
     const [focusedId, setFocusedId] = useState(null)
     const [cycleIndex, setCycleIndex] = useState(0)
+    const [isMobile, setIsMobile] = useState(false)
     const cardRefs = useRef({})
     const containerRef = useRef(null)
     const isAnimating = useRef(false)
     const tweenRef = useRef(null)
+
+    useEffect(() => {
+        const updateIsMobile = () => {
+            const mobile = window.innerWidth <= 700
+            setIsMobile(mobile)
+            if (mobile) {
+                setFocusedId(null)
+                isAnimating.current = false
+                if (tweenRef.current) tweenRef.current.kill()
+                Object.values(cardRefs.current).forEach((card) => {
+                    if (card) gsap.set(card, { clearProps: 'transform,zIndex,boxShadow' })
+                })
+            }
+        }
+
+        updateIsMobile()
+        window.addEventListener('resize', updateIsMobile)
+        window.addEventListener('orientationchange', updateIsMobile)
+        return () => {
+            window.removeEventListener('resize', updateIsMobile)
+            window.removeEventListener('orientationchange', updateIsMobile)
+        }
+    }, [])
 
     const getCardTransform = useCallback((cardId) => {
         const card = cardRefs.current[cardId]
@@ -56,6 +80,7 @@ export default function EntityManagementSlide() {
     }, [])
 
     const focusCard = useCallback((id) => {
+        if (isMobile) return
         if (isAnimating.current) return
 
         const card = cardRefs.current[id]
@@ -79,7 +104,7 @@ export default function EntityManagementSlide() {
                 isAnimating.current = false
             }
         })
-    }, [getCardTransform])
+    }, [getCardTransform, isMobile])
 
     const unfocusCard = useCallback((id) => {
         if (isAnimating.current) return
@@ -107,13 +132,15 @@ export default function EntityManagementSlide() {
     }, [])
 
     useEffect(() => {
+        if (isMobile) return
         const startDelay = setTimeout(() => {
             focusCard(entities[0].id)
         }, 6000)
         return () => clearTimeout(startDelay)
-    }, [focusCard])
+    }, [focusCard, isMobile])
 
     useEffect(() => {
+        if (isMobile) return
         if (focusedId === null) return
 
         const hideTimer = setTimeout(() => {
@@ -128,12 +155,12 @@ export default function EntityManagementSlide() {
         }, 6000)
 
         return () => clearTimeout(hideTimer)
-    }, [focusedId, cycleIndex, unfocusCard, focusCard])
+    }, [focusedId, cycleIndex, unfocusCard, focusCard, isMobile])
 
     return (
         <div
             ref={containerRef}
-            className="slide"
+            className="slide entity-slide"
             style={{
                 position: 'relative',
                 width: '100%',
@@ -151,11 +178,13 @@ export default function EntityManagementSlide() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 style={{ marginBottom: '60px', textAlign: 'center' }}
+                className="entity-title"
             >
                 Entity Management
             </motion.h2>
 
             <div
+                className="entity-grid"
                 style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(2, 1fr)',
@@ -170,6 +199,7 @@ export default function EntityManagementSlide() {
                     return (
                         <div
                             key={entity.id}
+                            className="entity-card-shell"
                             style={{
                                 position: 'relative',
                                 width: '100%',
@@ -178,6 +208,7 @@ export default function EntityManagementSlide() {
                         >
                             <div
                                 ref={(el) => (cardRefs.current[entity.id] = el)}
+                                className="entity-card"
                                 style={{
                                     position: 'absolute',
                                     top: 0,
@@ -197,12 +228,15 @@ export default function EntityManagementSlide() {
                                     willChange: 'transform',
                                 }}
                             >
-                                <div style={{
-                                    flex: 1,
-                                    overflow: 'hidden',
-                                    position: 'relative',
-                                    minHeight: 0,
-                                }}>
+                                <div
+                                    className="entity-card-media"
+                                    style={{
+                                        flex: 1,
+                                        overflow: 'hidden',
+                                        position: 'relative',
+                                        minHeight: 0,
+                                    }}
+                                >
                                     <img
                                         src={entity.src}
                                         alt={entity.label}
@@ -215,6 +249,7 @@ export default function EntityManagementSlide() {
                                     />
                                 </div>
                                 <div
+                                    className="entity-card-label"
                                     style={{
                                         height: '40px',
                                         display: 'flex',
